@@ -81,7 +81,7 @@ public enum GestorVentanas {
         ventanas.put(TipoVentana.REGISTRO, new VentanaRegistro());
        
         ventanas.put(TipoVentana.PERFIL, new VentanaPerfil());
-        
+        ventanas.put(TipoVentana.APP, new VentanaApp());
         ventanas.put(TipoVentana.ESTADISTICAS, new VentanaEstadisticas());
 
     }
