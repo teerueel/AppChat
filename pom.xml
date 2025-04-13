@@ -78,6 +78,11 @@
             <artifactId>hibernate-community-dialects</artifactId>
             <version>6.2.7.Final</version>
     </dependency>
+    <dependency>
+           <groupId>tds</groupId>
+            <artifactId>chatWindowLib</artifactId>
+           <version>1.1</version>
+    </dependency>
 
   </dependencies>
   <build>

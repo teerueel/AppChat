@@ -214,9 +214,7 @@ public class VentanaLogin implements Ventana {
             }*/
 
         	if(Controlador.INSTANCIA.iniciarSesion(campoUsuario.getText(), String.valueOf(campoPassword.getPassword()))){
-        		JOptionPane.showMessageDialog(panelPrincipal, 
-                        "Iniciaste sesión.", 
-                        "Has iniciado sesión", JOptionPane.INFORMATION_MESSAGE);
+        		GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.APP);
         	}
             else {
                 JOptionPane.showMessageDialog(panelPrincipal, 
