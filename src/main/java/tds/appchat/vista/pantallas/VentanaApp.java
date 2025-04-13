@@ -1,6 +1,8 @@
 package tds.appchat.vista.pantallas;
 
 import javax.swing.*;
+
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
@@ -62,7 +64,10 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         });
         
         btnBuscar.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Abrir ventana de búsqueda"));
-        btnGestion.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Abrir gestión de contactos"));
+        btnGestion.addActionListener(e -> {
+        GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
+        
+    });
         btnPremium.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Convertirse a usuario Premium"));
         
         lblUserImage.addMouseListener(new MouseAdapter() {
