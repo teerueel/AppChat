@@ -159,18 +159,17 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
     @Override
     public void alMostrar() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'alMostrar'");
     }
 
     @Override
     public void alOcultar() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'alOcultar'");
+       
     }
 
     @Override
     public TipoVentana getTipo() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTipo'");
+        return TipoVentana.APP;
     }
 }
