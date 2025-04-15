@@ -6,6 +6,7 @@ import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
+import tds.appchat.vista.util.EstilosApp;
 import tds.BubbleText;
 
 import java.awt.*;
@@ -41,6 +42,22 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         JButton btnBuscar = new JButton("Buscar");
         JButton btnGestion = new JButton("Contactos");
         JButton btnPremium = new JButton("Premium");
+        // Aplicar estética de la APP a cada botón
+        btnEnviarContacto.setFont(EstilosApp.FUENTE_BOTON);
+        btnEnviarContacto.setForeground(Color.WHITE);
+        btnEnviarContacto.setBackground(EstilosApp.COLOR_PRIMARIO);
+        
+        btnBuscar.setFont(EstilosApp.FUENTE_BOTON);
+        btnBuscar.setForeground(Color.WHITE);
+        btnBuscar.setBackground(EstilosApp.COLOR_PRIMARIO);
+        
+        btnGestion.setFont(EstilosApp.FUENTE_BOTON);
+        btnGestion.setForeground(Color.WHITE);
+        btnGestion.setBackground(EstilosApp.COLOR_PRIMARIO);
+        
+        btnPremium.setFont(EstilosApp.FUENTE_BOTON);
+        btnPremium.setForeground(Color.WHITE);
+        btnPremium.setBackground(EstilosApp.COLOR_PRIMARIO);
         JLabel lblUserName = new JLabel("Usuario Actual");
         JLabel lblUserImage = new JLabel("[Imagen]");
         lblUserImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -52,8 +69,7 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         topPanel.add(btnPremium);
         topPanel.add(lblUserName);
         topPanel.add(lblUserImage);
-        // Añadir toques verdes: cambiar fondo del topPanel
-        topPanel.setBackground(new Color(200, 255, 200));
+        topPanel.setBackground(EstilosApp.COLOR_FONDO);
         
         // Manejadores de eventos en botones (simulación)
         btnEnviarContacto.addActionListener(e -> {
@@ -90,9 +106,9 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
             contactBox.setLayout(new BoxLayout(contactBox, BoxLayout.Y_AXIS));
             // Borde titulado en verde
             contactBox.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(new Color(0, 128, 0)),
+                BorderFactory.createLineBorder(EstilosApp.COLOR_TARJETA),
                 "Contacto " + i,
-                0, 0, null, new Color(0, 128, 0)
+                0, 0, null, EstilosApp.COLOR_TEXTO_SECUNDARIO
             ));
             contactBox.add(new JLabel("Nombre: Contacto " + i));
             contactBox.add(new JLabel("Mensaje: Mensaje de prueba " + i));

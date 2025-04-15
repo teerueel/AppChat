@@ -5,6 +5,7 @@ import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.util.EstilosApp;
 import tds.appchat.vista.util.ImagenUtil;
+import tds.appchat.controlador.Controlador;
 import tds.appchat.sesion.Sesion;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -58,7 +59,7 @@ public class Cabecera extends JPanel implements Recargable {
         JPanel navLinks = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         navLinks.setOpaque(false);
         
-        String[] enlaces = {"Inicio"};
+        String[] enlaces = {"Inicio", "Principal"};
         for (String enlace : enlaces) {
             JLabel linkLabel = new JLabel(enlace);
             linkLabel.setFont(EstilosApp.FUENTE_NAVBAR);
@@ -74,6 +75,14 @@ public class Cabecera extends JPanel implements Recargable {
                     switch (enlace) {
                         case "Inicio":
                             GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.PRINCIPAL);
+                            break;
+                        case "Principal":
+                            if(Controlador.INSTANCIA.haySesion()){
+                                GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.APP);
+                            } else {
+                                JOptionPane.showMessageDialog(Cabecera.this, "Inicia sesión para acceder a esta sección.");
+                            }
+                            
                             break;
                        
                         // Añadir más casos según sea necesario

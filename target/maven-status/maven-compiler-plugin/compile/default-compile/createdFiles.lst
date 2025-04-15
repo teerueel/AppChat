@@ -26,9 +26,11 @@ tds\appchat\vista\componentes\Cabecera$3.class
 tds\appchat\vista\core\TipoVentana.class
 tds\appchat\vista\componentes\CustomButton$1.class
 tds\appchat\vista\core\Ventana.class
+tds\appchat\vista\pantallas\VentanaRegistro$1.class
 tds\appchat\repositorio\RepositorioUsuario.class
 tds\appchat\sesion\Sesion.class
 tds\appchat\vista\pantallas\VentanaLogin$2.class
 tds\appchat\vista\componentes\Cabecera.class
 tds\appchat\vista\pantallas\VentanaLogin.class
+tds\appchat\vista\pantallas\VentanaContactos.class
 tds\appchat\vista\pantallas\VentanaPerfil.class
