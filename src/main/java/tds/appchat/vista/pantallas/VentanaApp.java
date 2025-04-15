@@ -79,12 +79,15 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
             }
         });
         
-        btnBuscar.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Abrir ventana de búsqueda"));
+        btnBuscar.addActionListener(e -> {
+           
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.BUSCAR);
+        });
         btnGestion.addActionListener(e -> {
         GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
         
     });
-        btnPremium.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Convertirse a usuario Premium"));
+        btnPremium.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
         
         lblUserImage.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {

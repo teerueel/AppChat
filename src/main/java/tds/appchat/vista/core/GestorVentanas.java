@@ -84,6 +84,7 @@ public enum GestorVentanas {
         ventanas.put(TipoVentana.APP, new VentanaApp());
         ventanas.put(TipoVentana.ESTADISTICAS, new VentanaEstadisticas());
         ventanas.put(TipoVentana.NUEVO_CONTACTO, new VentanaNuevoContacto());
+        ventanas.put(TipoVentana.BUSCAR, new VentanaBuscar());
 
     }
     
