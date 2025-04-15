@@ -3,7 +3,7 @@
 
 <img src="src\main\resources\images\appchat_logo.png" alt="AppChat Logo" width="250"/>
 
-### Plataforma para el envío y recibimiento de mensajes.
+### Plataforma para el envío de mensajes.
 
 [![Estado](https://img.shields.io/badge/Estado-En_Desarrollo-yellow.svg)](https://github.com/teerueel/AppChat.git)
 [![Java](https://img.shields.io/badge/Java-23-orange.svg)](https://www.oracle.com/java/)
