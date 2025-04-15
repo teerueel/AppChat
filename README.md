@@ -63,5 +63,5 @@ java -jar target/pds2025-plataforma-aprendizaje-1.0-SNAPSHOT.jar
 ---
 
 <div align="center">
-<i>Proyecto desarrollado para la asignatura de Procesos de Desarrollo de Software</i>
+<i>Proyecto desarrollado para la asignatura de Tecnologías de Desarrollo de Software</i>
 </div>
