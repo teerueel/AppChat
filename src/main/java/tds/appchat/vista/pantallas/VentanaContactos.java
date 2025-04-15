@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 
@@ -49,6 +50,11 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         btnAddContacto.setFont(EstilosApp.FUENTE_BOTON);
         btnAddContacto.setForeground(Color.WHITE);
         btnAddContacto.setBackground(EstilosApp.COLOR_PRIMARIO);
+        // Al hacer clic, se mostrará la VentanaNuevoContacto
+        btnAddContacto.addActionListener(e -> {
+            // Se asume que TipoVentana.NUEVO_CONTACTO está definido y GestorVentanas gestiona la navegación
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.NUEVO_CONTACTO);
+        });
         panelIzquierdo.add(btnAddContacto, BorderLayout.SOUTH);
 
         // Panel derecho: Área para mostrar contactos del grupo seleccionado y botón "Añadir Grupo"
