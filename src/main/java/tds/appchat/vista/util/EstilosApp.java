@@ -13,7 +13,7 @@ public class EstilosApp {
     
     // Colores de la aplicación
     public static final Color COLOR_PRIMARIO = new Color(0, 128, 0); // Verde principal
-    public static final Color COLOR_SECUNDARIO = new Color(255, 196, 0);   // Amarillo (bandera española)
+    public static final Color COLOR_SECUNDARIO = new Color(0, 153, 255); // Azul secundario
     public static final Color COLOR_FONDO = new Color(249, 249, 249);      // Fondo claro
     public static final Color COLOR_TARJETA = new Color(255, 255, 255);    // Blanco para tarjetas
     public static final Color COLOR_TEXTO = new Color(51, 51, 51);         // Negro suave para texto

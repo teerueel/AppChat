@@ -11,5 +11,7 @@ public enum TipoVentana {
     PERFIL, 
     ESTADISTICAS,
     APP,
-    CONTACTOS
+    CONTACTOS,
+    NUEVO_CONTACTO,
+    BUSCAR
 }

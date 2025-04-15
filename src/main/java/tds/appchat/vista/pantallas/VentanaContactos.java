@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import tds.appchat.vista.core.Ventana;
+import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 
@@ -45,7 +47,14 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         
         // Botón "Añadir Contacto" debajo de la lista
         JButton btnAddContacto = new JButton("Añadir Contacto");
-        btnAddContacto.setBackground(new Color(200, 255, 200));
+        btnAddContacto.setFont(EstilosApp.FUENTE_BOTON);
+        btnAddContacto.setForeground(Color.WHITE);
+        btnAddContacto.setBackground(EstilosApp.COLOR_PRIMARIO);
+        // Al hacer clic, se mostrará la VentanaNuevoContacto
+        btnAddContacto.addActionListener(e -> {
+            // Se asume que TipoVentana.NUEVO_CONTACTO está definido y GestorVentanas gestiona la navegación
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.NUEVO_CONTACTO);
+        });
         panelIzquierdo.add(btnAddContacto, BorderLayout.SOUTH);
 
         // Panel derecho: Área para mostrar contactos del grupo seleccionado y botón "Añadir Grupo"
@@ -60,7 +69,9 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         panelDerecho.add(areaGrupo, BorderLayout.CENTER);
         // Botón "Añadir Grupo" en la parte inferior con estética verde
         JButton btnAddGrupo = new JButton("Añadir Grupo");
-        btnAddGrupo.setBackground(new Color(200, 255, 200));
+        btnAddGrupo.setFont(EstilosApp.FUENTE_BOTON);
+        btnAddGrupo.setForeground(Color.WHITE);
+        btnAddGrupo.setBackground(EstilosApp.COLOR_PRIMARIO);
         panelDerecho.add(btnAddGrupo, BorderLayout.SOUTH);
         
         // Utilizar un JSplitPane para dividir los dos paneles de manera equitativa

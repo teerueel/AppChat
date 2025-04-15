@@ -48,6 +48,10 @@ public enum Controlador {
     public void cerrarSesion() {
     	Sesion.INSTANCIA.cerrarSesion();
     }
+
+    public boolean haySesion(){
+        return Sesion.INSTANCIA.haySesion();
+    }
     
     
   
