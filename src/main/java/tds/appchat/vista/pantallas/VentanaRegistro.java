@@ -6,6 +6,7 @@ import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
 import tds.appchat.vista.util.ImagenUtil;
+import com.toedter.calendar.JDateChooser;  
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,8 +22,13 @@ public class VentanaRegistro implements Ventana {
     private JPanel panelPrincipal;
     private JTextField campoUsuario;
     private JTextField campoEmail;
+    private JTextField campoTlf;
+    private JTextField campoSaludo;
     private JPasswordField campoPassword;
     private JPasswordField campoConfirmPassword;
+    private JDateChooser dateChooserNacimiento; // Campo para la fecha usando JDateChooser
+    private JLabel lblAvatar;
+    private String path = "/images/avatar_default.png"; //PATH de la imagen seleccionada
     
     public VentanaRegistro() {
         inicializarComponentes();
@@ -52,6 +58,7 @@ public class VentanaRegistro implements Ventana {
         JScrollPane scrollPane = new JScrollPane(contenidoPanel);
         scrollPane.setBorder(null);
         scrollPane.getViewport().setBackground(EstilosApp.COLOR_FONDO);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Nueva línea para mostrar el scrollbar siempre
         
         // Agregar componentes al panel principal
         panelPrincipal.add(scrollPane, BorderLayout.CENTER);
@@ -107,6 +114,77 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelFormulario.setMaximumSize(new Dimension(400, 400));
         
+        // Nuevo panel para la foto
+        JPanel panelFoto = new JPanel();
+        panelFoto.setLayout(new BoxLayout(panelFoto, BoxLayout.Y_AXIS));
+        panelFoto.setOpaque(false);
+        panelFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+         // Crear avatar con borde circular
+        lblAvatar = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (getIcon() != null) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    int diameter = Math.min(getWidth(), getHeight());
+                    int x = (getWidth() - diameter) / 2;
+                    int y = (getHeight() - diameter) / 2;
+                    
+                    // Dibujar círculo
+                    g2.setColor(EstilosApp.COLOR_PRIMARIO);
+                    g2.fillOval(x, y, diameter, diameter);
+                    
+                    // Clip para la imagen
+                    g2.setClip(new java.awt.geom.Ellipse2D.Float(x, y, diameter, diameter));
+                    getIcon().paintIcon(this, g2, x, y);
+                    g2.dispose();
+                }
+            }
+        };
+        
+        ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagen(path)
+                .getScaledInstance(120, 120, Image.SCALE_SMOOTH));
+        lblAvatar.setIcon(avatarIcon);
+        lblAvatar.setPreferredSize(new Dimension(120, 120));
+        lblAvatar.setMaximumSize(new Dimension(120, 120));
+        lblAvatar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelFoto.add(lblAvatar);
+        panelFoto.add(Box.createVerticalStrut(10));
+        
+        JButton btnSeleccionarFoto = new JButton("Seleccionar foto");
+        btnSeleccionarFoto.setFont(EstilosApp.FUENTE_BOTON);
+        btnSeleccionarFoto.setForeground(Color.WHITE);
+        btnSeleccionarFoto.setBackground(EstilosApp.COLOR_PRIMARIO);
+        btnSeleccionarFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        btnSeleccionarFoto.addActionListener(e -> {
+            // Llamar al controlador para seleccionar imagen; se asume que retorna una URL o path
+            
+            path = Controlador.INSTANCIA.seleccionarImagenPerfil();
+            if(path != null && !path.isEmpty()){
+                try {
+                    // ...existing code reemplazado...
+                    Image image = ImagenUtil.cargarImagenDesdeArchivo(path);
+                    if(image != null){
+                        // Escalar la imagen a 120x120 para que se visualice correctamente
+                        Image scaled = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+                        lblAvatar.setIcon(new ImageIcon(scaled));
+                    }
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            
+        });
+        
+        panelFoto.add(btnSeleccionarFoto);
+        panelFoto.add(Box.createVerticalStrut(30));
+        
+        // Agregar el panelFoto al inicio del panelFormulario previo a los demás campos
+        panelFormulario.add(panelFoto);
+
         // Campo de usuario
         JLabel labelUsuario = new JLabel("Nombre de usuario");
         labelUsuario.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -124,6 +202,24 @@ public class VentanaRegistro implements Ventana {
         
         // Efecto focus en campo usuario
         campoUsuario.addFocusListener(crearEfectoFocus(campoUsuario));
+
+        //Campo teléfono 
+        JLabel labelTlf = new JLabel("Teléfono");
+        labelTlf.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelTlf.setForeground(EstilosApp.COLOR_TEXTO);
+        labelTlf.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        campoTlf = new JTextField(20);
+        campoTlf.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        campoTlf.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        campoTlf.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campoTlf.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        
+        // Efecto focus en campo telefono
+        campoTlf.addFocusListener(crearEfectoFocus(campoTlf));
         
         // Campo de email
         JLabel labelEmail = new JLabel("Correo electrónico");
@@ -142,6 +238,47 @@ public class VentanaRegistro implements Ventana {
         
         // Efecto focus en campo email
         campoEmail.addFocusListener(crearEfectoFocus(campoEmail));
+
+
+        // Campo de saludo
+        JLabel labelSaludo = new JLabel("Saludo");
+        labelSaludo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelSaludo.setForeground(EstilosApp.COLOR_TEXTO);
+        labelSaludo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        campoSaludo = new JTextField(20);
+        campoSaludo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        campoSaludo.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        campoSaludo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campoSaludo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        
+        // Efecto focus en campo email
+        campoSaludo.addFocusListener(crearEfectoFocus(campoSaludo));
+        
+        panelFormulario.add(labelSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(campoSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+        
+        // Nueva sección: Fecha de Nacimiento usando JDateChooser
+        JLabel labelFechaNacimiento = new JLabel("Fecha de Nacimiento");
+        labelFechaNacimiento.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelFechaNacimiento.setForeground(EstilosApp.COLOR_TEXTO);
+        labelFechaNacimiento.setAlignmentX(Component.LEFT_ALIGNMENT);
+        dateChooserNacimiento = new JDateChooser();
+        dateChooserNacimiento.setDateFormatString("dd/MM/yyyy");
+
+        dateChooserNacimiento.setPreferredSize(new Dimension(400, 45));
+        dateChooserNacimiento.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        dateChooserNacimiento.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panelFormulario.add(labelFechaNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(dateChooserNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         
         // Campo de contraseña
         JLabel labelPassword = new JLabel("Contraseña");
@@ -207,10 +344,25 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoUsuario);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panelFormulario.add(labelTlf);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(campoTlf);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         
         panelFormulario.add(labelEmail);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoEmail);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panelFormulario.add(labelSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(campoSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panelFormulario.add(labelFechaNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(dateChooserNacimiento);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         
         panelFormulario.add(labelPassword);
@@ -221,24 +373,10 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.add(labelConfirmPassword);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoConfirmPassword);
-        panelFormulario.add(Box.createRigidArea(new Dimension(0, 15)));
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 15))); 
         
         // Añadir panel para seleccionar rol
-        JPanel panelRol = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panelRol.setOpaque(false);
-        panelRol.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel labelRol = new JLabel("Selecciona tu rol:");
-        labelRol.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        labelRol.setForeground(EstilosApp.COLOR_TEXTO);
-        JRadioButton radioEstudiante = new JRadioButton("Estudiante");
-        radioEstudiante.setOpaque(false);
-        radioEstudiante.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        radioEstudiante.setForeground(EstilosApp.COLOR_TEXTO);
-        JRadioButton radioCreador = new JRadioButton("Creador");
-        radioCreador.setOpaque(false);
-        radioCreador.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        radioCreador.setForeground(EstilosApp.COLOR_TEXTO);
-        ButtonGroup grupoRol = new ButtonGroup();
+       
 
         // Botón de registro
         JButton btnRegistrar = new JButton("Crear Cuenta");
@@ -253,10 +391,11 @@ public class VentanaRegistro implements Ventana {
 
         btnRegistrar.addActionListener(e -> {
             // Validación de campos
-            if (campoUsuario.getText().isEmpty() || campoEmail.getText().isEmpty() ||
-                    campoPassword.getPassword().length == 0 || campoConfirmPassword.getPassword().length == 0) {
+            if (campoUsuario.getText().isEmpty() || campoEmail.getText().isEmpty() 
+            ||  campoTlf.getText().isEmpty() 
+            || campoPassword.getPassword().length == 0 || campoConfirmPassword.getPassword().length == 0) {
                 JOptionPane.showMessageDialog(panelPrincipal, 
-                        "Todos los campos son obligatorios", 
+                        "Rellena los campos obligatorios", 
                         "Error de registro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -281,11 +420,22 @@ public class VentanaRegistro implements Ventana {
             
             // Simulación de registro exitoso
             boolean exito = Controlador.INSTANCIA.registrarUsuario(campoEmail.getText(), campoUsuario.getText(), 
-                    String.valueOf(campoPassword.getPassword()));
-            if(exito){
+                    String.valueOf(campoPassword.getPassword()), campoTlf.getText(), path,
+                    campoSaludo.getText());
+            if(exito && path != null && !path.isEmpty()){
             JOptionPane.showMessageDialog(panelPrincipal, 
                     "Registro completado con éxito. Ya puedes iniciar sesión.", 
                     "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(Controlador.INSTANCIA.emailRegistrado(campoEmail.getText())){
+                JOptionPane.showMessageDialog(panelPrincipal, 
+                        "El correo ya está registrado.", 
+                        "Error de registro", JOptionPane.ERROR_MESSAGE);
+            }
+            else if(Controlador.INSTANCIA.tlfRegistrado(campoTlf.getText())){
+                JOptionPane.showMessageDialog(panelPrincipal, 
+                        "El teléfono ya está registrado.", 
+                        "Error de registro", JOptionPane.ERROR_MESSAGE);
             }
             else{
                 JOptionPane.showMessageDialog(panelPrincipal, 
@@ -347,7 +497,16 @@ public class VentanaRegistro implements Ventana {
         campoEmail.setText("");
         campoPassword.setText("");
         campoConfirmPassword.setText("");
+        campoTlf.setText("");
+        campoSaludo.setText("");
         campoUsuario.requestFocus();
+        // Limpiar el campo de fecha de nacimiento
+        dateChooserNacimiento.setDate(null);
+        // Limpiar la foto
+        lblAvatar.setIcon(new ImageIcon(ImagenUtil.cargarImagen("/images/avatar_default.png")
+                .getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        path = "/images/avatar_default.png"; // Restablecer el path a la imagen por defecto
+
     }
     
     @Override

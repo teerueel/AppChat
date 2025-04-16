@@ -1,57 +1,34 @@
 package tds.appchat.modelo;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 
-@Entity
+
 public class Usuario {
 
    
-    private Integer id;
-    
-   
-
-    
-    
+    private Integer id;  
     private String nombre;
-    
- 
+    private String telefono;
+    private String saludo;
     private String email;
-    
-    
     private String password;
-    
- 
     private EstadisticasUsuario stats;
+    private boolean Premium;
+    String imagen;
     
 
     
     public Usuario() {
         this.stats = new EstadisticasUsuario();
-        
+        this.Premium    = false;
     }
+
+
     
-    public Usuario( String nombre, String email, String password) {
-        this();
-       
-        this.nombre = nombre;
-        this.email = email;
-        this.password = password;
-    }
+    
 
     public Usuario(int id,  String nombre, String email, String password, EstadisticasUsuario stats) {
         this.id = id;
-       
         this.nombre = nombre;
         this.email = email;
         this.password = password;
@@ -60,7 +37,22 @@ public class Usuario {
     }
 
     public Usuario(int id,  String nombre, String email, String password) {
-        this(id, nombre, email, password, new EstadisticasUsuario());
+        this();
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.password = password;
+    }
+
+    public Usuario(int id, String nombre, String email, String password, String telefono, String saludo) {
+        this(id, nombre, email, password);
+        this.telefono = telefono;
+        this.saludo = saludo;
+    }
+
+    public Usuario(int id, String nombre, String email, String password, String telefono, String saludo, String imagen) {
+        this(id, nombre, email, password, telefono, saludo);
+        this.imagen = imagen;
     }
 
    
@@ -103,6 +95,39 @@ public class Usuario {
     public EstadisticasUsuario getStats() {
         return this.stats;
     }
+
+    public String getTelefono() {
+        return this.telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getSaludo() {
+        return this.saludo;
+    }  
+
+    public void setSaludo(String saludo) {
+        this.saludo = saludo;
+    }
+
+    public boolean isPremium() {
+        return this.Premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.Premium = premium;
+    }
+
+    public String getImagen() {
+        return this.imagen;
+    }  
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
 
 
     

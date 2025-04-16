@@ -16,18 +16,24 @@ public enum GestorUsuario implements RepositorioUsuario {
      */
     GestorUsuario() {
         usuarios = new HashMap<Integer, Usuario>();
-        usuarios.put(0, new Usuario(0,  "admin", "admin@gmail.com", "admin"));
+        usuarios.put(0, new Usuario(0,  "admin", "admin@gmail.com", "admin", "000000000", "Hola soy admin", null));
     }
 
     
+    public boolean tlfRegistrado(String tlf) {
+    	return usuarios.values().stream().anyMatch(u -> u.getTelefono().equalsIgnoreCase(tlf));
+    }
+
     public boolean emailRegistrado(String email) {
     	return usuarios.values().stream().anyMatch(u -> u.getEmail().equalsIgnoreCase(email));
     }
+
+    
     
     @Override
-    public boolean crearUsuario(String email, String nombre, String password){
-        Usuario user = new Usuario(usuarios.size(), nombre, email, password);
-        if(emailRegistrado(email)) return false;
+    public boolean crearUsuario(String email, String nombre, String password,String tlf, String imagen , String saludo) {
+        Usuario user = new Usuario(usuarios.size(), nombre, email, password, tlf, saludo, imagen);
+        if(tlfRegistrado(tlf) || emailRegistrado(email)) return false;
          usuarios.put(user.getId(), user);
          return true;
     }
