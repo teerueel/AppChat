@@ -33,16 +33,23 @@ public enum Controlador {
      * @param esCreador Indica si el usuario tiene rol creador
      * @return true si el registro fue exitoso, false en caso contrario
      */
+
+     // Se utiliza para registrar un nuevo usuario en el sistema
     public boolean registrarUsuario(String email, String nombre, String password, String tlf, String imagen, String saludo){
         return GestorUsuario.INSTANCIA.crearUsuario(email, nombre, password, tlf, imagen, saludo);
     }
 
+    // Se utiliza para saber si un telefono ya está registrado en el sistema
     public boolean tlfRegistrado(String tlf) {
     	return GestorUsuario.INSTANCIA.tlfRegistrado(tlf);
     }
-
+    // Se utiliza para saber si un email ya está registrado en el sistema
     public boolean emailRegistrado(String email) {
     	return GestorUsuario.INSTANCIA.emailRegistrado(email);
+    }
+
+    public String seleccionarImagenPerfil(){
+        return "https://i.pinimg.com/474x/7e/e6/a8/7ee6a8726f6be062bfc4f5bcb5584c59.jpg";
     }
     
     public boolean iniciarSesion(String email, String password) {

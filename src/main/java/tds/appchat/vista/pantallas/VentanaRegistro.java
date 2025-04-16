@@ -27,6 +27,7 @@ public class VentanaRegistro implements Ventana {
     private JPasswordField campoPassword;
     private JPasswordField campoConfirmPassword;
     private JDateChooser dateChooserNacimiento; // Campo para la fecha usando JDateChooser
+    private JLabel lblAvatar;
     
     public VentanaRegistro() {
         inicializarComponentes();
@@ -112,6 +113,71 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelFormulario.setMaximumSize(new Dimension(400, 400));
         
+        // Nuevo panel para la foto
+        JPanel panelFoto = new JPanel();
+        panelFoto.setLayout(new BoxLayout(panelFoto, BoxLayout.Y_AXIS));
+        panelFoto.setOpaque(false);
+        panelFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+         // Crear avatar con borde circular
+        lblAvatar = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                if (getIcon() != null) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    int diameter = Math.min(getWidth(), getHeight());
+                    int x = (getWidth() - diameter) / 2;
+                    int y = (getHeight() - diameter) / 2;
+                    
+                    // Dibujar círculo
+                    g2.setColor(EstilosApp.COLOR_PRIMARIO);
+                    g2.fillOval(x, y, diameter, diameter);
+                    
+                    // Clip para la imagen
+                    g2.setClip(new java.awt.geom.Ellipse2D.Float(x, y, diameter, diameter));
+                    getIcon().paintIcon(this, g2, x, y);
+                    g2.dispose();
+                }
+            }
+        };
+        
+        ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagen("/images/avatar_default.png")
+                .getScaledInstance(120, 120, Image.SCALE_SMOOTH));
+        lblAvatar.setIcon(avatarIcon);
+        lblAvatar.setPreferredSize(new Dimension(120, 120));
+        lblAvatar.setMaximumSize(new Dimension(120, 120));
+        lblAvatar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelFoto.add(lblAvatar);
+        panelFoto.add(Box.createVerticalStrut(10));
+        
+        JButton btnSeleccionarFoto = new JButton("Seleccionar foto");
+        btnSeleccionarFoto.setFont(EstilosApp.FUENTE_BOTON);
+        btnSeleccionarFoto.setForeground(Color.WHITE);
+        btnSeleccionarFoto.setBackground(EstilosApp.COLOR_PRIMARIO);
+        btnSeleccionarFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnSeleccionarFoto.addActionListener(e -> {
+            // Llamar al controlador para seleccionar imagen; se asume que retorna una URL o path
+            String path = Controlador.INSTANCIA.seleccionarImagenPerfil();
+            if(path != null && !path.isEmpty()){
+                try {
+                    java.net.URL url = new java.net.URI(path).toURL();
+                    java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(url);
+                    // Escalar la imagen a 120x120 para que se visualice correctamente
+                    Image scaled = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+                    lblAvatar.setIcon(new ImageIcon(scaled));
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        panelFoto.add(btnSeleccionarFoto);
+        panelFoto.add(Box.createVerticalStrut(30));
+        
+        // Agregar el panelFoto al inicio del panelFormulario previo a los demás campos
+        panelFormulario.add(panelFoto);
+
         // Campo de usuario
         JLabel labelUsuario = new JLabel("Nombre de usuario");
         labelUsuario.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -427,6 +493,12 @@ public class VentanaRegistro implements Ventana {
         campoTlf.setText("");
         campoSaludo.setText("");
         campoUsuario.requestFocus();
+        // Limpiar el campo de fecha de nacimiento
+        dateChooserNacimiento.setDate(null);
+        // Limpiar la foto
+        lblAvatar.setIcon(new ImageIcon(ImagenUtil.cargarImagen("/images/avatar_default.png")
+                .getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+
     }
     
     @Override
