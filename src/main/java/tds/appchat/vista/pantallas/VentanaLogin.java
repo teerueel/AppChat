@@ -19,7 +19,7 @@ import java.awt.event.FocusEvent;
  */
 public class VentanaLogin implements Ventana {
     private JPanel panelPrincipal;
-    private JTextField campoUsuario;
+    private JTextField campoTlf;
     private JPasswordField campoPassword;
     
     public VentanaLogin() {
@@ -105,25 +105,25 @@ public class VentanaLogin implements Ventana {
         panelFormulario.setMaximumSize(new Dimension(400, 200));
         
         // Campo de usuario
-        JLabel labelUsuario = new JLabel("Correo electrónico");
-        labelUsuario.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        labelUsuario.setForeground(EstilosApp.COLOR_TEXTO);
-        labelUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel labelTlf = new JLabel("Teléfono");
+        labelTlf.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelTlf.setForeground(EstilosApp.COLOR_TEXTO);
+        labelTlf.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        campoUsuario = new JTextField(20);
-        campoUsuario.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        campoUsuario.setBorder(BorderFactory.createCompoundBorder(
+        campoTlf = new JTextField(20);
+        campoTlf.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        campoTlf.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
                 new EmptyBorder(10, 15, 10, 15)
         ));
-        campoUsuario.setAlignmentX(Component.LEFT_ALIGNMENT);
-        campoUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        campoTlf.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campoTlf.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         
         // Efecto focus en campo usuario
-        campoUsuario.addFocusListener(new FocusAdapter() {
+        campoTlf.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                campoUsuario.setBorder(BorderFactory.createCompoundBorder(
+                campoTlf.setBorder(BorderFactory.createCompoundBorder(
                         new LineBorder(EstilosApp.COLOR_PRIMARIO, 1, true),
                         new EmptyBorder(10, 15, 10, 15)
                 ));
@@ -131,7 +131,7 @@ public class VentanaLogin implements Ventana {
             
             @Override
             public void focusLost(FocusEvent e) {
-                campoUsuario.setBorder(BorderFactory.createCompoundBorder(
+                campoTlf.setBorder(BorderFactory.createCompoundBorder(
                         new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
                         new EmptyBorder(10, 15, 10, 15)
                 ));
@@ -213,7 +213,7 @@ public class VentanaLogin implements Ventana {
                         "Error de autenticación", JOptionPane.ERROR_MESSAGE);
             }*/
 
-        	if(Controlador.INSTANCIA.iniciarSesion(campoUsuario.getText(), String.valueOf(campoPassword.getPassword()))){
+        	if(Controlador.INSTANCIA.iniciarSesion(campoTlf.getText(), String.valueOf(campoPassword.getPassword()))){
         		GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.APP);
         	}
             else {
@@ -247,9 +247,9 @@ public class VentanaLogin implements Ventana {
         panelRegistro.add(linkRegistro);
         
         // Agregar campos al panel de formulario
-        panelFormulario.add(labelUsuario);
+        panelFormulario.add(labelTlf);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
-        panelFormulario.add(campoUsuario);
+        panelFormulario.add(campoTlf);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         panelFormulario.add(labelPassword);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
@@ -276,9 +276,9 @@ public class VentanaLogin implements Ventana {
     
     @Override
     public void alMostrar() {
-        campoUsuario.setText("");
+        campoTlf.setText("");
         campoPassword.setText("");
-        campoUsuario.requestFocus();
+        campoTlf.requestFocus();
     }
     
     @Override
