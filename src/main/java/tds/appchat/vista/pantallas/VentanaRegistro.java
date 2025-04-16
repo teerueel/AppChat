@@ -21,6 +21,8 @@ public class VentanaRegistro implements Ventana {
     private JPanel panelPrincipal;
     private JTextField campoUsuario;
     private JTextField campoEmail;
+    private JTextField campoTlf;
+    private JTextField campoSaludo;
     private JPasswordField campoPassword;
     private JPasswordField campoConfirmPassword;
     
@@ -124,6 +126,24 @@ public class VentanaRegistro implements Ventana {
         
         // Efecto focus en campo usuario
         campoUsuario.addFocusListener(crearEfectoFocus(campoUsuario));
+
+        //Campo teléfono 
+        JLabel labelTlf = new JLabel("Teléfono");
+        labelTlf.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelTlf.setForeground(EstilosApp.COLOR_TEXTO);
+        labelTlf.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        campoTlf = new JTextField(20);
+        campoTlf.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        campoTlf.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        campoTlf.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campoTlf.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        
+        // Efecto focus en campo telefono
+        campoTlf.addFocusListener(crearEfectoFocus(campoTlf));
         
         // Campo de email
         JLabel labelEmail = new JLabel("Correo electrónico");
@@ -142,6 +162,25 @@ public class VentanaRegistro implements Ventana {
         
         // Efecto focus en campo email
         campoEmail.addFocusListener(crearEfectoFocus(campoEmail));
+
+
+        // Campo de saludo
+        JLabel labelSaludo = new JLabel("Saludo");
+        labelSaludo.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelSaludo.setForeground(EstilosApp.COLOR_TEXTO);
+        labelSaludo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        campoSaludo = new JTextField(20);
+        campoSaludo.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        campoSaludo.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
+                new EmptyBorder(10, 15, 10, 15)
+        ));
+        campoSaludo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campoSaludo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        
+        // Efecto focus en campo email
+        campoSaludo.addFocusListener(crearEfectoFocus(campoSaludo));
         
         // Campo de contraseña
         JLabel labelPassword = new JLabel("Contraseña");
@@ -207,10 +246,20 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoUsuario);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panelFormulario.add(labelTlf);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(campoTlf);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         
         panelFormulario.add(labelEmail);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoEmail);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panelFormulario.add(labelSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(campoSaludo);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         
         panelFormulario.add(labelPassword);
@@ -253,10 +302,11 @@ public class VentanaRegistro implements Ventana {
 
         btnRegistrar.addActionListener(e -> {
             // Validación de campos
-            if (campoUsuario.getText().isEmpty() || campoEmail.getText().isEmpty() ||
-                    campoPassword.getPassword().length == 0 || campoConfirmPassword.getPassword().length == 0) {
+            if (campoUsuario.getText().isEmpty() || campoEmail.getText().isEmpty() 
+            ||  campoTlf.getText().isEmpty() 
+            || campoPassword.getPassword().length == 0 || campoConfirmPassword.getPassword().length == 0) {
                 JOptionPane.showMessageDialog(panelPrincipal, 
-                        "Todos los campos son obligatorios", 
+                        "Rellena los campos obligatorios", 
                         "Error de registro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -281,11 +331,22 @@ public class VentanaRegistro implements Ventana {
             
             // Simulación de registro exitoso
             boolean exito = Controlador.INSTANCIA.registrarUsuario(campoEmail.getText(), campoUsuario.getText(), 
-                    String.valueOf(campoPassword.getPassword()));
+                    String.valueOf(campoPassword.getPassword()), campoTlf.getText(),null,
+                    campoSaludo.getText());
             if(exito){
             JOptionPane.showMessageDialog(panelPrincipal, 
                     "Registro completado con éxito. Ya puedes iniciar sesión.", 
                     "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else if(Controlador.INSTANCIA.emailRegistrado(campoEmail.getText())){
+                JOptionPane.showMessageDialog(panelPrincipal, 
+                        "El correo ya está registrado.", 
+                        "Error de registro", JOptionPane.ERROR_MESSAGE);
+            }
+            else if(Controlador.INSTANCIA.tlfRegistrado(campoTlf.getText())){
+                JOptionPane.showMessageDialog(panelPrincipal, 
+                        "El teléfono ya está registrado.", 
+                        "Error de registro", JOptionPane.ERROR_MESSAGE);
             }
             else{
                 JOptionPane.showMessageDialog(panelPrincipal, 
@@ -347,6 +408,8 @@ public class VentanaRegistro implements Ventana {
         campoEmail.setText("");
         campoPassword.setText("");
         campoConfirmPassword.setText("");
+        campoTlf.setText("");
+        campoSaludo.setText("");
         campoUsuario.requestFocus();
     }
     

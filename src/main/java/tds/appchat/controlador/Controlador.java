@@ -33,8 +33,16 @@ public enum Controlador {
      * @param esCreador Indica si el usuario tiene rol creador
      * @return true si el registro fue exitoso, false en caso contrario
      */
-    public boolean registrarUsuario(String email, String nombre, String password){
-        return GestorUsuario.INSTANCIA.crearUsuario(email, nombre, password);
+    public boolean registrarUsuario(String email, String nombre, String password, String tlf, String imagen, String saludo){
+        return GestorUsuario.INSTANCIA.crearUsuario(email, nombre, password, tlf, imagen, saludo);
+    }
+
+    public boolean tlfRegistrado(String tlf) {
+    	return GestorUsuario.INSTANCIA.tlfRegistrado(tlf);
+    }
+
+    public boolean emailRegistrado(String email) {
+    	return GestorUsuario.INSTANCIA.emailRegistrado(email);
     }
     
     public boolean iniciarSesion(String email, String password) {
