@@ -6,33 +6,10 @@ import tds.appchat.modelo.*;
 
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
-import tds.appchat.vista.core.GestorVentanas;
-import tds.appchat.vista.core.TipoVentana;
+
 import tds.appchat.vista.util.SelectorImagen;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.databind.JsonNode;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetAdapter;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DnDConstants;
 
 public enum Controlador {
     INSTANCIA;
@@ -80,8 +57,6 @@ public enum Controlador {
         return Sesion.INSTANCIA.haySesion();
     }
     
-    
-  
 
     public void actualizarTiempoUso(long tiempo){
         if(Sesion.INSTANCIA.haySesion()){
