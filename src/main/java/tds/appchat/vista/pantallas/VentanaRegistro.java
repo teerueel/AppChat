@@ -6,6 +6,7 @@ import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
 import tds.appchat.vista.util.ImagenUtil;
+import com.toedter.calendar.JDateChooser;  
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,6 +26,7 @@ public class VentanaRegistro implements Ventana {
     private JTextField campoSaludo;
     private JPasswordField campoPassword;
     private JPasswordField campoConfirmPassword;
+    private JDateChooser dateChooserNacimiento; // Campo para la fecha usando JDateChooser
     
     public VentanaRegistro() {
         inicializarComponentes();
@@ -54,6 +56,7 @@ public class VentanaRegistro implements Ventana {
         JScrollPane scrollPane = new JScrollPane(contenidoPanel);
         scrollPane.setBorder(null);
         scrollPane.getViewport().setBackground(EstilosApp.COLOR_FONDO);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // Nueva línea para mostrar el scrollbar siempre
         
         // Agregar componentes al panel principal
         panelPrincipal.add(scrollPane, BorderLayout.CENTER);
@@ -182,6 +185,28 @@ public class VentanaRegistro implements Ventana {
         // Efecto focus en campo email
         campoSaludo.addFocusListener(crearEfectoFocus(campoSaludo));
         
+        panelFormulario.add(labelSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(campoSaludo);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+        
+        // Nueva sección: Fecha de Nacimiento usando JDateChooser
+        JLabel labelFechaNacimiento = new JLabel("Fecha de Nacimiento");
+        labelFechaNacimiento.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelFechaNacimiento.setForeground(EstilosApp.COLOR_TEXTO);
+        labelFechaNacimiento.setAlignmentX(Component.LEFT_ALIGNMENT);
+        dateChooserNacimiento = new JDateChooser();
+        dateChooserNacimiento.setDateFormatString("dd/MM/yyyy");
+
+        dateChooserNacimiento.setPreferredSize(new Dimension(400, 45));
+        dateChooserNacimiento.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        dateChooserNacimiento.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panelFormulario.add(labelFechaNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(dateChooserNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+        
         // Campo de contraseña
         JLabel labelPassword = new JLabel("Contraseña");
         labelPassword.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -261,6 +286,11 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoSaludo);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        panelFormulario.add(labelFechaNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
+        panelFormulario.add(dateChooserNacimiento);
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 20)));
         
         panelFormulario.add(labelPassword);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
@@ -270,24 +300,10 @@ public class VentanaRegistro implements Ventana {
         panelFormulario.add(labelConfirmPassword);
         panelFormulario.add(Box.createRigidArea(new Dimension(0, 8)));
         panelFormulario.add(campoConfirmPassword);
-        panelFormulario.add(Box.createRigidArea(new Dimension(0, 15)));
+        panelFormulario.add(Box.createRigidArea(new Dimension(0, 15))); 
         
         // Añadir panel para seleccionar rol
-        JPanel panelRol = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panelRol.setOpaque(false);
-        panelRol.setAlignmentX(Component.LEFT_ALIGNMENT);
-        JLabel labelRol = new JLabel("Selecciona tu rol:");
-        labelRol.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        labelRol.setForeground(EstilosApp.COLOR_TEXTO);
-        JRadioButton radioEstudiante = new JRadioButton("Estudiante");
-        radioEstudiante.setOpaque(false);
-        radioEstudiante.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        radioEstudiante.setForeground(EstilosApp.COLOR_TEXTO);
-        JRadioButton radioCreador = new JRadioButton("Creador");
-        radioCreador.setOpaque(false);
-        radioCreador.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        radioCreador.setForeground(EstilosApp.COLOR_TEXTO);
-        ButtonGroup grupoRol = new ButtonGroup();
+       
 
         // Botón de registro
         JButton btnRegistrar = new JButton("Crear Cuenta");
@@ -331,7 +347,7 @@ public class VentanaRegistro implements Ventana {
             
             // Simulación de registro exitoso
             boolean exito = Controlador.INSTANCIA.registrarUsuario(campoEmail.getText(), campoUsuario.getText(), 
-                    String.valueOf(campoPassword.getPassword()), campoTlf.getText(),null,
+                    String.valueOf(campoPassword.getPassword()), campoTlf.getText(), null,
                     campoSaludo.getText());
             if(exito){
             JOptionPane.showMessageDialog(panelPrincipal, 
