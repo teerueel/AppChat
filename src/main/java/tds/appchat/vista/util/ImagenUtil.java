@@ -30,4 +30,13 @@ public class ImagenUtil {
             return null;
         }
     }
+
+    public static Image cargarImagenDesdeArchivo(String ruta) {
+        try {
+            return ImageIO.read(new java.io.File(ruta));
+        } catch (IOException e) {
+            System.err.println("Error al cargar imagen desde archivo: " + e.getMessage());
+            return null;
+        }
+    }
 }

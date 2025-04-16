@@ -28,6 +28,7 @@ public class VentanaRegistro implements Ventana {
     private JPasswordField campoConfirmPassword;
     private JDateChooser dateChooserNacimiento; // Campo para la fecha usando JDateChooser
     private JLabel lblAvatar;
+    private String path = "/images/avatar_default.png"; //PATH de la imagen seleccionada
     
     public VentanaRegistro() {
         inicializarComponentes();
@@ -143,7 +144,7 @@ public class VentanaRegistro implements Ventana {
             }
         };
         
-        ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagen("/images/avatar_default.png")
+        ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagen(path)
                 .getScaledInstance(120, 120, Image.SCALE_SMOOTH));
         lblAvatar.setIcon(avatarIcon);
         lblAvatar.setPreferredSize(new Dimension(120, 120));
@@ -157,21 +158,27 @@ public class VentanaRegistro implements Ventana {
         btnSeleccionarFoto.setForeground(Color.WHITE);
         btnSeleccionarFoto.setBackground(EstilosApp.COLOR_PRIMARIO);
         btnSeleccionarFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         btnSeleccionarFoto.addActionListener(e -> {
             // Llamar al controlador para seleccionar imagen; se asume que retorna una URL o path
-            String path = Controlador.INSTANCIA.seleccionarImagenPerfil();
+            
+            path = Controlador.INSTANCIA.seleccionarImagenPerfil();
             if(path != null && !path.isEmpty()){
                 try {
-                    java.net.URL url = new java.net.URI(path).toURL();
-                    java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(url);
-                    // Escalar la imagen a 120x120 para que se visualice correctamente
-                    Image scaled = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
-                    lblAvatar.setIcon(new ImageIcon(scaled));
+                    // ...existing code reemplazado...
+                    Image image = ImagenUtil.cargarImagenDesdeArchivo(path);
+                    if(image != null){
+                        // Escalar la imagen a 120x120 para que se visualice correctamente
+                        Image scaled = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+                        lblAvatar.setIcon(new ImageIcon(scaled));
+                    }
                 } catch(Exception ex) {
                     ex.printStackTrace();
                 }
             }
+            
         });
+        
         panelFoto.add(btnSeleccionarFoto);
         panelFoto.add(Box.createVerticalStrut(30));
         
@@ -413,9 +420,9 @@ public class VentanaRegistro implements Ventana {
             
             // Simulación de registro exitoso
             boolean exito = Controlador.INSTANCIA.registrarUsuario(campoEmail.getText(), campoUsuario.getText(), 
-                    String.valueOf(campoPassword.getPassword()), campoTlf.getText(), null,
+                    String.valueOf(campoPassword.getPassword()), campoTlf.getText(), path,
                     campoSaludo.getText());
-            if(exito){
+            if(exito && path != null && !path.isEmpty()){
             JOptionPane.showMessageDialog(panelPrincipal, 
                     "Registro completado con éxito. Ya puedes iniciar sesión.", 
                     "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
@@ -498,6 +505,7 @@ public class VentanaRegistro implements Ventana {
         // Limpiar la foto
         lblAvatar.setIcon(new ImageIcon(ImagenUtil.cargarImagen("/images/avatar_default.png")
                 .getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
+        path = "/images/avatar_default.png"; // Restablecer el path a la imagen por defecto
 
     }
     
