@@ -133,9 +133,9 @@ public enum Controlador {
         return selectedPath[0];
     }
     
-    public boolean iniciarSesion(String email, String password) {
-    	if(GestorUsuario.INSTANCIA.autenticarUsuario(email, password).isPresent()) {
-    		Sesion.INSTANCIA.setUsuarioActual(GestorUsuario.INSTANCIA.autenticarUsuario(email, password).get());
+    public boolean iniciarSesion(String tlf, String password) {
+    	if(GestorUsuario.INSTANCIA.autenticarUsuario(tlf, password).isPresent()) {
+    		Sesion.INSTANCIA.setUsuarioActual(GestorUsuario.INSTANCIA.autenticarUsuario(tlf, password).get());
     		return true;
     	}
     	return false;
