@@ -105,7 +105,7 @@ public class VentanaPerfil implements Ventana {
             }
         };
         
-        ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagenDesdeArchivo(Sesion.INSTANCIA.getUsuarioActual().getImagen())
+        ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagen(Sesion.INSTANCIA.getUsuarioActual().getImagen())
                 .getScaledInstance(120, 120, Image.SCALE_SMOOTH));
         lblAvatar.setIcon(avatarIcon);
         lblAvatar.setPreferredSize(new Dimension(120, 120));

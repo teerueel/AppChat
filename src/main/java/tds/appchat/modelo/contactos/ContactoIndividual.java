@@ -61,6 +61,16 @@ public class ContactoIndividual implements Contacto {
     public String getTelefono() {
         return this.usuario.getTelefono();
     }
+
+    public String getImagen(){
+        return this.usuario.getImagen();
+    }
+
+    public String getSaludo(){
+        return this.usuario.getSaludo();
+    }
+
+    
     
 
    
