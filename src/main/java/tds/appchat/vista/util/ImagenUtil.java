@@ -16,19 +16,22 @@ public class ImagenUtil {
      * @return La imagen cargada o null si no se encuentra
      */
     public static Image cargarImagen(String ruta) {
+        Image img = null;
         try {
             InputStream is = ImagenUtil.class.getResourceAsStream(ruta);
             if (is != null) {
-                return new ImageIcon(ImageIO.read(is)).getImage();
-            } else {
-                // Si no encuentra la imagen, se imprime un error por consola
-                System.err.println("No se encontró el recurso: " + ruta);
-                return null;
+                img = ImageIO.read(is);
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar la imagen: " + e.getMessage());
-            return null;
+            System.err.println("Error al cargar la imagen desde recursos: " + e.getMessage());
         }
+        if (img == null) {
+            img = cargarImagenDesdeArchivo(ruta);
+            if(img == null){
+                System.err.println("Error: no se pudo cargar la imagen ni desde recursos ni desde archivo: " + ruta);
+            }
+        }
+        return img;
     }
 
     public static Image cargarImagenDesdeArchivo(String ruta) {

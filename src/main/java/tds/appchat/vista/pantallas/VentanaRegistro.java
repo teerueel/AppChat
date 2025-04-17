@@ -166,7 +166,7 @@ public class VentanaRegistro implements Ventana {
             if(path != null && !path.isEmpty()){
                 try {
                     // ...existing code reemplazado...
-                    Image image = ImagenUtil.cargarImagenDesdeArchivo(path);
+                    Image image = ImagenUtil.cargarImagen(path);
                     if(image != null){
                         // Escalar la imagen a 120x120 para que se visualice correctamente
                         Image scaled = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);

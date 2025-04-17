@@ -76,7 +76,7 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
             path = Controlador.INSTANCIA.seleccionarImagenPerfil();
             if(path != null && !path.isEmpty()){
                 try {
-                    Image image = ImagenUtil.cargarImagenDesdeArchivo(path);
+                    Image image = ImagenUtil.cargarImagen(path);
                     if(image != null){
                         Image scaled = image.getScaledInstance(120, 120, Image.SCALE_SMOOTH);
                         lblImagen.setIcon(new ImageIcon(scaled));
@@ -126,7 +126,12 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
         panelCentro.add(campoNombreGrupo);
         panelCentro.add(Box.createVerticalStrut(15));
         
-        // Nuevo botón "Añadir Contactos"
+        // Eliminar la inserción anterior del botón "Añadir Contactos" y el contador, y crear un panel centrado para ambos
+        JPanel panelContactos = new JPanel();
+        panelContactos.setLayout(new BoxLayout(panelContactos, BoxLayout.Y_AXIS));
+        panelContactos.setOpaque(false);
+        panelContactos.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JButton btnAddContactos = new JButton("Añadir Contactos");
         btnAddContactos.setFont(EstilosApp.FUENTE_BOTON);
         btnAddContactos.setForeground(Color.WHITE);
@@ -138,15 +143,17 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
             contactosSeleccionados = dialog.getSelectedContactos();
             lblSelectedCount.setText("Contactos seleccionados: " + contactosSeleccionados.size());
         });
-        panelCentro.add(btnAddContactos);
-        panelCentro.add(Box.createVerticalStrut(10));
-        
-        // Etiqueta para mostrar cantidad de contactos seleccionados
+        panelContactos.add(btnAddContactos);
+        panelContactos.add(Box.createVerticalStrut(10));
+
         lblSelectedCount = new JLabel("Contactos seleccionados: 0");
         lblSelectedCount.setFont(EstilosApp.FUENTE_NORMAL);
         lblSelectedCount.setForeground(EstilosApp.COLOR_TEXTO);
         lblSelectedCount.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelCentro.add(lblSelectedCount);
+        panelContactos.add(lblSelectedCount);
+
+        panelCentro.add(panelContactos);
+        panelCentro.add(Box.createVerticalStrut(15));
         
         panelPrincipal.add(panelCentro, BorderLayout.CENTER);
         

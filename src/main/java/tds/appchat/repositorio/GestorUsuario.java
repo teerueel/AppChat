@@ -20,6 +20,12 @@ public enum GestorUsuario implements RepositorioUsuario {
         "00", "Hola soy admin", "/images/avatar_default.png"));
         usuarios.put(1, new Usuario(1,  "admin2", "admin2@gmail.com", "admin",
          "01", "Hola soy admin", "/images/avatar_default.png"));
+         usuarios.put(2, new Usuario(2, "messi", "messi@gmail.com", "messi",
+         "messitlf", "Hola soy messi", "/images/messi.jpg"));
+         usuarios.put(3, new Usuario(3, "cristiano", "cristiano@gmail.com", "cristiano",
+         "cristianotlf", "SIUUUUU", "/images/cristiano.png"));
+         usuarios.put(4, new Usuario(4, "mbappe", "mbappe@gmail.com", "mbappe",
+         "mbappetlf", "Hola soy mbappe", "/images/mbappe.jpg"));
     }
 
     

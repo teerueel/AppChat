@@ -103,15 +103,10 @@ public class Cabecera extends JPanel implements Recargable {
             
             // Crear un icono de perfil con bordes redondeados
             JLabel iconoPerfil = new JLabel();
-            ImageIcon avatarIcon = null;
+           
             String path = Sesion.INSTANCIA.getUsuarioActual().getImagen();
-            if(path.equals("/images/avatar_default.png")){
-                 avatarIcon = new ImageIcon(ImagenUtil.cargarImagen(path)
-                        .getScaledInstance(32, 32, Image.SCALE_SMOOTH));
-            } else {
-                 avatarIcon = new ImageIcon(ImagenUtil.cargarImagenDesdeArchivo(path)
-                        .getScaledInstance(32, 32, Image.SCALE_SMOOTH));
-            }
+            ImageIcon avatarIcon = new ImageIcon(ImagenUtil.cargarImagen(path)
+            .getScaledInstance(32, 32, Image.SCALE_SMOOTH));
             
             iconoPerfil.setIcon(avatarIcon);
             
@@ -148,13 +143,8 @@ public class Cabecera extends JPanel implements Recargable {
             // Panel para foto de perfil en el menú
             JLabel menuAvatar = new JLabel();
             String path2 = Sesion.INSTANCIA.getUsuarioActual().getImagen();
-            if(path.equals("/images/avatar_default.png")){
-                menuAvatar.setIcon(new ImageIcon(ImagenUtil.cargarImagen(path2)
-                        .getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-            } else {
-                menuAvatar.setIcon(new ImageIcon(ImagenUtil.cargarImagenDesdeArchivo(path2)
-                        .getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
-            }
+            menuAvatar.setIcon(new ImageIcon(ImagenUtil.cargarImagen(path2)
+            .getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
            
             menuAvatar.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(EstilosApp.COLOR_PRIMARIO, 2),

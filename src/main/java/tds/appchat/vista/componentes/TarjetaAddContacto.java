@@ -35,7 +35,7 @@ public class TarjetaAddContacto extends JPanel {
         lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
         Image image = null;
         if(contacto instanceof ContactoIndividual) {
-            image = ImagenUtil.cargarImagenDesdeArchivo(((ContactoIndividual) contacto).getImagen());
+            image = ImagenUtil.cargarImagen(((ContactoIndividual) contacto).getImagen());
         } else if(contacto instanceof Grupo) {
             image = ImagenUtil.cargarImagen("/images/grupo_default.jpg");
         }

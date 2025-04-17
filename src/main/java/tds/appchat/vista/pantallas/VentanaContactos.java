@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.sesion.Sesion;
+import tds.appchat.vista.componentes.TarjetaAddContacto;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
@@ -37,14 +39,14 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         listaContactos.setBorder(BorderFactory.createTitledBorder("Contactos"));    
         // Obtener la lista de contactos del usuario actual y añadirlos a la lista
         if(Sesion.INSTANCIA.haySesion()){
-        java.util.List<String> contactos = Sesion.INSTANCIA.getUsuarioActual().getContactosUsuario();
-        listaContactos.removeAll();
-        for(String contacto : contactos) {
-            JLabel lbl = new JLabel(contacto);
-            lbl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            lbl.setForeground(new Color(0, 100, 0));
-            listaContactos.add(lbl);
-        }}
+            java.util.List<Contacto> contactos = Sesion.INSTANCIA.getUsuarioActual().getContactos();
+            listaContactos.removeAll();
+            for(Contacto contacto : contactos) {
+                // Utilizar TarjetaAddContacto en lugar de JLabel
+                TarjetaAddContacto tarjeta = new TarjetaAddContacto(contacto);
+                listaContactos.add(tarjeta);
+            }
+        }
         // Envolver la lista en un JScrollPane
         JScrollPane scrollLista = new JScrollPane(listaContactos);
         scrollLista.setPreferredSize(new Dimension(350, 500));
