@@ -1,6 +1,10 @@
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\App.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\controlador\Controlador.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\contactos\Contacto.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\contactos\ContactoIndividual.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\contactos\Grupo.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\EstadisticasUsuario.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\Mensaje.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\Usuario.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\repositorio\GestorUsuario.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\repositorio\RepositorioUsuario.java

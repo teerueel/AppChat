@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
@@ -33,13 +34,18 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         // Crear el contenedor de la lista, con BoxLayout vertical
         JPanel listaContactos = new JPanel();
         listaContactos.setLayout(new BoxLayout(listaContactos, BoxLayout.Y_AXIS));
-        // Simular algunos contactos y grupos agregados
-        for (int i = 1; i <= 10; i++) {
-            JLabel lbl = new JLabel("Contacto/Grupo " + i);
+        listaContactos.setBackground(Color.WHITE);
+        listaContactos.setBorder(BorderFactory.createTitledBorder("Contactos"));    
+        // Obtener la lista de contactos del usuario actual y añadirlos a la lista
+        if(Sesion.INSTANCIA.haySesion()){
+        java.util.List<String> contactos = Sesion.INSTANCIA.getUsuarioActual().getContactosUsuario();
+        listaContactos.removeAll();
+        for(String contacto : contactos) {
+            JLabel lbl = new JLabel(contacto);
             lbl.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             lbl.setForeground(new Color(0, 100, 0));
             listaContactos.add(lbl);
-        }
+        }}
         // Envolver la lista en un JScrollPane
         JScrollPane scrollLista = new JScrollPane(listaContactos);
         scrollLista.setPreferredSize(new Dimension(350, 500));
