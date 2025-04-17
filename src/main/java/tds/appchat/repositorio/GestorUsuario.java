@@ -16,7 +16,10 @@ public enum GestorUsuario implements RepositorioUsuario {
      */
     GestorUsuario() {
         usuarios = new HashMap<Integer, Usuario>();
-        usuarios.put(0, new Usuario(0,  "admin", "admin@gmail.com", "admin", "000000000", "Hola soy admin", "/images/avatar_default.png"));
+        usuarios.put(0, new Usuario(0,  "admin", "admin@gmail.com", "admin", 
+        "00", "Hola soy admin", "/images/avatar_default.png"));
+        usuarios.put(1, new Usuario(1,  "admin2", "admin2@gmail.com", "admin",
+         "01", "Hola soy admin", "/images/avatar_default.png"));
     }
 
     

@@ -151,8 +151,12 @@ public class VentanaNuevoContacto extends JFrame implements Ventana, Recargable{
             if(Controlador.INSTANCIA.nuevoContacto(campoUsuario.getText(), campoTelefono.getText())) {
                 JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Contacto registrado correctamente.");
                 GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
-            } else {
-                JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Error al registrar el contacto. Verifique los datos.");
+            } else if(!Controlador.INSTANCIA.tlfRegistrado(campoTelefono.getText())) {
+                JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "El teléfono no está registrado en nuestra Base de Datos.");
+                
+            }
+            else {
+                JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Ya tienes un contacto con este número de teléfono.");
             }
            
         });
