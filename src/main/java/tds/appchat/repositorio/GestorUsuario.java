@@ -16,7 +16,7 @@ public enum GestorUsuario implements RepositorioUsuario {
      */
     GestorUsuario() {
         usuarios = new HashMap<Integer, Usuario>();
-        usuarios.put(0, new Usuario(0,  "admin", "admin@gmail.com", "admin", "000000000", "Hola soy admin", null));
+        usuarios.put(0, new Usuario(0,  "admin", "admin@gmail.com", "admin", "000000000", "Hola soy admin", "/images/avatar_default.png"));
     }
 
     
@@ -53,6 +53,10 @@ public enum GestorUsuario implements RepositorioUsuario {
     	
     	return usuarios.values().stream().filter(u -> u.getTelefono().equalsIgnoreCase(tlf) 
     			&& u.getPassword().equals(password)).findAny();
+    }
+
+    public Optional<Usuario> getUsuario(String tlf){
+        return usuarios.values().stream().filter(u -> u.getTelefono().equalsIgnoreCase(tlf)).findAny();
     }
 
 

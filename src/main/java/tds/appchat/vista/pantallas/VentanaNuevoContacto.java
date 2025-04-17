@@ -10,9 +10,10 @@ import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.controlador.Controlador;
 import tds.appchat.vista.core.GestorVentanas;
 
-public class VentanaNuevoContacto extends JFrame implements Ventana{
+public class VentanaNuevoContacto extends JFrame implements Ventana, Recargable{
 
     private JPanel panelPrincipal;
    
@@ -147,7 +148,13 @@ public class VentanaNuevoContacto extends JFrame implements Ventana{
         // Acciones de botones
         btnAceptar.addActionListener(e -> {
             // Aquí se implementaría la lógica para registrar el nuevo contacto.
-            JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Funcionalidad sin implementar");
+            if(Controlador.INSTANCIA.nuevoContacto(campoUsuario.getText(), campoTelefono.getText())) {
+                JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Contacto registrado correctamente.");
+                GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
+            } else {
+                JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Error al registrar el contacto. Verifique los datos.");
+            }
+           
         });
 
         btnCancelar.addActionListener(e -> {
@@ -183,5 +190,13 @@ public class VentanaNuevoContacto extends JFrame implements Ventana{
     @Override
     public TipoVentana getTipo() {
         return TipoVentana.NUEVO_CONTACTO; // Asegúrese de definir NUEVO_CONTACTO en TipoVentana
+    }
+
+    @Override
+    public void recargar() {
+        panelPrincipal.removeAll();
+        inicializarComponentes();
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
 }

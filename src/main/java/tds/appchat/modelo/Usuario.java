@@ -1,7 +1,11 @@
 package tds.appchat.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-
+import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.modelo.contactos.ContactoIndividual;
 
 public class Usuario {
 
@@ -14,20 +18,21 @@ public class Usuario {
     private String password;
     private EstadisticasUsuario stats;
     private boolean Premium;
-    String imagen;
+    private String imagen;
+    private List<Contacto> contactos;
+
     
 
     
     public Usuario() {
         this.stats = new EstadisticasUsuario();
+        this.contactos = new ArrayList<Contacto>();
         this.Premium    = false;
     }
 
 
-    
-    
-
     public Usuario(int id,  String nombre, String email, String password, EstadisticasUsuario stats) {
+        this();
         this.id = id;
         this.nombre = nombre;
         this.email = email;
@@ -128,6 +133,21 @@ public class Usuario {
         this.imagen = imagen;
     }
 
+    public List<Contacto> getContactos() {
+        return this.contactos;
+    }
+
+    // Se utiliza para añadir un contacto a la lista de contactos del usuario
+    public boolean addContacto(Usuario user, String nombre) {
+        Contacto contacto = new ContactoIndividual(user, nombre);
+        return this.contactos.add(contacto);
+    }
+
+
+    public Optional<Contacto> contactoRegistrado(String telefono) {
+        return this.contactos.stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
+    }
+
 
 
     
@@ -137,5 +157,11 @@ public class Usuario {
 
     public void actualizarRacha(boolean acierto) {
         this.stats.actualizarRacha(acierto);
+    }
+
+
+    public List<String> getContactosUsuario() {
+        // TODO Auto-generated method stub
+        return this.contactos.stream().map(c -> c.getNombre()).toList();
     }
 }

@@ -65,5 +65,16 @@ public enum Controlador {
             Sesion.INSTANCIA.setTiempoInicioSesion(System.currentTimeMillis());
         }
     }
+
+    public boolean nuevoContacto(String nombre, String telefono){
+        if(Sesion.INSTANCIA.getUsuarioActual().contactoRegistrado(telefono).isPresent()){
+            return false;
+        }
+        if(!GestorUsuario.INSTANCIA.tlfRegistrado(telefono)){
+            return false;
+        }
+        Usuario user = GestorUsuario.INSTANCIA.getUsuario(telefono).get();
+        return Sesion.INSTANCIA.getUsuarioActual().addContacto(user,nombre);
+    }
   
 }

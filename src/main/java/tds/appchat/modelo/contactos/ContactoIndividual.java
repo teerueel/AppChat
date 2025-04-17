@@ -9,15 +9,18 @@ import tds.appchat.modelo.Usuario;
 public class ContactoIndividual implements Contacto {
     
     private Usuario usuario;
+    private String nombre;
     private List<Mensaje> mensajesRecibidos;
 
 
-    public ContactoIndividual() {
+    public ContactoIndividual(String nombre) {
+        this.nombre = nombre;
         this.usuario = null;
         this.mensajesRecibidos = new ArrayList<Mensaje>();
     }
 
-    public ContactoIndividual(Usuario usuario) {
+    public ContactoIndividual(Usuario usuario, String nombre) {
+        this.nombre = nombre;
         this.usuario = usuario;
         this.mensajesRecibidos = new ArrayList<Mensaje>();
     }
@@ -32,6 +35,15 @@ public class ContactoIndividual implements Contacto {
         this.usuario = usuario;
     }
 
+    @Override
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public List<Mensaje> getMensajesRecibidos() {
         return mensajesRecibidos;
     }
@@ -44,6 +56,12 @@ public class ContactoIndividual implements Contacto {
     public void agregarMensaje(Mensaje mensaje) {
         this.mensajesRecibidos.add(mensaje);
     }
+
+    @Override
+    public String getTelefono() {
+        return this.usuario.getTelefono();
+    }
+    
 
    
 

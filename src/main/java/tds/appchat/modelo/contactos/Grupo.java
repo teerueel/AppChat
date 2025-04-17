@@ -19,7 +19,8 @@ public class Grupo implements Contacto {
         this.contactos = contactos;
     }
 
-    public String getNombreGrupo() {
+    @Override
+    public String getNombre() {
         return nombreGrupo;
     }
 
@@ -44,5 +45,10 @@ public class Grupo implements Contacto {
         for (Contacto contacto : contactos) {
             contacto.agregarMensaje(mensaje);
         }
+    }
+
+    @Override
+    public String getTelefono() {
+        return null; // Los grupos no tienen un teléfono único
     }
 }
