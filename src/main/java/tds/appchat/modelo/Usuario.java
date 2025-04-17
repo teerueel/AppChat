@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
+import tds.appchat.modelo.contactos.Grupo;
 
 public class Usuario {
 
@@ -148,20 +149,27 @@ public class Usuario {
         return this.contactos.stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
     }
 
-
-
-    
-    public void aumentarTiempoTotal(long tiempo) {
-        this.stats.aumentarTiempoUso(tiempo);
-    }
-
-    public void actualizarRacha(boolean acierto) {
-        this.stats.actualizarRacha(acierto);
+    public Optional<Contacto> grupoRegistrado(String nombreGrupo) {
+        return this.contactos.stream().filter(u -> u.getNombre().equals(nombreGrupo)).findAny();   
     }
 
 
     public List<String> getContactosUsuario() {
         // TODO Auto-generated method stub
         return this.contactos.stream().map(c -> c.getNombre()).toList();
+    }
+
+    public boolean addGrupo(String nombre, String imagen, List<Contacto> contactos) {
+        // TODO Auto-generated method stub
+        Grupo grupo = new Grupo(nombre, imagen, contactos);
+        return this.contactos.add(grupo);
+    }
+
+    public void aumentarTiempoTotal(long tiempo) {
+        this.stats.aumentarTiempoUso(tiempo);
+    }
+
+    public void actualizarRacha(boolean acierto) {
+        this.stats.actualizarRacha(acierto);
     }
 }

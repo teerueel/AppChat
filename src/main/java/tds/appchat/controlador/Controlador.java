@@ -1,9 +1,10 @@
 package tds.appchat.controlador;
 
 
+import java.util.List;
+
 import tds.appchat.modelo.*;
-
-
+import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
 
@@ -75,6 +76,13 @@ public enum Controlador {
         }
         Usuario user = GestorUsuario.INSTANCIA.getUsuario(telefono).get();
         return Sesion.INSTANCIA.getUsuarioActual().addContacto(user,nombre);
+    }
+
+    public boolean nuevoGrupo(String nombre, String imagen, List<Contacto> contactos){
+        if(Sesion.INSTANCIA.getUsuarioActual().grupoRegistrado(nombre).isPresent()){
+            return false;  
+        }
+        return Sesion.INSTANCIA.getUsuarioActual().addGrupo(nombre, imagen, contactos);
     }
   
 }
