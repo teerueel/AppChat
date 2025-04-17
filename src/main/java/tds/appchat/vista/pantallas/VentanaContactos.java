@@ -2,7 +2,6 @@ package tds.appchat.vista.pantallas;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
 import tds.appchat.sesion.Sesion;

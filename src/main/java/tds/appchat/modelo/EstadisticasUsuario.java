@@ -1,6 +1,6 @@
 package tds.appchat.modelo;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Embeddable;
 
 @Embeddable

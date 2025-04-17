@@ -7,7 +7,7 @@ import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
-import tds.BubbleText;
+
 
 import java.awt.*;
 import java.awt.event.*;

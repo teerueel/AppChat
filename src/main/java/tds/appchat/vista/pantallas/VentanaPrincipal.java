@@ -1,7 +1,6 @@
 package tds.appchat.vista.pantallas;
 
-import tds.appchat.vista.componentes.CustomButton;
-import tds.appchat.vista.core.GestorVentanas;
+
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.util.EstilosApp;
