@@ -13,5 +13,6 @@ public enum TipoVentana {
     APP,
     CONTACTOS,
     NUEVO_CONTACTO,
-    BUSCAR
+    BUSCAR,
+    NUEVO_GRUPO
 }

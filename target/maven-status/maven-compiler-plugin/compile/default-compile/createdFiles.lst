@@ -4,10 +4,12 @@ tds\appchat\vista\pantallas\VentanaEstadisticas.class
 tds\appchat\vista\pantallas\VentanaNuevoContacto.class
 tds\appchat\vista\pantallas\VentanaPerfil$1.class
 tds\appchat\vista\pantallas\VentanaPrincipal.class
+tds\appchat\vista\pantallas\VentanaNuevoGrupo$1.class
 tds\appchat\vista\core\Recargable.class
 tds\appchat\vista\pantallas\VentanaApp.class
 tds\appchat\vista\pantallas\VentanaRegistro$2.class
 tds\appchat\vista\componentes\Cabecera$4.class
+tds\appchat\vista\pantallas\VentanaNuevoGrupo.class
 tds\appchat\vista\pantallas\VentanaLogin$1.class
 tds\appchat\vista\pantallas\VentanaRegistro$3.class
 tds\appchat\vista\util\ImagenUtil.class

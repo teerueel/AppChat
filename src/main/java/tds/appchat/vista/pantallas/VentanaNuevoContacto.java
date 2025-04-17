@@ -147,6 +147,12 @@ public class VentanaNuevoContacto extends JFrame implements Ventana, Recargable{
 
         // Acciones de botones
         btnAceptar.addActionListener(e -> {
+            if(campoTelefono.getText().isEmpty() || campoUsuario.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(panelPrincipal, 
+                "Debe ingresar el nombre y teléfono del nuevo contacto", "Error", 
+                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             // Aquí se implementaría la lógica para registrar el nuevo contacto.
             if(Controlador.INSTANCIA.nuevoContacto(campoUsuario.getText(), campoTelefono.getText())) {
                 JOptionPane.showMessageDialog(VentanaNuevoContacto.this, "Contacto registrado correctamente.");

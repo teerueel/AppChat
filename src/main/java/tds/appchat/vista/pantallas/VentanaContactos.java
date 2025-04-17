@@ -77,6 +77,11 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         btnAddGrupo.setFont(EstilosApp.FUENTE_BOTON);
         btnAddGrupo.setForeground(Color.WHITE);
         btnAddGrupo.setBackground(EstilosApp.COLOR_PRIMARIO);
+        //FUncionalidd del botón
+        btnAddGrupo.addActionListener(e -> {
+            // Se asume que TipoVentana.NUEVO_GRUPO está definido y GestorVentanas gestiona la navegación
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.NUEVO_GRUPO);
+        });
         panelDerecho.add(btnAddGrupo, BorderLayout.SOUTH);
         
         // Utilizar un JSplitPane para dividir los dos paneles de manera equitativa
