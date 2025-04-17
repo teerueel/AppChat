@@ -6,6 +6,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.List;
 import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
@@ -13,6 +15,7 @@ import tds.appchat.vista.util.EstilosApp;
 import tds.appchat.controlador.Controlador;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.ImagenUtil;
+import tds.appchat.modelo.contactos.Contacto;
 
 public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
 
@@ -20,6 +23,8 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
     private JTextField campoNombreGrupo;
     private JLabel lblImagen;
     private String path = "/images/grupo_default.jpg"; // Imagen por defecto
+    private List<Contacto> contactosSeleccionados = new ArrayList<>();
+    private JLabel lblSelectedCount; // Muestra la cantidad de contactos seleccionados
 
     public VentanaNuevoGrupo() {
         inicializarComponentes();
@@ -28,7 +33,7 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
     public void inicializarComponentes() {
         setTitle("Nuevo Grupo");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(350, 300);
+        setSize(350, 350);
         setLocationRelativeTo(null);
 
         panelPrincipal = new JPanel(new BorderLayout());
@@ -40,7 +45,7 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
         lblTitulo.setBorder(new EmptyBorder(10,10,10,10));
         panelPrincipal.add(lblTitulo, BorderLayout.NORTH);
         
-        // Panel central: Imagen e ingreso del nombre
+        // Panel central: Imagen, ingreso del nombre y botón de "Añadir Contactos"
         JPanel panelCentro = new JPanel();
         panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
         panelCentro.setBackground(EstilosApp.COLOR_FONDO);
@@ -82,7 +87,6 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
             }
         });
         panelImagen.add(btnImportarImagen);
-        
         panelCentro.add(panelImagen);
         panelCentro.add(Box.createVerticalStrut(15));
         
@@ -101,7 +105,7 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
                 new EmptyBorder(10, 15, 10, 15)
         ));
         campoNombreGrupo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        campoNombreGrupo.setMaximumSize(new Dimension(400, 45));
+        campoNombreGrupo.setMaximumSize(new Dimension(300, 45));
         // Efecto focus para campo
         campoNombreGrupo.addFocusListener(new FocusAdapter(){
             @Override
@@ -120,6 +124,29 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
             }
         });
         panelCentro.add(campoNombreGrupo);
+        panelCentro.add(Box.createVerticalStrut(15));
+        
+        // Nuevo botón "Añadir Contactos"
+        JButton btnAddContactos = new JButton("Añadir Contactos");
+        btnAddContactos.setFont(EstilosApp.FUENTE_BOTON);
+        btnAddContactos.setForeground(Color.WHITE);
+        btnAddContactos.setBackground(EstilosApp.COLOR_SECUNDARIO);
+        btnAddContactos.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnAddContactos.addActionListener(e -> {
+            DialogSeleccionarContactosGrupo dialog = new DialogSeleccionarContactosGrupo(this);
+            dialog.setVisible(true);
+            contactosSeleccionados = dialog.getSelectedContactos();
+            lblSelectedCount.setText("Contactos seleccionados: " + contactosSeleccionados.size());
+        });
+        panelCentro.add(btnAddContactos);
+        panelCentro.add(Box.createVerticalStrut(10));
+        
+        // Etiqueta para mostrar cantidad de contactos seleccionados
+        lblSelectedCount = new JLabel("Contactos seleccionados: 0");
+        lblSelectedCount.setFont(EstilosApp.FUENTE_NORMAL);
+        lblSelectedCount.setForeground(EstilosApp.COLOR_TEXTO);
+        lblSelectedCount.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelCentro.add(lblSelectedCount);
         
         panelPrincipal.add(panelCentro, BorderLayout.CENTER);
         
@@ -137,8 +164,18 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
                 JOptionPane.showMessageDialog(panelPrincipal, "Debe ingresar el nombre del grupo", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // Se supone que existe un método en Controlador para registrar grupo
-            JOptionPane.showMessageDialog(panelPrincipal, "Funcionalidad implementada próximamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+            // Aquí se procederá a crear el grupo incluyendo los contactos seleccionados
+            // Por ejemplo, llamar a un método en Controlador: nuevoGrupo(String nombre, String imagen, List<Contacto> contactos)
+            /*boolean exito = Controlador.INSTANCIA.nuevoGrupo(campoNombreGrupo.getText(), path, contactosSeleccionados);
+            if(exito){
+                JOptionPane.showMessageDialog(panelPrincipal, "Grupo creado exitosamente.");
+                GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
+            } else {
+                JOptionPane.showMessageDialog(panelPrincipal, "Error al crear el grupo.", "Error", JOptionPane.ERROR_MESSAGE);
+            }*/
+            JOptionPane.showMessageDialog(panelPrincipal, 
+            "Funcionalidad disponible próximamente", "Pronto", JOptionPane.INFORMATION_MESSAGE);
+                return;
         });
         
         JButton btnCancelar = new JButton("Cancelar");
@@ -179,6 +216,9 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
         // Restablecer imagen por defecto
         lblImagen.setIcon(new ImageIcon(ImagenUtil.cargarImagen(path)
                 .getScaledInstance(120,120,Image.SCALE_SMOOTH)));
+        path = "/images/grupo_default.jpg";
+        contactosSeleccionados.clear();
+        lblSelectedCount.setText("Contactos seleccionados: 0");
     }
 
     @Override

@@ -19,6 +19,7 @@ tds\appchat\vista\pantallas\VentanaBuscar$1.class
 tds\appchat\vista\pantallas\VentanaBuscar$3.class
 tds\appchat\vista\pantallas\VentanaLogin$3.class
 tds\appchat\vista\util\EstilosApp.class
+tds\appchat\vista\pantallas\DialogSeleccionarContactosGrupo.class
 tds\appchat\vista\componentes\Cabecera$3.class
 tds\appchat\vista\core\TipoVentana.class
 tds\appchat\vista\componentes\CustomButton$1.class
@@ -33,8 +34,10 @@ tds\appchat\vista\util\SelectorImagen.class
 tds\appchat\modelo\EstadisticasUsuario.class
 tds\appchat\modelo\Usuario.class
 tds\appchat\repositorio\GestorUsuario.class
+tds\appchat\vista\pantallas\DialogSeleccionarContactosGrupo$1.class
 tds\appchat\vista\pantallas\VentanaBuscar.class
 tds\appchat\App.class
+tds\appchat\vista\componentes\TarjetaAddContacto.class
 tds\appchat\vista\pantallas\VentanaNuevoContacto$2.class
 tds\appchat\vista\pantallas\VentanaPrincipal$2.class
 tds\appchat\vista\pantallas\VentanaRegistro.class
