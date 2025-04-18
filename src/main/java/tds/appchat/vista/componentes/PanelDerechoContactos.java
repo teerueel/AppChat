@@ -18,6 +18,7 @@ import tds.appchat.vista.core.TipoVentana;
 public class PanelDerechoContactos extends JPanel {
 
     Contacto seleccionado;
+    List<Contacto> selectedIntegrantes = new ArrayList<>(); // Lista para almacenar los contactos seleccionados
 
     public PanelDerechoContactos() {
         inicializarComponentes();
@@ -48,7 +49,7 @@ public class PanelDerechoContactos extends JPanel {
 
             Grupo grupo = (Grupo) seleccionado;
             // Lista para almacenar los contactos seleccionados
-            final List<Contacto> selectedIntegrantes = new ArrayList<>();
+            
             
             // Panel para listar cada integrante con TarjetaAddContacto y toggle de selección
             JPanel listaIntegrantes = new JPanel();
@@ -85,7 +86,9 @@ public class PanelDerechoContactos extends JPanel {
         }
             
             // Panel de botones para acciones
-         
+            JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+            panelBotones.setBackground(Color.WHITE);
+            panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
             // Botón "Añadir Grupo"
             JButton btnAddGrupo = new JButton("Añadir Grupo");
             btnAddGrupo.setFont(EstilosApp.FUENTE_BOTON);
@@ -95,11 +98,23 @@ public class PanelDerechoContactos extends JPanel {
             btnAddGrupo.addActionListener(e -> {
                 GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.NUEVO_GRUPO);
             });
-            this.add(btnAddGrupo,BorderLayout.SOUTH);
+            panelBotones.add(btnAddGrupo,BorderLayout.SOUTH);
 
             
             // Botón "Eliminar"
+            JButton btnEliminar = new JButton("Eliminar");
+            btnEliminar.setFont(EstilosApp.FUENTE_BOTON);
+            btnEliminar.setForeground(Color.WHITE);
+            btnEliminar.setBackground(Color.RED);
             
+            btnEliminar.addActionListener(e -> {
+                Controlador.INSTANCIA.eliminarContactos(selectedIntegrantes, (Grupo) seleccionado);
+                GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
+            });
+            panelBotones.add(btnEliminar,BorderLayout.SOUTH);
+            
+
+            this.add(panelBotones, BorderLayout.SOUTH);
         
     }
 }
