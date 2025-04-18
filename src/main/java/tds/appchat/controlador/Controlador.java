@@ -5,6 +5,7 @@ import java.util.List;
 
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.modelo.contactos.Grupo;
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
 
@@ -83,6 +84,10 @@ public enum Controlador {
             return false;  
         }
         return Sesion.INSTANCIA.getUsuarioActual().addGrupo(nombre, imagen, contactos);
+    }
+
+    public void eliminarContactos(List<Contacto> contactos, Grupo grupo){
+        grupo.eliminarContactos(contactos);
     }
   
 }

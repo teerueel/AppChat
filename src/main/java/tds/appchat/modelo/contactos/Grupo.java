@@ -19,7 +19,11 @@ public class Grupo implements Contacto {
     public Grupo(String nombreGrupo, String imagen, List<Contacto> contactos) {
         this.nombreGrupo = nombreGrupo;
         this.imagen = imagen;
-        this.contactos = contactos;
+        this.contactos = new ArrayList<Contacto>();
+        contactos.stream().forEach(contacto -> {
+            this.contactos.add(contacto);
+            }
+        );   
     }
 
     @Override
@@ -46,6 +50,16 @@ public class Grupo implements Contacto {
 
     public void agregarContacto(Contacto contacto) {
         this.contactos.add(contacto);
+    }
+
+    
+
+    public void  eliminarContactos(List<Contacto> contactos) {
+        
+        for (Contacto contacto : contactos) {
+            
+            this.contactos.remove(contacto);
+        }
     }
 
     @Override

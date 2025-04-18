@@ -177,7 +177,7 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
                 JOptionPane.showMessageDialog(panelPrincipal, "Grupo creado exitosamente.");
                 GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
             } else {
-                JOptionPane.showMessageDialog(panelPrincipal, "Error al crear el grupo.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(panelPrincipal, "Nombre de grupo repetido.", "Error", JOptionPane.ERROR_MESSAGE);
             }
            
         });
