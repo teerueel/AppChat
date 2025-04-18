@@ -61,7 +61,7 @@ public class ContactoIndividual implements Contacto {
     public String getTelefono() {
         return this.usuario.getTelefono();
     }
-    @Override
+
     public String getImagen(){
         return this.usuario.getImagen();
     }

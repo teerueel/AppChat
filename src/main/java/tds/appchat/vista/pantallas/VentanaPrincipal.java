@@ -190,7 +190,7 @@ public class VentanaPrincipal implements Ventana {
             labelImagen.setIcon(new ImageIcon(roundedImage));
         } else {
             // Si no encuentra la imagen, mostrar un placeholder mejorado
-            labelImagen.setText("<html><div style='text-align: center;'>APPCHAT</div></html>");
+            labelImagen.setText("<html><div style='text-align: center;'>Historia de España</div></html>");
             labelImagen.setFont(new Font("Segoe UI", Font.BOLD, 28));
             labelImagen.setHorizontalAlignment(SwingConstants.CENTER);
             labelImagen.setForeground(EstilosApp.COLOR_PRIMARIO);

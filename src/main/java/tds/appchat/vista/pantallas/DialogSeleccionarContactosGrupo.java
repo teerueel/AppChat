@@ -4,10 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
-import tds.appchat.controlador.Controlador;
 import tds.appchat.modelo.contactos.Contacto;
-import tds.appchat.modelo.contactos.Grupo;
 import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.componentes.TarjetaAddContacto;
 import tds.appchat.vista.util.EstilosApp;
@@ -15,17 +12,9 @@ import tds.appchat.vista.util.EstilosApp;
 public class DialogSeleccionarContactosGrupo extends JDialog {
     private java.util.List<Contacto> selectedContactos = new ArrayList<>();
     private JPanel panelListado;
-    Grupo grupo;
 
     public DialogSeleccionarContactosGrupo(Frame owner) {
         super(owner, "Selecciona Contactos", true);
-        this.grupo = null;
-        inicializarComponentes();
-    }
-
-    public DialogSeleccionarContactosGrupo(Frame owner, Grupo grupo) {
-        super(owner, "Selecciona Contactos", true);
-        this.grupo = grupo;
         inicializarComponentes();
     }
 
@@ -42,7 +31,7 @@ public class DialogSeleccionarContactosGrupo extends JDialog {
         
         // Cargar contactos del usuario actual
         java.util.List<Contacto> contactos = Sesion.INSTANCIA.haySesion() ?
-            Controlador.INSTANCIA.getContactosRestantes(this.grupo): new ArrayList<>();
+            Sesion.INSTANCIA.getUsuarioActual().getContactos() : new ArrayList<>();
         
         // Por cada contacto se crea una tarjeta con capacidad de selección
         for(Contacto c : contactos) {

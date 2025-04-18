@@ -15,7 +15,6 @@ tds\appchat\vista\pantallas\VentanaRegistro$3.class
 tds\appchat\vista\util\ImagenUtil.class
 tds\appchat\vista\pantallas\VentanaApp$1.class
 tds\appchat\modelo\contactos\Grupo.class
-tds\appchat\vista\componentes\PanelDerechoContactos.class
 tds\appchat\vista\pantallas\VentanaBuscar$1.class
 tds\appchat\vista\pantallas\VentanaBuscar$3.class
 tds\appchat\vista\pantallas\VentanaLogin$3.class
@@ -30,7 +29,6 @@ tds\appchat\modelo\contactos\Contacto.class
 tds\appchat\vista\pantallas\VentanaLogin.class
 tds\appchat\vista\pantallas\VentanaContactos.class
 tds\appchat\vista\pantallas\VentanaPerfil.class
-tds\appchat\vista\componentes\PanelIzquierdoContactos.class
 tds\appchat\modelo\Mensaje.class
 tds\appchat\vista\util\SelectorImagen.class
 tds\appchat\modelo\EstadisticasUsuario.class
@@ -48,7 +46,6 @@ tds\appchat\vista\core\GestorVentanas.class
 tds\appchat\controlador\Controlador.class
 tds\appchat\modelo\contactos\ContactoIndividual.class
 tds\appchat\vista\pantallas\VentanaPrincipal$1.class
-tds\appchat\vista\componentes\PanelIzquierdoContactos$1.class
 tds\appchat\vista\pantallas\VentanaNuevoContacto$1.class
 tds\appchat\vista\componentes\Cabecera$1.class
 tds\appchat\vista\pantallas\VentanaRegistro$1.class
