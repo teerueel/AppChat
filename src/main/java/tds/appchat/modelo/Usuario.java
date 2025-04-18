@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
-import tds.appchat.modelo.contactos.Grupo;
 
 public class Usuario {
 
@@ -138,14 +137,6 @@ public class Usuario {
         return this.contactos;
     }
 
-    public List<Contacto> getContactosIndividuales() {
-        return this.contactos.stream().filter(c -> c instanceof ContactoIndividual).toList();
-    }
-
-    public List<Contacto> getGrupos() {
-        return this.contactos.stream().filter(c -> c instanceof Grupo).toList();
-    }
-
     // Se utiliza para añadir un contacto a la lista de contactos del usuario
     public boolean addContacto(Usuario user, String nombre) {
         Contacto contacto = new ContactoIndividual(user, nombre);
@@ -154,30 +145,23 @@ public class Usuario {
 
 
     public Optional<Contacto> contactoRegistrado(String telefono) {
-        return this.getContactosIndividuales().stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
-    }
-
-    public Optional<Contacto> grupoRegistrado(String nombreGrupo) {
-        return this.getGrupos().stream().filter(u -> u.getNombre().equals(nombreGrupo)).findAny();   
+        return this.contactos.stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
     }
 
 
-    public List<String> getContactosUsuario() {
-        // TODO Auto-generated method stub
-        return this.contactos.stream().map(c -> c.getNombre()).toList();
-    }
 
-    public boolean addGrupo(String nombre, String imagen, List<Contacto> contactos) {
-        // TODO Auto-generated method stub
-        Grupo grupo = new Grupo(nombre, imagen, contactos);
-        return this.contactos.add(grupo);
-    }
-
+    
     public void aumentarTiempoTotal(long tiempo) {
         this.stats.aumentarTiempoUso(tiempo);
     }
 
     public void actualizarRacha(boolean acierto) {
         this.stats.actualizarRacha(acierto);
+    }
+
+
+    public List<String> getContactosUsuario() {
+        // TODO Auto-generated method stub
+        return this.contactos.stream().map(c -> c.getNombre()).toList();
     }
 }

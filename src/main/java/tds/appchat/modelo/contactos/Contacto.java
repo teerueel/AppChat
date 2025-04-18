@@ -7,5 +7,4 @@ public interface Contacto {
     public void agregarMensaje(Mensaje mensaje);
     public String getTelefono();
     public String getNombre(); // Método para obtener el nombre del contacto
-    public String getImagen();
 }

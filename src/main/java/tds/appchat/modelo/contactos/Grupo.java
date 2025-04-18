@@ -8,32 +8,20 @@ import tds.appchat.modelo.Mensaje;
 public class Grupo implements Contacto {
     private String nombreGrupo;
     private List<Contacto> contactos;
-    private String imagen;
 
     public Grupo(String nombreGrupo) {
         this.nombreGrupo = nombreGrupo;
         this.contactos = new ArrayList<Contacto>();
-
     }
 
-    public Grupo(String nombreGrupo, String imagen, List<Contacto> contactos) {
+    public Grupo(String nombreGrupo, List<Contacto> contactos) {
         this.nombreGrupo = nombreGrupo;
-        this.imagen = imagen;
-        this.contactos = new ArrayList<Contacto>();
-        contactos.stream().forEach(contacto -> {
-            this.contactos.add(contacto);
-            }
-        );   
+        this.contactos = contactos;
     }
 
     @Override
     public String getNombre() {
         return nombreGrupo;
-    }
-
-    @Override
-    public String getImagen() {
-        return imagen;
     }
 
     public void setNombreGrupo(String nombreGrupo) {
@@ -50,22 +38,6 @@ public class Grupo implements Contacto {
 
     public void agregarContacto(Contacto contacto) {
         this.contactos.add(contacto);
-    }
-
-    
-
-    public void  eliminarContactos(List<Contacto> contactos) {
-        
-        for (Contacto contacto : contactos) {
-            
-            this.contactos.remove(contacto);
-        }
-    }
-
-    public void agregarContactos(List<Contacto> contactos) {
-        for (Contacto contacto : contactos) {
-            this.contactos.add(contacto);
-        }
     }
 
     @Override
