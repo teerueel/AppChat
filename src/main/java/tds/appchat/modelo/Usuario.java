@@ -138,6 +138,14 @@ public class Usuario {
         return this.contactos;
     }
 
+    public List<Contacto> getContactosIndividuales() {
+        return this.contactos.stream().filter(c -> c instanceof ContactoIndividual).toList();
+    }
+
+    public List<Contacto> getGrupos() {
+        return this.contactos.stream().filter(c -> c instanceof Grupo).toList();
+    }
+
     // Se utiliza para añadir un contacto a la lista de contactos del usuario
     public boolean addContacto(Usuario user, String nombre) {
         Contacto contacto = new ContactoIndividual(user, nombre);
@@ -146,11 +154,11 @@ public class Usuario {
 
 
     public Optional<Contacto> contactoRegistrado(String telefono) {
-        return this.contactos.stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
+        return this.getContactosIndividuales().stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
     }
 
     public Optional<Contacto> grupoRegistrado(String nombreGrupo) {
-        return this.contactos.stream().filter(u -> u.getNombre().equals(nombreGrupo)).findAny();   
+        return this.getGrupos().stream().filter(u -> u.getNombre().equals(nombreGrupo)).findAny();   
     }
 
 

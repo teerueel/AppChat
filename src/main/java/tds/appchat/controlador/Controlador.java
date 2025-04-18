@@ -86,8 +86,23 @@ public enum Controlador {
         return Sesion.INSTANCIA.getUsuarioActual().addGrupo(nombre, imagen, contactos);
     }
 
+    public void agregarContactosGrupo(List<Contacto> contactos, Grupo grupo){
+        if(contactos.isEmpty()){
+            return;
+        }
+         grupo.agregarContactos(contactos);
+    }
+
     public void eliminarContactos(List<Contacto> contactos, Grupo grupo){
         grupo.eliminarContactos(contactos);
+    }
+
+    public List<Contacto> getContactosRestantes(Grupo grupo){
+        if(grupo == null){
+            return Sesion.INSTANCIA.getUsuarioActual().getContactos();
+        }
+        return Sesion.INSTANCIA.getUsuarioActual().getContactos().stream()
+        .filter(c -> !grupo.getContactos().contains(c) && !c.equals(grupo)).toList();
     }
   
 }

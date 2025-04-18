@@ -62,6 +62,12 @@ public class Grupo implements Contacto {
         }
     }
 
+    public void agregarContactos(List<Contacto> contactos) {
+        for (Contacto contacto : contactos) {
+            this.contactos.add(contacto);
+        }
+    }
+
     @Override
     public void agregarMensaje(Mensaje mensaje) {
         for (Contacto contacto : contactos) {

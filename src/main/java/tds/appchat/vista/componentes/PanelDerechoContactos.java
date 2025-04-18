@@ -14,6 +14,7 @@ import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.vista.util.EstilosApp;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.TipoVentana;
+import tds.appchat.vista.pantallas.DialogSeleccionarContactosGrupo;
 
 public class PanelDerechoContactos extends JPanel {
 
@@ -112,8 +113,28 @@ public class PanelDerechoContactos extends JPanel {
                 GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
             });
             panelBotones.add(btnEliminar,BorderLayout.SOUTH);
-            
 
+            // Botón "Añadir Contactos"
+            JButton btnAddContactos = new JButton("Añadir Contactos");
+            btnAddContactos.setFont(EstilosApp.FUENTE_BOTON);
+            btnAddContactos.setForeground(Color.WHITE);
+            btnAddContactos.setBackground(EstilosApp.COLOR_PRIMARIO);
+            btnAddContactos.addActionListener(e -> {
+                // Mostrar ventana de selección de contactos
+                List<Contacto> contactosSeleccionados = new ArrayList<>();
+                DialogSeleccionarContactosGrupo dialog = 
+                new DialogSeleccionarContactosGrupo(GestorVentanas.INSTANCIA.getVentanaContactos(),
+                 (Grupo) seleccionado);
+                dialog.setVisible(true);
+                contactosSeleccionados = dialog.getSelectedContactos();
+                // Agregar contactos seleccionados al grupo
+                Controlador.INSTANCIA.agregarContactosGrupo(contactosSeleccionados, (Grupo) seleccionado);
+                // Actualizar la vista de contactos
+                GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
+            });
+            panelBotones.add(btnAddContactos,BorderLayout.SOUTH);
+
+            //Añadimos el panel de botones al panel principal
             this.add(panelBotones, BorderLayout.SOUTH);
         
     }
