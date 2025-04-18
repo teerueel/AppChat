@@ -27,6 +27,11 @@ public class PanelDerechoContactos extends JPanel {
     
     void inicializarComponentes(){
         setLayout(new BorderLayout());
+
+          // Panel de botones para acciones
+          JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+          panelBotones.setBackground(Color.WHITE);
+          panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         
         // Obtener la selección actual desde VentanaContactos (sincronizador)
         if(GestorVentanas.INSTANCIA != null) {
@@ -56,6 +61,8 @@ public class PanelDerechoContactos extends JPanel {
             JPanel listaIntegrantes = new JPanel();
             listaIntegrantes.setLayout(new BoxLayout(listaIntegrantes, BoxLayout.Y_AXIS));
             listaIntegrantes.setBackground(Color.WHITE);
+
+          
             
             for (Contacto integrante : grupo.getContactos()) {
                 
@@ -84,12 +91,45 @@ public class PanelDerechoContactos extends JPanel {
             }
             JScrollPane scroll = new JScrollPane(listaIntegrantes);
             add(scroll, BorderLayout.CENTER);
+
+               // Botón "Eliminar"
+               JButton btnEliminar = new JButton("Eliminar");
+               btnEliminar.setFont(EstilosApp.FUENTE_BOTON);
+               btnEliminar.setForeground(Color.WHITE);
+               btnEliminar.setBackground(Color.RED);
+               
+               btnEliminar.addActionListener(e -> {
+                   if(selectedIntegrantes.isEmpty()) {
+                       JOptionPane.showMessageDialog(this, "Seleccione al menos un contacto para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+                       return;
+                   }
+                   Controlador.INSTANCIA.eliminarContactos(selectedIntegrantes, (Grupo) seleccionado);
+                   GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
+               });
+               panelBotones.add(btnEliminar,BorderLayout.SOUTH);
+   
+               // Botón "Añadir Contactos"
+               JButton btnAddContactos = new JButton("Añadir Contactos");
+               btnAddContactos.setFont(EstilosApp.FUENTE_BOTON);
+               btnAddContactos.setForeground(Color.WHITE);
+               btnAddContactos.setBackground(EstilosApp.COLOR_PRIMARIO);
+               btnAddContactos.addActionListener(e -> {
+                   // Mostrar ventana de selección de contactos
+                   List<Contacto> contactosSeleccionados = new ArrayList<>();
+                   DialogSeleccionarContactosGrupo dialog = 
+                   new DialogSeleccionarContactosGrupo(GestorVentanas.INSTANCIA.getVentanaContactos(),
+                    (Grupo) seleccionado);
+                   dialog.setVisible(true);
+                   contactosSeleccionados = dialog.getSelectedContactos();
+                   // Agregar contactos seleccionados al grupo
+                   Controlador.INSTANCIA.agregarContactosGrupo(contactosSeleccionados, (Grupo) seleccionado);
+                   // Actualizar la vista de contactos
+                   GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
+               });
+               panelBotones.add(btnAddContactos,BorderLayout.SOUTH);
         }
             
-            // Panel de botones para acciones
-            JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-            panelBotones.setBackground(Color.WHITE);
-            panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+            
             // Botón "Añadir Grupo"
             JButton btnAddGrupo = new JButton("Añadir Grupo");
             btnAddGrupo.setFont(EstilosApp.FUENTE_BOTON);
@@ -102,37 +142,7 @@ public class PanelDerechoContactos extends JPanel {
             panelBotones.add(btnAddGrupo,BorderLayout.SOUTH);
 
             
-            // Botón "Eliminar"
-            JButton btnEliminar = new JButton("Eliminar");
-            btnEliminar.setFont(EstilosApp.FUENTE_BOTON);
-            btnEliminar.setForeground(Color.WHITE);
-            btnEliminar.setBackground(Color.RED);
-            
-            btnEliminar.addActionListener(e -> {
-                Controlador.INSTANCIA.eliminarContactos(selectedIntegrantes, (Grupo) seleccionado);
-                GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
-            });
-            panelBotones.add(btnEliminar,BorderLayout.SOUTH);
-
-            // Botón "Añadir Contactos"
-            JButton btnAddContactos = new JButton("Añadir Contactos");
-            btnAddContactos.setFont(EstilosApp.FUENTE_BOTON);
-            btnAddContactos.setForeground(Color.WHITE);
-            btnAddContactos.setBackground(EstilosApp.COLOR_PRIMARIO);
-            btnAddContactos.addActionListener(e -> {
-                // Mostrar ventana de selección de contactos
-                List<Contacto> contactosSeleccionados = new ArrayList<>();
-                DialogSeleccionarContactosGrupo dialog = 
-                new DialogSeleccionarContactosGrupo(GestorVentanas.INSTANCIA.getVentanaContactos(),
-                 (Grupo) seleccionado);
-                dialog.setVisible(true);
-                contactosSeleccionados = dialog.getSelectedContactos();
-                // Agregar contactos seleccionados al grupo
-                Controlador.INSTANCIA.agregarContactosGrupo(contactosSeleccionados, (Grupo) seleccionado);
-                // Actualizar la vista de contactos
-                GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelDerecho();
-            });
-            panelBotones.add(btnAddContactos,BorderLayout.SOUTH);
+         
 
             //Añadimos el panel de botones al panel principal
             this.add(panelBotones, BorderLayout.SOUTH);
