@@ -18,7 +18,7 @@ public class VentanaNuevoContacto extends JFrame implements Ventana, Recargable{
     private JPanel panelPrincipal;
    
     private JTextField campoTelefono;
-   private JTextField campoUsuario; // Cambiado a campoUsuario para mayor claridad
+   private JTextField campoUsuario; 
 
     public VentanaNuevoContacto() {
         inicializarComponentes();

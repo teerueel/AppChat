@@ -171,18 +171,15 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
                 JOptionPane.showMessageDialog(panelPrincipal, "Debe ingresar el nombre del grupo", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // Aquí se procederá a crear el grupo incluyendo los contactos seleccionados
-            // Por ejemplo, llamar a un método en Controlador: nuevoGrupo(String nombre, String imagen, List<Contacto> contactos)
-            /*boolean exito = Controlador.INSTANCIA.nuevoGrupo(campoNombreGrupo.getText(), path, contactosSeleccionados);
+            
+            boolean exito = Controlador.INSTANCIA.nuevoGrupo(campoNombreGrupo.getText(), path, contactosSeleccionados);
             if(exito){
                 JOptionPane.showMessageDialog(panelPrincipal, "Grupo creado exitosamente.");
                 GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
             } else {
-                JOptionPane.showMessageDialog(panelPrincipal, "Error al crear el grupo.", "Error", JOptionPane.ERROR_MESSAGE);
-            }*/
-            JOptionPane.showMessageDialog(panelPrincipal, 
-            "Funcionalidad disponible próximamente", "Pronto", JOptionPane.INFORMATION_MESSAGE);
-                return;
+                JOptionPane.showMessageDialog(panelPrincipal, "Nombre de grupo repetido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+           
         });
         
         JButton btnCancelar = new JButton("Cancelar");
@@ -206,6 +203,7 @@ public class VentanaNuevoGrupo extends JFrame implements Ventana, Recargable {
     @Override
     public void recargar() {
         panelPrincipal.removeAll();
+        path = "/images/grupo_default.jpg"; // Restablecer la imagen por defecto
         inicializarComponentes();
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
