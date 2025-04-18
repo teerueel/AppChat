@@ -173,6 +173,13 @@ public class Usuario {
         return this.contactos.add(grupo);
     }
 
+    //Elimina un contacto de la lista de contactos del usuario, también de todos los grupos
+    // a los que pertenezca
+    public void eliminarContacto(Contacto contacto) {
+        this.contactos.remove(contacto);
+        getGrupos().stream().filter(g-> ((Grupo) g).getContactos().contains(contacto)).forEach(g -> ((Grupo) g).eliminarContacto(contacto));
+    }   
+
     public void aumentarTiempoTotal(long tiempo) {
         this.stats.aumentarTiempoUso(tiempo);
     }

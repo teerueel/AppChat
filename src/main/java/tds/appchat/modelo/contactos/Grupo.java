@@ -62,6 +62,10 @@ public class Grupo implements Contacto {
         }
     }
 
+    public void eliminarContacto(Contacto contacto) {
+        this.contactos.remove(contacto);
+    }
+
     public void agregarContactos(List<Contacto> contactos) {
         for (Contacto contacto : contactos) {
             this.contactos.add(contacto);

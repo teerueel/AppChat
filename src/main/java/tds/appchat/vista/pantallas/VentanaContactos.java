@@ -60,6 +60,14 @@ public class VentanaContactos extends JFrame implements Ventana, Recargable {
         panelPrincipal.repaint();
     }
 
+    public void updatePanelIzquierdo(){
+        panelIzquierdo = new PanelIzquierdoContactos();
+        splitPane.setLeftComponent(panelIzquierdo);
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+        this.updatePanelDerecho();
+    }
+
     @Override
     public void recargar() {
         panelPrincipal.removeAll();

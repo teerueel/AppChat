@@ -2,6 +2,7 @@ package tds.appchat.vista.componentes;
 
 import javax.swing.*;
 
+import tds.appchat.controlador.Controlador;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.core.GestorVentanas;
@@ -64,6 +65,11 @@ public class PanelIzquierdoContactos extends JPanel {
         JScrollPane scrollLista = new JScrollPane(listaContactos);
         scrollLista.setPreferredSize(new Dimension(350, 500));
         this.add(scrollLista, BorderLayout.CENTER);
+
+        //Panel para añadir botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        panelBotones.setBackground(Color.WHITE);
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         
         // Botón "Añadir Contacto" debajo de la lista
         JButton btnAddContacto = new JButton("Añadir Contacto");
@@ -73,7 +79,26 @@ public class PanelIzquierdoContactos extends JPanel {
         btnAddContacto.addActionListener(e -> {
             GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.NUEVO_CONTACTO);
         });
-        this.add(btnAddContacto, BorderLayout.SOUTH);
+        panelBotones.add(btnAddContacto, BorderLayout.SOUTH);
+
+        // Botón "Eliminar" debajo de la lista
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setFont(EstilosApp.FUENTE_BOTON);
+        btnEliminar.setForeground(Color.WHITE);
+        btnEliminar.setBackground(Color.RED);
+        btnEliminar.addActionListener(e -> {
+            if (selectedContacto != null) {
+                // Lógica para eliminar el contacto seleccionado
+                Controlador.INSTANCIA.eliminarContacto(selectedContacto);
+                // Actualizar la lista de contactos en el panel
+                GestorVentanas.INSTANCIA.getVentanaContactos().updatePanelIzquierdo();
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecciona un contacto", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        panelBotones.add(btnEliminar, BorderLayout.SOUTH);
+
+        this.add(panelBotones, BorderLayout.SOUTH);
     }
     
     // Método que devuelve el contacto seleccionado

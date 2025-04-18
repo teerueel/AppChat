@@ -97,6 +97,10 @@ public enum Controlador {
         grupo.eliminarContactos(contactos);
     }
 
+    public void eliminarContacto(Contacto contacto){
+        Sesion.INSTANCIA.getUsuarioActual().eliminarContacto(contacto);
+    }
+
     public List<Contacto> getContactosRestantes(Grupo grupo){
         if(grupo == null){
             return Sesion.INSTANCIA.getUsuarioActual().getContactos();
