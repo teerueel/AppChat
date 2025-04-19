@@ -19,12 +19,14 @@ public class ContactoIndividual implements Contacto {
         this.nombre = nombre;
         this.usuario = null;
         this.mensajes = new ArrayList<Mensaje>();
+        this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
     }
 
     public ContactoIndividual(Usuario usuario, String nombre) {
         this.nombre = nombre;
         this.usuario = usuario;
         this.mensajes = new ArrayList<Mensaje>();
+        this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
     }
 
    

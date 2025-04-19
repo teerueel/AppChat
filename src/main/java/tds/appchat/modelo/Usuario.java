@@ -1,8 +1,11 @@
 package tds.appchat.modelo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
@@ -179,6 +182,13 @@ public class Usuario {
         this.contactos.remove(contacto);
         getGrupos().stream().filter(g-> ((Grupo) g).getContactos().contains(contacto)).forEach(g -> ((Grupo) g).eliminarContacto(contacto));
     }
+
+    public Map<Contacto, Mensaje> getUltimosMensajes() {
+        return this.getContactosIndividuales().stream().
+                filter(c -> ((ContactoIndividual) c).getUltimoMensaje().isPresent()).
+                collect(Collectors.toMap(c -> c, 
+                c -> ((ContactoIndividual) c).getUltimoMensaje().get()));
+    }
     
     
 
@@ -189,4 +199,6 @@ public class Usuario {
     public void actualizarRacha(boolean acierto) {
         this.stats.actualizarRacha(acierto);
     }
+
+
 }
