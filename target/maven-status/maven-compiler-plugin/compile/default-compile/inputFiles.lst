@@ -6,6 +6,7 @@ c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\contacto
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\EstadisticasUsuario.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\Mensaje.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\Usuario.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\modelo\util\TipoMensaje.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\repositorio\GestorUsuario.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\repositorio\RepositorioUsuario.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\sesion\Sesion.java
@@ -13,7 +14,9 @@ c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\component
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\componentes\CustomButton.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\componentes\PanelDerechoContactos.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\componentes\PanelIzquierdoContactos.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\componentes\PanelIzquierdoMensajes.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\componentes\TarjetaAddContacto.java
+c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\componentes\TarjetaContactoMensaje.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\core\GestorVentanas.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\core\Recargable.java
 c:\Users\Antonio\Desktop\Nueva carpeta\src\main\java\tds\appchat\vista\core\TipoVentana.java

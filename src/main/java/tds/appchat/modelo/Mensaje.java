@@ -1,16 +1,15 @@
 package tds.appchat.modelo;
 
-import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import tds.appchat.modelo.util.TipoMensaje;
 
 public class Mensaje {
     private String texto;
-    private LocalDate fecha;
+    private LocalDateTime fecha;
     private TipoMensaje tipo;
     //emoticono aún no se como hacerlo
 
-    public Mensaje(String texto, LocalDate fecha, TipoMensaje tipo) {
+    public Mensaje(String texto, LocalDateTime fecha, TipoMensaje tipo) {
         this.texto = texto;
         this.fecha = fecha;
         this.tipo = tipo;
@@ -18,7 +17,7 @@ public class Mensaje {
     
     public Mensaje(String texto, TipoMensaje tipo) {
         this.texto = texto;
-        this.fecha = LocalDate.now();
+        this.fecha = LocalDateTime.now();
         this.tipo = tipo;
     }
 
@@ -28,10 +27,10 @@ public class Mensaje {
     public void setTexto(String texto) {
         this.texto = texto;
     }
-    public LocalDate getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
     public TipoMensaje getTipo() {
@@ -40,8 +39,4 @@ public class Mensaje {
     public void setTipo(TipoMensaje tipo) {
         this.tipo = tipo;
     }
-    
-
-
-
 }

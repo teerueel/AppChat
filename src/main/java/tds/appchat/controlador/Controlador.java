@@ -2,6 +2,7 @@ package tds.appchat.controlador;
 
 
 import java.util.List;
+import java.util.Map;
 
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
@@ -107,6 +108,13 @@ public enum Controlador {
         }
         return Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().stream()
         .filter(c -> !grupo.getContactos().contains(c) && !c.equals(grupo)).toList();
+    }
+
+    public Map<Contacto, Mensaje> getUltimosMensajes(){
+        if(!Sesion.INSTANCIA.haySesion()){
+            return null;
+        }
+        return Sesion.INSTANCIA.getUsuarioActual().getUltimosMensajes();
     }
   
 }

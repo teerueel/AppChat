@@ -2,6 +2,7 @@ package tds.appchat.vista.pantallas;
 
 import javax.swing.*;
 
+import tds.appchat.vista.componentes.PanelIzquierdoMensajes;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
@@ -46,32 +47,7 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         btnEnviarContacto.setFont(EstilosApp.FUENTE_BOTON);
         btnEnviarContacto.setForeground(Color.WHITE);
         btnEnviarContacto.setBackground(EstilosApp.COLOR_PRIMARIO);
-        
-        btnBuscar.setFont(EstilosApp.FUENTE_BOTON);
-        btnBuscar.setForeground(Color.WHITE);
-        btnBuscar.setBackground(EstilosApp.COLOR_PRIMARIO);
-        
-        btnGestion.setFont(EstilosApp.FUENTE_BOTON);
-        btnGestion.setForeground(Color.WHITE);
-        btnGestion.setBackground(EstilosApp.COLOR_PRIMARIO);
-        
-        btnPremium.setFont(EstilosApp.FUENTE_BOTON);
-        btnPremium.setForeground(Color.WHITE);
-        btnPremium.setBackground(EstilosApp.COLOR_PRIMARIO);
-        JLabel lblUserName = new JLabel("Usuario Actual");
-        JLabel lblUserImage = new JLabel("[Imagen]");
-        lblUserImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
-        topPanel.add(contactField);
-        topPanel.add(btnEnviarContacto);
-        topPanel.add(btnBuscar);
-        topPanel.add(btnGestion);
-        topPanel.add(btnPremium);
-        topPanel.add(lblUserName);
-        topPanel.add(lblUserImage);
-        topPanel.setBackground(EstilosApp.COLOR_FONDO);
-        
-        // Manejadores de eventos en botones (simulación)
+
         btnEnviarContacto.addActionListener(e -> {
             String contacto = contactField.getText().trim();
             if (!contacto.isEmpty()){
@@ -79,49 +55,50 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
             }
         });
         
+        btnBuscar.setFont(EstilosApp.FUENTE_BOTON);
+        btnBuscar.setForeground(Color.WHITE);
+        btnBuscar.setBackground(EstilosApp.COLOR_PRIMARIO);
+
+        
         btnBuscar.addActionListener(e -> {
            
             GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.BUSCAR);
         });
+        
+        btnGestion.setFont(EstilosApp.FUENTE_BOTON);
+        btnGestion.setForeground(Color.WHITE);
+        btnGestion.setBackground(EstilosApp.COLOR_PRIMARIO);
+
         btnGestion.addActionListener(e -> {
-        GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
-        
-    });
-        btnPremium.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
-        
-        lblUserImage.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(VentanaApp.this, "Cambiar imagen de perfil");
-            }
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
+            
         });
+
+        
+        btnPremium.setFont(EstilosApp.FUENTE_BOTON);
+        btnPremium.setForeground(Color.WHITE);
+        btnPremium.setBackground(EstilosApp.COLOR_PRIMARIO);
+
+        btnPremium.addActionListener(e -> JOptionPane.
+        showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
+        
+        
+        topPanel.add(contactField);
+        topPanel.add(btnEnviarContacto);
+        topPanel.add(btnBuscar);
+        topPanel.add(btnGestion);
+        topPanel.add(btnPremium);
+        
+        topPanel.setBackground(EstilosApp.COLOR_FONDO);
+        
+        
         
         // Agregar topPanel a panelPrincipal
         panelPrincipal.add(topPanel, BorderLayout.NORTH);
         
         // Panel de contactos con cajitas y scroll vertical
-        contactsPanel = new JPanel();
-        contactsPanel.setLayout(new BoxLayout(contactsPanel, BoxLayout.Y_AXIS));
-        // Ajuste: aplicar margen interno al contactsPanel para mover su contenido más a la derecha
-        contactsPanel.setBorder(BorderFactory.createEmptyBorder(30, 200, 10, 50));
-        // Creación de cajitas de contacto (se aumentó la cantidad para provocar overflow)
-        for (int i = 1; i <= 20; i++) {
-            JPanel contactBox = new JPanel();
-            contactBox.setLayout(new BoxLayout(contactBox, BoxLayout.Y_AXIS));
-            // Borde titulado en verde
-            contactBox.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(EstilosApp.COLOR_TARJETA),
-                "Contacto " + i,
-                0, 0, null, EstilosApp.COLOR_TEXTO_SECUNDARIO
-            ));
-            contactBox.add(new JLabel("Nombre: Contacto " + i));
-            contactBox.add(new JLabel("Mensaje: Mensaje de prueba " + i));
-            contactBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-            contactsPanel.add(contactBox);
-        }
-        JScrollPane scrollPane = new JScrollPane(contactsPanel);
-        scrollPane.setPreferredSize(new Dimension(400, 500)); // se aumenta el tamaño
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // borde para hacer visible el scrollPane
+        contactsPanel = new PanelIzquierdoMensajes();
+       
         
         // Actualización: Creación del Panel Mensajes sin usar BubbleText
         JPanel panelMensajes = new JPanel();
@@ -148,7 +125,7 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         scrollMensajes.setPreferredSize(new Dimension(200, 500));
         
         // Reemplazar adición individual por un JSplitPane para que ambos paneles sean iguales
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, scrollMensajes);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, contactsPanel, panelMensajes);
         splitPane.setResizeWeight(0.5);
         // Agregar splitPane a panelPrincipal en la zona central
         panelPrincipal.add(splitPane, BorderLayout.CENTER);
