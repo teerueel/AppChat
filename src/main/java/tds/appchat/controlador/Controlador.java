@@ -103,9 +103,9 @@ public enum Controlador {
 
     public List<Contacto> getContactosRestantes(Grupo grupo){
         if(grupo == null){
-            return Sesion.INSTANCIA.getUsuarioActual().getContactos();
+            return Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales();
         }
-        return Sesion.INSTANCIA.getUsuarioActual().getContactos().stream()
+        return Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().stream()
         .filter(c -> !grupo.getContactos().contains(c) && !c.equals(grupo)).toList();
     }
   
