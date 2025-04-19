@@ -9,16 +9,18 @@ public class Grupo implements Contacto {
     private String nombreGrupo;
     private List<Contacto> contactos;
     private String imagen;
+    
 
     public Grupo(String nombreGrupo) {
         this.nombreGrupo = nombreGrupo;
         this.contactos = new ArrayList<Contacto>();
-
+        
     }
 
     public Grupo(String nombreGrupo, String imagen, List<Contacto> contactos) {
         this.nombreGrupo = nombreGrupo;
         this.imagen = imagen;
+        
         this.contactos = new ArrayList<Contacto>();
         contactos.stream().forEach(contacto -> {
             this.contactos.add(contacto);

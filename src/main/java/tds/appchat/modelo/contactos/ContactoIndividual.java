@@ -2,27 +2,29 @@ package tds.appchat.modelo.contactos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.Usuario;
+import tds.appchat.modelo.util.TipoMensaje;
 
 public class ContactoIndividual implements Contacto {
     
     private Usuario usuario;
     private String nombre;
-    private List<Mensaje> mensajesRecibidos;
+    private List<Mensaje> mensajes;
 
 
     public ContactoIndividual(String nombre) {
         this.nombre = nombre;
         this.usuario = null;
-        this.mensajesRecibidos = new ArrayList<Mensaje>();
+        this.mensajes = new ArrayList<Mensaje>();
     }
 
     public ContactoIndividual(Usuario usuario, String nombre) {
         this.nombre = nombre;
         this.usuario = usuario;
-        this.mensajesRecibidos = new ArrayList<Mensaje>();
+        this.mensajes = new ArrayList<Mensaje>();
     }
 
    
@@ -45,16 +47,16 @@ public class ContactoIndividual implements Contacto {
     }
 
     public List<Mensaje> getMensajesRecibidos() {
-        return mensajesRecibidos;
+        return mensajes;
     }
 
     public void setMensajesRecibidos(List<Mensaje> mensajesRecibidos) {
-        this.mensajesRecibidos = mensajesRecibidos;
+        this.mensajes = mensajesRecibidos;
     }
 
     @Override
     public void agregarMensaje(Mensaje mensaje) {
-        this.mensajesRecibidos.add(mensaje);
+        this.mensajes.add(mensaje);
     }
 
     @Override
@@ -68,6 +70,13 @@ public class ContactoIndividual implements Contacto {
 
     public String getSaludo(){
         return this.usuario.getSaludo();
+    }
+
+    //devuelve el último mensaje recibido
+    public Optional<Mensaje> getUltimoMensaje(){
+        return this.mensajes.stream().
+                filter(m -> m.getTipo() == TipoMensaje.RECIBIDO).
+                max((m1, m2) -> m1.getFecha().compareTo(m2.getFecha()));
     }
 
     

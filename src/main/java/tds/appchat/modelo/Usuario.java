@@ -178,7 +178,9 @@ public class Usuario {
     public void eliminarContacto(Contacto contacto) {
         this.contactos.remove(contacto);
         getGrupos().stream().filter(g-> ((Grupo) g).getContactos().contains(contacto)).forEach(g -> ((Grupo) g).eliminarContacto(contacto));
-    }   
+    }
+    
+    
 
     public void aumentarTiempoTotal(long tiempo) {
         this.stats.aumentarTiempoUso(tiempo);
