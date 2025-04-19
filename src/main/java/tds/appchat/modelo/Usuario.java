@@ -1,7 +1,9 @@
 package tds.appchat.modelo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -184,10 +186,14 @@ public class Usuario {
     }
 
     public Map<Contacto, Mensaje> getUltimosMensajes() {
-        return this.getContactosIndividuales().stream().
-                filter(c -> ((ContactoIndividual) c).getUltimoMensaje().isPresent()).
-                collect(Collectors.toMap(c -> c, 
-                c -> ((ContactoIndividual) c).getUltimoMensaje().get()));
+        return this.getContactosIndividuales().stream()
+                .filter(c -> ((ContactoIndividual) c).getUltimoMensaje().isPresent())
+                .sorted(Comparator.comparing(c -> ((ContactoIndividual) c).getUltimoMensaje().get().getFecha()).reversed())
+                .collect(Collectors.toMap(
+                        c -> c,
+                        c -> ((ContactoIndividual) c).getUltimoMensaje().get(),
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new));
     }
     
     
