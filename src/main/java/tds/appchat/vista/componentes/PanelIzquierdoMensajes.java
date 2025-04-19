@@ -9,6 +9,7 @@ import java.util.Map;
 import tds.appchat.controlador.Controlador;
 import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.EstilosApp;
 
 public class PanelIzquierdoMensajes extends JPanel {
@@ -72,6 +73,7 @@ public class PanelIzquierdoMensajes extends JPanel {
                         selectedPanel.setBorder(selectedBorder);
                         selectedContacto = contacto;
                         selectedMensaje = mensaje;
+                        GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho();
                     }
                 });
                 

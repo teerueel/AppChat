@@ -2,6 +2,10 @@ package tds.appchat.vista.pantallas;
 
 import javax.swing.*;
 
+import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.vista.componentes.PanelDerechoContactos;
+import tds.appchat.vista.componentes.PanelDerechoMensajes;
+import tds.appchat.vista.componentes.PanelIzquierdoContactos;
 import tds.appchat.vista.componentes.PanelIzquierdoMensajes;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
@@ -19,8 +23,10 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
 
     private JPanel panelPrincipal;
     private JPanel topPanel;
-    private JPanel contactsPanel;
-    private JTextField contactField;
+    private JPanel panelContactos;
+    private JPanel panelMensajes;
+    private JSplitPane splitPane;
+    
 
     // Constructor
     public VentanaApp() {
@@ -38,22 +44,12 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         
         // Panel superior: solo contiene los botones y campos de acción
         topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        contactField = new JTextField(10);
-        JButton btnEnviarContacto = new JButton("Enviar");
+        
+       
         JButton btnBuscar = new JButton("Buscar");
         JButton btnGestion = new JButton("Contactos");
         JButton btnPremium = new JButton("Premium");
         // Aplicar estética de la APP a cada botón
-        btnEnviarContacto.setFont(EstilosApp.FUENTE_BOTON);
-        btnEnviarContacto.setForeground(Color.WHITE);
-        btnEnviarContacto.setBackground(EstilosApp.COLOR_PRIMARIO);
-
-        btnEnviarContacto.addActionListener(e -> {
-            String contacto = contactField.getText().trim();
-            if (!contacto.isEmpty()){
-                JOptionPane.showMessageDialog(VentanaApp.this, "Iniciando conversación con: " + contacto);
-            }
-        });
         
         btnBuscar.setFont(EstilosApp.FUENTE_BOTON);
         btnBuscar.setForeground(Color.WHITE);
@@ -83,8 +79,6 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
         
         
-        topPanel.add(contactField);
-        topPanel.add(btnEnviarContacto);
         topPanel.add(btnBuscar);
         topPanel.add(btnGestion);
         topPanel.add(btnPremium);
@@ -97,35 +91,19 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         panelPrincipal.add(topPanel, BorderLayout.NORTH);
         
         // Panel de contactos con cajitas y scroll vertical
-        contactsPanel = new PanelIzquierdoMensajes();
+         this.panelContactos = new PanelIzquierdoMensajes();
        
         
         // Actualización: Creación del Panel Mensajes sin usar BubbleText
-        JPanel panelMensajes = new JPanel();
-        panelMensajes.setLayout(new BoxLayout(panelMensajes, BoxLayout.Y_AXIS));
-        // Borde titulado con toques verdes
-        panelMensajes.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(new Color(0, 128, 0)),
-            "Mensajes",
-            0, 0, null, new Color(0, 128, 0)
-        ));
-        // Agregar mensajes simples con JLabel y fuente en tono verde oscuro
-        JLabel msg1 = new JLabel("Hola, ¿cómo estás?");
-        msg1.setForeground(new Color(0, 100, 0));
-        JLabel msg2 = new JLabel("Bien, gracias. ¿Y tú?");
-        msg2.setForeground(new Color(0, 100, 0));
-        JLabel msg3 = new JLabel("Todo bien, enviando prueba.");
-        msg3.setForeground(new Color(0, 100, 0));
-        panelMensajes.add(msg1);
-        panelMensajes.add(msg2);
-        panelMensajes.add(msg3);
+         this.panelMensajes = new PanelDerechoMensajes();
+       
         
         // Envolver panelMensajes en un JScrollPane para garantizar su visualización
         JScrollPane scrollMensajes = new JScrollPane(panelMensajes);
         scrollMensajes.setPreferredSize(new Dimension(200, 500));
         
         // Reemplazar adición individual por un JSplitPane para que ambos paneles sean iguales
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, contactsPanel, panelMensajes);
+         this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.panelContactos, this.panelMensajes);
         splitPane.setResizeWeight(0.5);
         // Agregar splitPane a panelPrincipal en la zona central
         panelPrincipal.add(splitPane, BorderLayout.CENTER);
@@ -163,10 +141,16 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         return TipoVentana.APP;
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaApp ventana = new VentanaApp();
-            ventana.setVisible(true);
-        });
+    public  void updatePanelDerecho() {
+        this.panelMensajes = new PanelDerechoMensajes();
+        splitPane.setRightComponent(this.panelMensajes);
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
+
+    public Contacto getSelectedContacto(){
+        return ((PanelIzquierdoMensajes) this.panelContactos).getSelectedContacto();
+    }
+
+    
 }
