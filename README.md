@@ -22,6 +22,7 @@
 <table>
   <tr>
     <td align="center"><a href="https://github.com/teerueel"><img src="https://github.com/identicons/teerueel.png" width="100px;" alt=""/><br /><sub><b>Antonio Teruel Ruiz</b></sub></a></td>
+     <td align="center"><a href="https://github.com/MalvidoPro"><img src="https://github.com/identicons/MalvidoPro.png" width="100px;" alt=""/><br /><sub><b>Jorge Malvido Guillén</b></sub></a></td>
   </tr>
 </table>
 
