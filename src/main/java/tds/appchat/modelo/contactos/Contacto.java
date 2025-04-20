@@ -1,5 +1,7 @@
 package tds.appchat.modelo.contactos;
 
+import java.util.List;
+
 import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.util.TipoMensaje;
 
@@ -12,4 +14,5 @@ public interface Contacto {
     public boolean isAgregado();
     public void setAgregado(boolean agregado);
     public void setNombre(String nombre);
+    public List<Mensaje> getMensajes(); // Método para obtener la lista de mensajes
 }

@@ -57,7 +57,7 @@ public class PanelDerechoMensajes extends JPanel {
             seleccionado = GestorVentanas.INSTANCIA.getVentanaApp().getSelectedContacto();
          }
 
-        else if(seleccionado == null) {
+        if(seleccionado == null) {
             JLabel lbl = new JLabel("Seleccione un contacto", SwingConstants.CENTER);
             lbl.setFont(EstilosApp.FUENTE_NORMAL);
             lbl.setForeground(EstilosApp.COLOR_TEXTO);
@@ -78,34 +78,39 @@ public class PanelDerechoMensajes extends JPanel {
             chat.setMaximumSize(new Dimension(400,700));
             chat.setPreferredSize(new Dimension(400,700));
             
+            if(!seleccionado.getMensajes().isEmpty()){
+                
             
-            for(Mensaje mensaje : ((ContactoIndividual) seleccionado).getMensajes()){
+                for(Mensaje mensaje : ((ContactoIndividual) seleccionado).getMensajes()){
 
-                
-              
-                
-                if(mensaje.getTipo() == TipoMensaje.ENVIADO){
-                    System.out.println("Enviado: " + mensaje.getTexto());
-                
-                     chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_PRIMARIO,
-                     Sesion.INSTANCIA.getUsuarioActual().getNombre(), BubbleText.SENT));
-                     
                     
-                }
-                else if(mensaje.getTipo() == TipoMensaje.RECIBIDO){
-                    System.out.println("Recibido: " + mensaje.getTexto());
-                    chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_SECUNDARIO,
-                    seleccionado.getNombre(), BubbleText.RECEIVED));
+                    if(mensaje.getTipo() == TipoMensaje.ENVIADO){
+                        System.out.println("Enviado: " + mensaje.getTexto());
                     
-                    
+                        chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_PRIMARIO,
+                        Sesion.INSTANCIA.getUsuarioActual().getNombre(), BubbleText.SENT));
+                        
+                        
+                    }
+                    else if(mensaje.getTipo() == TipoMensaje.RECIBIDO){
+                        System.out.println("Recibido: " + mensaje.getTexto());
+                        chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_SECUNDARIO,
+                        seleccionado.getNombre(), BubbleText.RECEIVED));
+                        
+                        
+                    }
                 }
             }
 
-            this.add(chat, BorderLayout.CENTER);
-           /*  JScrollPane scroll = new JScrollPane(chat);
+            JScrollPane scroll = new JScrollPane(chat);
             scroll.setBackground(Color.GREEN);
-            scroll.setMaximumSize(new Dimension(300, 300));
-            add(scroll, BorderLayout.CENTER);*/
+            scroll.setSize(400,700);
+            scroll.setMinimumSize(new Dimension(400,700));
+            scroll.setMaximumSize(new Dimension(400,700));
+            scroll.setPreferredSize(new Dimension(400,700));
+            add(scroll, BorderLayout.CENTER);
+            this.add(scroll, BorderLayout.CENTER);
+           
         }    
 
                

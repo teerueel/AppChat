@@ -3,6 +3,8 @@ package tds.appchat.modelo.contactos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.mapping.Array;
+
 import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.util.TipoMensaje;
 
@@ -97,5 +99,10 @@ public class Grupo implements Contacto {
     @Override
     public String getTelefono() {
         return null; // Los grupos no tienen un teléfono único
+    }
+
+    @Override 
+    public List<Mensaje> getMensajes() {
+        return new ArrayList<Mensaje>();
     }
 }
