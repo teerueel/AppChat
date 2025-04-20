@@ -126,7 +126,7 @@ public enum Controlador {
 
         GestorUsuario.INSTANCIA.
         getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> {
-           usuario.recibirMensaje(texto, seleccionado.getTelefono());
+           usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono());
         });
         
     }

@@ -14,6 +14,7 @@ public class ContactoIndividual implements Contacto {
     private Usuario usuario;
     private String nombre;
     private List<Mensaje> mensajes;
+    private boolean agregado;
 
 
     public ContactoIndividual(String nombre) {
@@ -21,6 +22,7 @@ public class ContactoIndividual implements Contacto {
         this.usuario = null;
         this.mensajes = new LinkedList<Mensaje>();
         this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
+        this.agregado = true;
     }
 
     public ContactoIndividual(Usuario usuario, String nombre) {
@@ -28,6 +30,15 @@ public class ContactoIndividual implements Contacto {
         this.usuario = usuario;
         this.mensajes = new ArrayList<Mensaje>();
         this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
+        this.agregado = true;
+    }
+
+    public ContactoIndividual(Usuario usuario, String nombre, boolean agregado) {
+        this.nombre = nombre;
+        this.usuario = usuario;
+        this.mensajes = new ArrayList<Mensaje>();
+        this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
+        this.agregado = agregado;
     }
 
    

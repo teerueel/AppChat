@@ -203,7 +203,7 @@ public class Usuario {
         if (contacto.isPresent()) {
             contacto.get().agregarMensaje(texto, TipoMensaje.RECIBIDO);
         } else {
-            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono);
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
             nuevoContacto.agregarMensaje(texto, TipoMensaje.RECIBIDO);
             this.contactos.add(nuevoContacto);
         }
