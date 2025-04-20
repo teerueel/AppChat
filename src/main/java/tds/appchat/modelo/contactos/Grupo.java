@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tds.appchat.modelo.Mensaje;
+import tds.appchat.modelo.util.TipoMensaje;
 
 public class Grupo implements Contacto {
     private String nombreGrupo;
@@ -75,9 +76,9 @@ public class Grupo implements Contacto {
     }
 
     @Override
-    public void agregarMensaje(Mensaje mensaje) {
+    public void agregarMensaje(String texto, TipoMensaje tipo) {
         for (Contacto contacto : contactos) {
-            contacto.agregarMensaje(mensaje);
+            contacto.agregarMensaje(texto, tipo);
         }
     }
 

@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.modelo.contactos.Grupo;
+import tds.appchat.modelo.util.TipoMensaje;
+import tds.appchat.sesion.Sesion;
 
 public class Usuario {
 
@@ -194,6 +196,19 @@ public class Usuario {
                         c -> ((ContactoIndividual) c).getUltimoMensaje().get(),
                         (existing, replacement) -> existing,
                         LinkedHashMap::new));
+    }
+
+    public void recibirMensaje(String texto, String telefono) {
+        Optional<Contacto> contacto = this.contactoRegistrado(telefono);
+        if (contacto.isPresent()) {
+            contacto.get().agregarMensaje(texto, TipoMensaje.RECIBIDO);
+        } else {
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono);
+            nuevoContacto.agregarMensaje(texto, TipoMensaje.RECIBIDO);
+            this.contactos.add(nuevoContacto);
+        }
+        
+        
     }
     
     

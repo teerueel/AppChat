@@ -1,6 +1,7 @@
 package tds.appchat.modelo.contactos;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public class ContactoIndividual implements Contacto {
     public ContactoIndividual(String nombre) {
         this.nombre = nombre;
         this.usuario = null;
-        this.mensajes = new ArrayList<Mensaje>();
+        this.mensajes = new LinkedList<Mensaje>();
         this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
     }
 
@@ -48,7 +49,7 @@ public class ContactoIndividual implements Contacto {
         this.nombre = nombre;
     }
 
-    public List<Mensaje> getMensajesRecibidos() {
+    public List<Mensaje> getMensajes() {
         return mensajes;
     }
 
@@ -57,7 +58,8 @@ public class ContactoIndividual implements Contacto {
     }
 
     @Override
-    public void agregarMensaje(Mensaje mensaje) {
+    public void agregarMensaje(String texto, TipoMensaje tipo) {
+        Mensaje mensaje = new Mensaje(texto, tipo);
         this.mensajes.add(mensaje);
     }
 
@@ -80,6 +82,8 @@ public class ContactoIndividual implements Contacto {
                 filter(m -> m.getTipo() == TipoMensaje.RECIBIDO).
                 max((m1, m2) -> m1.getFecha().compareTo(m2.getFecha()));
     }
+
+
 
     
     

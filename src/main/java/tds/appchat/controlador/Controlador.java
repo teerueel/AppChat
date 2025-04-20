@@ -7,6 +7,7 @@ import java.util.Map;
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.Grupo;
+import tds.appchat.modelo.util.TipoMensaje;
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
 
@@ -115,6 +116,19 @@ public enum Controlador {
             return null;
         }
         return Sesion.INSTANCIA.getUsuarioActual().getUltimosMensajes();
+    }
+
+    public void enviarMensaje(String texto, Contacto seleccionado){
+        if(seleccionado == null){
+            return;
+        }
+        seleccionado.agregarMensaje(texto, TipoMensaje.ENVIADO);
+
+        GestorUsuario.INSTANCIA.
+        getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> {
+           usuario.recibirMensaje(texto, seleccionado.getTelefono());
+        });
+        
     }
   
 }

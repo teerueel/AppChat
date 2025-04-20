@@ -2,6 +2,7 @@ package tds.appchat.vista.componentes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.FocusAdapter;
@@ -10,20 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import org.hibernate.mapping.Component;
 
 import tds.BubbleText;
+import tds.appchat.controlador.Controlador;
+import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
+import tds.appchat.modelo.util.TipoMensaje;
+import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.EstilosApp;
 
@@ -38,6 +46,8 @@ public class PanelDerechoMensajes extends JPanel {
 
     public void inicializarComponentes(){
         setLayout(new BorderLayout());
+        this.setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
+        this.setBackground(Color.WHITE);
 
         JPanel panelTexto = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         panelTexto.setBackground(Color.WHITE);
@@ -56,9 +66,58 @@ public class PanelDerechoMensajes extends JPanel {
 
         else{
             //Aquí escribo los mensajes.
-            new BubbleText(panelTexto, ((ContactoIndividual) seleccionado).getUltimoMensaje().get().getTexto(), 
-            getBackground(), TOOL_TIP_TEXT_KEY, ABORT);
-        }
+           /*  JPanel listaMensajes = new JPanel();
+            listaMensajes.setLayout(new BoxLayout(listaMensajes, BoxLayout.Y_AXIS));
+            listaMensajes.setBackground(Color.ORANGE);
+            listaMensajes.setMaximumSize(new Dimension(300, 300)); */
+            JPanel chat=new JPanel();
+            chat.setLayout(new BoxLayout(chat,BoxLayout.Y_AXIS));
+            chat.setSize(400,700);
+            chat.setMinimumSize(new Dimension(400,700));
+            chat.setMaximumSize(new Dimension(400,700));
+            chat.setPreferredSize(new Dimension(400,700));
+            
+            
+            for(Mensaje mensaje : ((ContactoIndividual) seleccionado).getMensajes()){
+
+                
+              
+                
+                if(mensaje.getTipo() == TipoMensaje.ENVIADO){
+                    System.out.println("Enviado: " + mensaje.getTexto());
+                
+                     chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_PRIMARIO,
+                     Sesion.INSTANCIA.getUsuarioActual().getNombre(), BubbleText.SENT));
+                     
+                    
+                }
+                else if(mensaje.getTipo() == TipoMensaje.RECIBIDO){
+                    System.out.println("Recibido: " + mensaje.getTexto());
+                    chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_SECUNDARIO,
+                    seleccionado.getNombre(), BubbleText.RECEIVED));
+                    
+                    
+                }
+            }
+
+            this.add(chat, BorderLayout.CENTER);
+           /*  JScrollPane scroll = new JScrollPane(chat);
+            scroll.setBackground(Color.GREEN);
+            scroll.setMaximumSize(new Dimension(300, 300));
+            add(scroll, BorderLayout.CENTER);*/
+        }    
+
+               
+                
+            
+            
+           
+           
+            
+  
+           
+
+        
 
         // Campo de texto para escribir el mensaje
         JTextField  campoTexto = new JTextField(20);
@@ -99,9 +158,12 @@ public class PanelDerechoMensajes extends JPanel {
         btnEnviar.setPreferredSize(new Dimension(100, 45));
         btnEnviar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         btnEnviar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Funcionalidad disponible próximamente", 
-            "Enviar Mensaje", JOptionPane.INFORMATION_MESSAGE);
-            
+            String texto = campoTexto.getText().trim();
+            if (texto.isEmpty()) {
+                return;
+            }
+            Controlador.INSTANCIA.enviarMensaje(texto, seleccionado);
+            GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho();
             campoTexto.setText(""); // Limpiar el campo de texto después de enviar
         });
 
