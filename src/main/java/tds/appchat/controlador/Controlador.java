@@ -130,5 +130,11 @@ public enum Controlador {
         });
         
     }
+
+    public void agregarContacto(String nombre, Contacto contacto){
+        contacto.setNombre(nombre);
+        contacto.setAgregado(true);
+
+    }
   
 }

@@ -9,4 +9,7 @@ public interface Contacto {
     public String getTelefono();
     public String getNombre(); // Método para obtener el nombre del contacto
     public String getImagen();
+    public boolean isAgregado();
+    public void setAgregado(boolean agregado);
+    public void setNombre(String nombre);
 }

@@ -87,6 +87,14 @@ public class ContactoIndividual implements Contacto {
         return this.usuario.getSaludo();
     }
 
+    public boolean isAgregado() {
+        return agregado;
+    }
+    
+    public void setAgregado(boolean agregado) {
+        this.agregado = agregado;
+    }
+
     //devuelve el último mensaje recibido
     public Optional<Mensaje> getUltimoMensaje(){
         return this.mensajes.stream().

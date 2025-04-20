@@ -148,6 +148,14 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         panelPrincipal.repaint();
     }
 
+    public void updatePanelIzquierdo(){
+        this.panelContactos = new PanelIzquierdoMensajes();
+        splitPane.setLeftComponent(this.panelContactos);
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+        this.updatePanelDerecho();
+    }
+
     public Contacto getSelectedContacto(){
         return ((PanelIzquierdoMensajes) this.panelContactos).getSelectedContacto();
     }

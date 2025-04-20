@@ -57,12 +57,13 @@ public class PanelDerechoMensajes extends JPanel {
             seleccionado = GestorVentanas.INSTANCIA.getVentanaApp().getSelectedContacto();
          }
 
-         if(seleccionado == null) {
+        else if(seleccionado == null) {
             JLabel lbl = new JLabel("Seleccione un contacto", SwingConstants.CENTER);
             lbl.setFont(EstilosApp.FUENTE_NORMAL);
             lbl.setForeground(EstilosApp.COLOR_TEXTO);
             add(lbl, BorderLayout.CENTER);
         }
+
 
         else{
             //Aquí escribo los mensajes.

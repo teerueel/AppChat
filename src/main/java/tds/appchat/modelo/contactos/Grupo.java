@@ -39,7 +39,7 @@ public class Grupo implements Contacto {
         return imagen;
     }
 
-    public void setNombreGrupo(String nombreGrupo) {
+    public void setNombre(String nombreGrupo) {
         this.nombreGrupo = nombreGrupo;
     }
 
@@ -81,6 +81,18 @@ public class Grupo implements Contacto {
             contacto.agregarMensaje(texto, tipo);
         }
     }
+
+    @Override
+    public boolean isAgregado() {
+        return true; // Los grupos siempre están agregados
+    }
+
+    @Override
+    public void setAgregado(boolean agregado) {
+        // No se necesita implementar, ya que los grupos siempre están agregados
+    }
+
+
 
     @Override
     public String getTelefono() {

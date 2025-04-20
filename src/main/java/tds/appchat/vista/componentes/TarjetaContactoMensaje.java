@@ -9,6 +9,7 @@ import tds.appchat.controlador.Controlador;
 import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.vista.util.ImagenUtil;
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.EstilosApp;
 
 public class TarjetaContactoMensaje extends JPanel {
@@ -77,5 +78,28 @@ public class TarjetaContactoMensaje extends JPanel {
         panelInfo.add(lblFecha);
         
         add(panelInfo, BorderLayout.CENTER);
+
+        if(!contacto.isAgregado()){
+           JButton btnAgregar = new JButton("+");
+            btnAgregar.setFont(EstilosApp.FUENTE_BOTON);
+            btnAgregar.setForeground(Color.WHITE);
+            btnAgregar.setBackground(EstilosApp.COLOR_PRIMARIO);
+            btnAgregar.setMinimumSize(new Dimension(50, 50));
+            btnAgregar.setMaximumSize(new Dimension(50, 50));
+            btnAgregar.setPreferredSize(new Dimension(50, 50));
+            btnAgregar.addActionListener(e -> {
+                Frame parentFrame = JOptionPane.getFrameForComponent(this);
+                DialogAgregarContacto dialog = new DialogAgregarContacto(parentFrame, this.contacto);
+                dialog.setVisible(true);
+                if(dialog.isConfirmed()){
+                    String nombreContacto = dialog.getContactoNombre();
+                    // Aquí se implementa la lógica para agregar el contacto utilizando el nombre introducido.
+                    System.out.println("Contacto a agregar: " + nombreContacto);
+                }
+                GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
+            });
+            this.add(btnAgregar, BorderLayout.EAST);    
+        }
+        
     }
 }
