@@ -3,22 +3,27 @@ package tds.appchat.modelo.contactos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.mapping.Array;
+
 import tds.appchat.modelo.Mensaje;
+import tds.appchat.modelo.util.TipoMensaje;
 
 public class Grupo implements Contacto {
     private String nombreGrupo;
     private List<Contacto> contactos;
     private String imagen;
+    
 
     public Grupo(String nombreGrupo) {
         this.nombreGrupo = nombreGrupo;
         this.contactos = new ArrayList<Contacto>();
-
+        
     }
 
     public Grupo(String nombreGrupo, String imagen, List<Contacto> contactos) {
         this.nombreGrupo = nombreGrupo;
         this.imagen = imagen;
+        
         this.contactos = new ArrayList<Contacto>();
         contactos.stream().forEach(contacto -> {
             this.contactos.add(contacto);
@@ -36,7 +41,7 @@ public class Grupo implements Contacto {
         return imagen;
     }
 
-    public void setNombreGrupo(String nombreGrupo) {
+    public void setNombre(String nombreGrupo) {
         this.nombreGrupo = nombreGrupo;
     }
 
@@ -73,14 +78,38 @@ public class Grupo implements Contacto {
     }
 
     @Override
-    public void agregarMensaje(Mensaje mensaje) {
+    public void agregarMensaje(String texto, TipoMensaje tipo) {
         for (Contacto contacto : contactos) {
-            contacto.agregarMensaje(mensaje);
+            contacto.agregarMensaje(texto, tipo);
         }
     }
 
     @Override
+    public void agregarEmoji(int emoji, TipoMensaje tipo) {
+        for (Contacto contacto : contactos) {
+            contacto.agregarEmoji(emoji, tipo);
+        }
+    }
+
+    @Override
+    public boolean isAgregado() {
+        return true; // Los grupos siempre están agregados
+    }
+
+    @Override
+    public void setAgregado(boolean agregado) {
+        // No se necesita implementar, ya que los grupos siempre están agregados
+    }
+
+
+
+    @Override
     public String getTelefono() {
         return null; // Los grupos no tienen un teléfono único
+    }
+
+    @Override 
+    public List<Mensaje> getMensajes() {
+        return new ArrayList<Mensaje>();
     }
 }

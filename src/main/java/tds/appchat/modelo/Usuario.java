@@ -1,12 +1,19 @@
 package tds.appchat.modelo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.modelo.contactos.Grupo;
+import tds.appchat.modelo.util.TipoMensaje;
+import tds.appchat.sesion.Sesion;
 
 public class Usuario {
 
@@ -178,7 +185,42 @@ public class Usuario {
     public void eliminarContacto(Contacto contacto) {
         this.contactos.remove(contacto);
         getGrupos().stream().filter(g-> ((Grupo) g).getContactos().contains(contacto)).forEach(g -> ((Grupo) g).eliminarContacto(contacto));
-    }   
+    }
+
+    public Map<Contacto, Mensaje> getUltimosMensajes() {
+        return this.getContactosIndividuales().stream()
+                .filter(c -> ((ContactoIndividual) c).getUltimoMensaje().isPresent())
+                .sorted(Comparator.comparing(c -> ((ContactoIndividual) c).getUltimoMensaje().get().getFecha()).reversed())
+                .collect(Collectors.toMap(
+                        c -> c,
+                        c -> ((ContactoIndividual) c).getUltimoMensaje().get(),
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new));
+    }
+
+    public void recibirMensaje(String texto, String telefono) {
+        Optional<Contacto> contacto = this.contactoRegistrado(telefono);
+        if (contacto.isPresent()) {
+            contacto.get().agregarMensaje(texto, TipoMensaje.RECIBIDO);
+        } else {
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
+            nuevoContacto.agregarMensaje(texto, TipoMensaje.RECIBIDO);
+            this.contactos.add(nuevoContacto);
+        }   
+    }
+
+    public void recibirEmoji(int emoji, String telefono) {
+        Optional<Contacto> contacto = this.contactoRegistrado(telefono);
+        if (contacto.isPresent()) {
+            contacto.get().agregarEmoji(emoji, TipoMensaje.RECIBIDO);
+        } else {
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
+            nuevoContacto.agregarEmoji(emoji, TipoMensaje.RECIBIDO);
+            this.contactos.add(nuevoContacto);
+        }   
+    }
+    
+    
 
     public void aumentarTiempoTotal(long tiempo) {
         this.stats.aumentarTiempoUso(tiempo);
@@ -187,4 +229,6 @@ public class Usuario {
     public void actualizarRacha(boolean acierto) {
         this.stats.actualizarRacha(acierto);
     }
+
+
 }

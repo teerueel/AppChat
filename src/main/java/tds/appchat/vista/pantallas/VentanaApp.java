@@ -2,6 +2,11 @@ package tds.appchat.vista.pantallas;
 
 import javax.swing.*;
 
+import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.vista.componentes.PanelDerechoContactos;
+import tds.appchat.vista.componentes.PanelDerechoMensajes;
+import tds.appchat.vista.componentes.PanelIzquierdoContactos;
+import tds.appchat.vista.componentes.PanelIzquierdoMensajes;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
@@ -18,8 +23,10 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
 
     private JPanel panelPrincipal;
     private JPanel topPanel;
-    private JPanel contactsPanel;
-    private JTextField contactField;
+    private JPanel panelContactos;
+    private JPanel panelMensajes;
+    private JSplitPane splitPane;
+    
 
     // Constructor
     public VentanaApp() {
@@ -37,118 +44,80 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         
         // Panel superior: solo contiene los botones y campos de acción
         topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        contactField = new JTextField(10);
-        JButton btnEnviarContacto = new JButton("Enviar");
+        
+       
         JButton btnBuscar = new JButton("Buscar");
         JButton btnGestion = new JButton("Contactos");
         JButton btnPremium = new JButton("Premium");
         // Aplicar estética de la APP a cada botón
-        btnEnviarContacto.setFont(EstilosApp.FUENTE_BOTON);
-        btnEnviarContacto.setForeground(Color.WHITE);
-        btnEnviarContacto.setBackground(EstilosApp.COLOR_PRIMARIO);
         
         btnBuscar.setFont(EstilosApp.FUENTE_BOTON);
         btnBuscar.setForeground(Color.WHITE);
         btnBuscar.setBackground(EstilosApp.COLOR_PRIMARIO);
-        
-        btnGestion.setFont(EstilosApp.FUENTE_BOTON);
-        btnGestion.setForeground(Color.WHITE);
-        btnGestion.setBackground(EstilosApp.COLOR_PRIMARIO);
-        
-        btnPremium.setFont(EstilosApp.FUENTE_BOTON);
-        btnPremium.setForeground(Color.WHITE);
-        btnPremium.setBackground(EstilosApp.COLOR_PRIMARIO);
-        JLabel lblUserName = new JLabel("Usuario Actual");
-        JLabel lblUserImage = new JLabel("[Imagen]");
-        lblUserImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
-        topPanel.add(contactField);
-        topPanel.add(btnEnviarContacto);
-        topPanel.add(btnBuscar);
-        topPanel.add(btnGestion);
-        topPanel.add(btnPremium);
-        topPanel.add(lblUserName);
-        topPanel.add(lblUserImage);
-        topPanel.setBackground(EstilosApp.COLOR_FONDO);
-        
-        // Manejadores de eventos en botones (simulación)
-        btnEnviarContacto.addActionListener(e -> {
-            String contacto = contactField.getText().trim();
-            if (!contacto.isEmpty()){
-                JOptionPane.showMessageDialog(VentanaApp.this, "Iniciando conversación con: " + contacto);
-            }
-        });
+
         
         btnBuscar.addActionListener(e -> {
            
             GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.BUSCAR);
         });
+        
+        btnGestion.setFont(EstilosApp.FUENTE_BOTON);
+        btnGestion.setForeground(Color.WHITE);
+        btnGestion.setBackground(EstilosApp.COLOR_PRIMARIO);
+
         btnGestion.addActionListener(e -> {
-        GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
+            
+        });
+
         
-    });
-        btnPremium.addActionListener(e -> JOptionPane.showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
+        btnPremium.setFont(EstilosApp.FUENTE_BOTON);
+        btnPremium.setForeground(Color.WHITE);
+        btnPremium.setBackground(EstilosApp.COLOR_PRIMARIO);
+
+        btnPremium.addActionListener(e -> JOptionPane.
+        showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
         
-        lblUserImage.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(VentanaApp.this, "Cambiar imagen de perfil");
+        // Nuevo botón "Iniciar Conversación"
+        JButton btnIniciar = new JButton("Iniciar Conversación");
+        btnIniciar.setFont(EstilosApp.FUENTE_BOTON);
+        btnIniciar.setForeground(Color.WHITE);
+        btnIniciar.setBackground(EstilosApp.COLOR_PRIMARIO);
+        btnIniciar.addActionListener(e -> {
+            DialogSeleccionarUnContacto dialog = new DialogSeleccionarUnContacto(VentanaApp.this);
+            dialog.setVisible(true);
+            if(dialog.getSelectedContacto() != null){
+                System.out.println("Contacto seleccionado: " + dialog.getSelectedContacto().getNombre());
+                updatePanelDerecho(dialog.getSelectedContacto());
             }
         });
+        
+        topPanel.add(btnBuscar);
+        topPanel.add(btnGestion);
+        topPanel.add(btnPremium);
+        topPanel.add(btnIniciar);
+        
+        topPanel.setBackground(EstilosApp.COLOR_FONDO);
+        
+        
         
         // Agregar topPanel a panelPrincipal
         panelPrincipal.add(topPanel, BorderLayout.NORTH);
         
         // Panel de contactos con cajitas y scroll vertical
-        contactsPanel = new JPanel();
-        contactsPanel.setLayout(new BoxLayout(contactsPanel, BoxLayout.Y_AXIS));
-        // Ajuste: aplicar margen interno al contactsPanel para mover su contenido más a la derecha
-        contactsPanel.setBorder(BorderFactory.createEmptyBorder(30, 200, 10, 50));
-        // Creación de cajitas de contacto (se aumentó la cantidad para provocar overflow)
-        for (int i = 1; i <= 20; i++) {
-            JPanel contactBox = new JPanel();
-            contactBox.setLayout(new BoxLayout(contactBox, BoxLayout.Y_AXIS));
-            // Borde titulado en verde
-            contactBox.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(EstilosApp.COLOR_TARJETA),
-                "Contacto " + i,
-                0, 0, null, EstilosApp.COLOR_TEXTO_SECUNDARIO
-            ));
-            contactBox.add(new JLabel("Nombre: Contacto " + i));
-            contactBox.add(new JLabel("Mensaje: Mensaje de prueba " + i));
-            contactBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-            contactsPanel.add(contactBox);
-        }
-        JScrollPane scrollPane = new JScrollPane(contactsPanel);
-        scrollPane.setPreferredSize(new Dimension(400, 500)); // se aumenta el tamaño
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // borde para hacer visible el scrollPane
+         this.panelContactos = new PanelIzquierdoMensajes();
+       
         
         // Actualización: Creación del Panel Mensajes sin usar BubbleText
-        JPanel panelMensajes = new JPanel();
-        panelMensajes.setLayout(new BoxLayout(panelMensajes, BoxLayout.Y_AXIS));
-        // Borde titulado con toques verdes
-        panelMensajes.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(new Color(0, 128, 0)),
-            "Mensajes",
-            0, 0, null, new Color(0, 128, 0)
-        ));
-        // Agregar mensajes simples con JLabel y fuente en tono verde oscuro
-        JLabel msg1 = new JLabel("Hola, ¿cómo estás?");
-        msg1.setForeground(new Color(0, 100, 0));
-        JLabel msg2 = new JLabel("Bien, gracias. ¿Y tú?");
-        msg2.setForeground(new Color(0, 100, 0));
-        JLabel msg3 = new JLabel("Todo bien, enviando prueba.");
-        msg3.setForeground(new Color(0, 100, 0));
-        panelMensajes.add(msg1);
-        panelMensajes.add(msg2);
-        panelMensajes.add(msg3);
+         this.panelMensajes = new PanelDerechoMensajes();
+       
         
         // Envolver panelMensajes en un JScrollPane para garantizar su visualización
         JScrollPane scrollMensajes = new JScrollPane(panelMensajes);
         scrollMensajes.setPreferredSize(new Dimension(200, 500));
         
         // Reemplazar adición individual por un JSplitPane para que ambos paneles sean iguales
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, scrollMensajes);
+         this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.panelContactos, this.panelMensajes);
         splitPane.setResizeWeight(0.5);
         // Agregar splitPane a panelPrincipal en la zona central
         panelPrincipal.add(splitPane, BorderLayout.CENTER);
@@ -186,10 +155,26 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         return TipoVentana.APP;
     }
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaApp ventana = new VentanaApp();
-            ventana.setVisible(true);
-        });
+    
+
+    public void updatePanelDerecho(Contacto contacto) {
+        this.panelMensajes = new PanelDerechoMensajes(contacto);
+        splitPane.setRightComponent(this.panelMensajes);
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
+
+    public void updatePanelIzquierdo(){
+        this.panelContactos = new PanelIzquierdoMensajes();
+        splitPane.setLeftComponent(this.panelContactos);
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+        
+    }
+
+    public Contacto getSelectedContacto(){
+        return ((PanelIzquierdoMensajes) this.panelContactos).getSelectedContacto();
+    }
+
+    
 }

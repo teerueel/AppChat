@@ -2,13 +2,16 @@ package tds.appchat.controlador;
 
 
 import java.util.List;
+import java.util.Map;
 
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.modelo.contactos.Grupo;
+import tds.appchat.modelo.util.TipoMensaje;
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
-
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.SelectorImagen;
 
 
@@ -107,6 +110,65 @@ public enum Controlador {
         }
         return Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().stream()
         .filter(c -> !grupo.getContactos().contains(c) && !c.equals(grupo)).toList();
+    }
+
+    public Map<Contacto, Mensaje> getUltimosMensajes(){
+        if(!Sesion.INSTANCIA.haySesion()){
+            return null;
+        }
+        return Sesion.INSTANCIA.getUsuarioActual().getUltimosMensajes();
+    }
+
+    public void enviarMensaje(String texto, Contacto seleccionado){
+        if(seleccionado == null){
+            return;
+        }
+        seleccionado.agregarMensaje(texto, TipoMensaje.ENVIADO);
+
+        
+        if(seleccionado instanceof ContactoIndividual){
+            
+            GestorUsuario.INSTANCIA.
+            getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> 
+            usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono())
+            );
+        }
+
+        else if(seleccionado instanceof Grupo){
+            Grupo grupo = (Grupo) seleccionado;
+            grupo.getContactos().stream().forEach(c -> 
+            GestorUsuario.INSTANCIA.getUsuario(c.getTelefono()).ifPresent(usuario -> 
+                usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono())));
+        }
+       GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
+    }
+
+    public void enviarEmoji(int emoji, Contacto seleccionado){
+        if(seleccionado == null){
+            return;
+        }
+        seleccionado.agregarEmoji(emoji, TipoMensaje.ENVIADO);
+        
+        if(seleccionado instanceof ContactoIndividual){
+            GestorUsuario.INSTANCIA.
+            getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> 
+            usuario.recibirEmoji(emoji, Sesion.INSTANCIA.getUsuarioActual().getTelefono())
+            );
+        }
+
+        else if(seleccionado instanceof Grupo){
+            Grupo grupo = (Grupo) seleccionado;
+            grupo.getContactos().stream().forEach(c -> 
+            GestorUsuario.INSTANCIA.getUsuario(c.getTelefono()).ifPresent(usuario -> 
+                usuario.recibirEmoji(emoji, Sesion.INSTANCIA.getUsuarioActual().getTelefono())));
+        }
+       GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
+    }
+
+    public void agregarContacto(String nombre, Contacto contacto){
+        contacto.setNombre(nombre);
+        contacto.setAgregado(true);
+
     }
   
 }

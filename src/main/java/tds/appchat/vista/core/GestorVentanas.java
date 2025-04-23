@@ -135,4 +135,8 @@ public enum GestorVentanas {
     public VentanaContactos getVentanaContactos(){
         return (VentanaContactos) ventanas.get(TipoVentana.CONTACTOS);
     }
+
+    public VentanaApp getVentanaApp(){
+        return (VentanaApp) ventanas.get(TipoVentana.APP);
+    }
 }
