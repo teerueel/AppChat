@@ -21,7 +21,7 @@ public class ContactoIndividual implements Contacto {
         this.nombre = nombre;
         this.usuario = null;
         this.mensajes = new LinkedList<Mensaje>();
-        this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
+        
         this.agregado = true;
     }
 
@@ -29,7 +29,6 @@ public class ContactoIndividual implements Contacto {
         this.nombre = nombre;
         this.usuario = usuario;
         this.mensajes = new ArrayList<Mensaje>();
-        this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
         this.agregado = true;
     }
 
@@ -37,7 +36,7 @@ public class ContactoIndividual implements Contacto {
         this.nombre = nombre;
         this.usuario = usuario;
         this.mensajes = new ArrayList<Mensaje>();
-        this.mensajes.add(new Mensaje("Hola soy " + nombre, TipoMensaje.RECIBIDO));
+        
         this.agregado = agregado;
     }
 
@@ -95,10 +94,9 @@ public class ContactoIndividual implements Contacto {
         this.agregado = agregado;
     }
 
-    //devuelve el último mensaje recibido
+    //devuelve el último mensaje 
     public Optional<Mensaje> getUltimoMensaje(){
         return this.mensajes.stream().
-                filter(m -> m.getTipo() == TipoMensaje.RECIBIDO).
                 max((m1, m2) -> m1.getFecha().compareTo(m2.getFecha()));
     }
 

@@ -40,12 +40,26 @@ public class PanelDerechoMensajes extends JPanel {
    
 
     public PanelDerechoMensajes() {
+        if(GestorVentanas.INSTANCIA != null) {
+            seleccionado = GestorVentanas.INSTANCIA.getVentanaApp().getSelectedContacto();
+         }
         inicializarComponentes();
 
     }
 
+    public PanelDerechoMensajes(Contacto contacto) {
+        this.seleccionado = contacto;
+        inicializarComponentes();
+    }
+
     public void inicializarComponentes(){
         setLayout(new BorderLayout());
+        // Añadir borde con título según el contacto seleccionado
+        if(seleccionado != null) {
+            setBorder(BorderFactory.createTitledBorder("Mensajes con " + seleccionado.getNombre()));
+        } else {
+            setBorder(BorderFactory.createTitledBorder("Mensajes"));
+        }
         this.setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
         this.setBackground(Color.WHITE);
 
@@ -53,9 +67,7 @@ public class PanelDerechoMensajes extends JPanel {
         panelTexto.setBackground(Color.WHITE);
         panelTexto.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         
-        if(GestorVentanas.INSTANCIA != null) {
-            seleccionado = GestorVentanas.INSTANCIA.getVentanaApp().getSelectedContacto();
-         }
+       
 
         if(seleccionado == null) {
             JLabel lbl = new JLabel("Seleccione un contacto", SwingConstants.CENTER);
@@ -169,7 +181,7 @@ public class PanelDerechoMensajes extends JPanel {
                 return;
             }
             Controlador.INSTANCIA.enviarMensaje(texto, seleccionado);
-            GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho();
+            GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho(seleccionado);
             campoTexto.setText(""); // Limpiar el campo de texto después de enviar
         });
 

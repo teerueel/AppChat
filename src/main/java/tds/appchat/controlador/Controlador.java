@@ -6,11 +6,12 @@ import java.util.Map;
 
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
+import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.modelo.contactos.Grupo;
 import tds.appchat.modelo.util.TipoMensaje;
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
-
+import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.SelectorImagen;
 
 
@@ -124,11 +125,22 @@ public enum Controlador {
         }
         seleccionado.agregarMensaje(texto, TipoMensaje.ENVIADO);
 
-        GestorUsuario.INSTANCIA.
-        getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> {
-           usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono());
-        });
         
+        if(seleccionado instanceof ContactoIndividual){
+            
+            GestorUsuario.INSTANCIA.
+            getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> 
+            usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono())
+            );
+        }
+
+        else if(seleccionado instanceof Grupo){
+            Grupo grupo = (Grupo) seleccionado;
+            grupo.getContactos().stream().forEach(c -> 
+            GestorUsuario.INSTANCIA.getUsuario(c.getTelefono()).ifPresent(usuario -> 
+                usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono())));
+        }
+       GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
     }
 
     public void agregarContacto(String nombre, Contacto contacto){

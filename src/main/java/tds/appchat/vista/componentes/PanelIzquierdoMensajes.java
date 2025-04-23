@@ -49,9 +49,11 @@ public class PanelIzquierdoMensajes extends JPanel {
             return;
         }
         else{
+            
         
         // Iterar sobre cada par (Contacto, Mensaje) para crear la tarjeta y el wrapper
             for(Map.Entry<Contacto, Mensaje> entry : ultimosMensajes.entrySet()){
+                System.out.println("Contacto: " + entry.getKey().getNombre() + ", Mensaje: " + entry.getValue().getTexto());
                 Contacto contacto = entry.getKey();
                 Mensaje mensaje = entry.getValue();
                 
@@ -73,7 +75,7 @@ public class PanelIzquierdoMensajes extends JPanel {
                         selectedPanel.setBorder(selectedBorder);
                         selectedContacto = contacto;
                         selectedMensaje = mensaje;
-                        GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho();
+                        GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho(selectedContacto);
                     }
                 });
                 

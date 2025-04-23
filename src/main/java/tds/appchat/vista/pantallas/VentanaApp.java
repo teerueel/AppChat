@@ -78,10 +78,24 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         btnPremium.addActionListener(e -> JOptionPane.
         showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
         
+        // Nuevo botón "Iniciar Conversación"
+        JButton btnIniciar = new JButton("Iniciar Conversación");
+        btnIniciar.setFont(EstilosApp.FUENTE_BOTON);
+        btnIniciar.setForeground(Color.WHITE);
+        btnIniciar.setBackground(EstilosApp.COLOR_PRIMARIO);
+        btnIniciar.addActionListener(e -> {
+            DialogSeleccionarUnContacto dialog = new DialogSeleccionarUnContacto(VentanaApp.this);
+            dialog.setVisible(true);
+            if(dialog.getSelectedContacto() != null){
+                System.out.println("Contacto seleccionado: " + dialog.getSelectedContacto().getNombre());
+                updatePanelDerecho(dialog.getSelectedContacto());
+            }
+        });
         
         topPanel.add(btnBuscar);
         topPanel.add(btnGestion);
         topPanel.add(btnPremium);
+        topPanel.add(btnIniciar);
         
         topPanel.setBackground(EstilosApp.COLOR_FONDO);
         
@@ -141,8 +155,10 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         return TipoVentana.APP;
     }
     
-    public  void updatePanelDerecho() {
-        this.panelMensajes = new PanelDerechoMensajes();
+    
+
+    public void updatePanelDerecho(Contacto contacto) {
+        this.panelMensajes = new PanelDerechoMensajes(contacto);
         splitPane.setRightComponent(this.panelMensajes);
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
@@ -153,7 +169,7 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         splitPane.setLeftComponent(this.panelContactos);
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
-        this.updatePanelDerecho();
+        
     }
 
     public Contacto getSelectedContacto(){
