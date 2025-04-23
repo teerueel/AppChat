@@ -74,6 +74,12 @@ public class ContactoIndividual implements Contacto {
     }
 
     @Override
+    public void agregarEmoji(int emoji, TipoMensaje tipo) {
+        Mensaje mensaje = new Mensaje(emoji,tipo);
+        this.mensajes.add(mensaje);
+    }
+
+    @Override
     public String getTelefono() {
         return this.usuario.getTelefono();
     }

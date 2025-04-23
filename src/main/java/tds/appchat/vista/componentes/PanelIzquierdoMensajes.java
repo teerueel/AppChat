@@ -53,7 +53,7 @@ public class PanelIzquierdoMensajes extends JPanel {
         
         // Iterar sobre cada par (Contacto, Mensaje) para crear la tarjeta y el wrapper
             for(Map.Entry<Contacto, Mensaje> entry : ultimosMensajes.entrySet()){
-                System.out.println("Contacto: " + entry.getKey().getNombre() + ", Mensaje: " + entry.getValue().getTexto());
+               
                 Contacto contacto = entry.getKey();
                 Mensaje mensaje = entry.getValue();
                 

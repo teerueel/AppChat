@@ -206,9 +206,18 @@ public class Usuario {
             Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
             nuevoContacto.agregarMensaje(texto, TipoMensaje.RECIBIDO);
             this.contactos.add(nuevoContacto);
-        }
-        
-        
+        }   
+    }
+
+    public void recibirEmoji(int emoji, String telefono) {
+        Optional<Contacto> contacto = this.contactoRegistrado(telefono);
+        if (contacto.isPresent()) {
+            contacto.get().agregarEmoji(emoji, TipoMensaje.RECIBIDO);
+        } else {
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
+            nuevoContacto.agregarEmoji(emoji, TipoMensaje.RECIBIDO);
+            this.contactos.add(nuevoContacto);
+        }   
     }
     
     

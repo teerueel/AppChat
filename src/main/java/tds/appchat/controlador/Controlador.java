@@ -143,6 +143,28 @@ public enum Controlador {
        GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
     }
 
+    public void enviarEmoji(int emoji, Contacto seleccionado){
+        if(seleccionado == null){
+            return;
+        }
+        seleccionado.agregarEmoji(emoji, TipoMensaje.ENVIADO);
+        
+        if(seleccionado instanceof ContactoIndividual){
+            GestorUsuario.INSTANCIA.
+            getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> 
+            usuario.recibirEmoji(emoji, Sesion.INSTANCIA.getUsuarioActual().getTelefono())
+            );
+        }
+
+        else if(seleccionado instanceof Grupo){
+            Grupo grupo = (Grupo) seleccionado;
+            grupo.getContactos().stream().forEach(c -> 
+            GestorUsuario.INSTANCIA.getUsuario(c.getTelefono()).ifPresent(usuario -> 
+                usuario.recibirEmoji(emoji, Sesion.INSTANCIA.getUsuarioActual().getTelefono())));
+        }
+       GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
+    }
+
     public void agregarContacto(String nombre, Contacto contacto){
         contacto.setNombre(nombre);
         contacto.setAgregado(true);

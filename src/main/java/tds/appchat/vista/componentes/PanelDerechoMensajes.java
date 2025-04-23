@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,6 +27,7 @@ import javax.swing.border.LineBorder;
 
 import org.hibernate.mapping.Component;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import tds.BubbleText;
 import tds.appchat.controlador.Controlador;
 import tds.appchat.modelo.Mensaje;
@@ -34,6 +37,7 @@ import tds.appchat.modelo.util.TipoMensaje;
 import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.core.GestorVentanas;
 import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.vista.util.ImagenUtil;
 
 public class PanelDerechoMensajes extends JPanel {
      Contacto seleccionado;
@@ -78,17 +82,13 @@ public class PanelDerechoMensajes extends JPanel {
 
 
         else{
-            //Aquí escribo los mensajes.
-           /*  JPanel listaMensajes = new JPanel();
-            listaMensajes.setLayout(new BoxLayout(listaMensajes, BoxLayout.Y_AXIS));
-            listaMensajes.setBackground(Color.ORANGE);
-            listaMensajes.setMaximumSize(new Dimension(300, 300)); */
+           
             JPanel chat=new JPanel();
             chat.setLayout(new BoxLayout(chat,BoxLayout.Y_AXIS));
-            chat.setSize(400,700);
-            chat.setMinimumSize(new Dimension(400,700));
-            chat.setMaximumSize(new Dimension(400,700));
-            chat.setPreferredSize(new Dimension(400,700));
+            chat.setSize(400,10000);
+            chat.setMinimumSize(new Dimension(400, 10000));
+            chat.setMaximumSize(new Dimension(400, 10000));
+            chat.setPreferredSize(new Dimension(400, 10000));
             
             if(!seleccionado.getMensajes().isEmpty()){
                 
@@ -97,18 +97,26 @@ public class PanelDerechoMensajes extends JPanel {
 
                     
                     if(mensaje.getTipo() == TipoMensaje.ENVIADO){
-                        System.out.println("Enviado: " + mensaje.getTexto());
-                    
+                        if(mensaje.isEmoji()){
+                            chat.add(new BubbleText(chat, mensaje.getEmoji(), EstilosApp.COLOR_PRIMARIO,
+                            Sesion.INSTANCIA.getUsuarioActual().getNombre(), BubbleText.SENT, 18));
+                        }
+                        
+                        else{
                         chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_PRIMARIO,
                         Sesion.INSTANCIA.getUsuarioActual().getNombre(), BubbleText.SENT));
-                        
+                        }
                         
                     }
                     else if(mensaje.getTipo() == TipoMensaje.RECIBIDO){
-                        System.out.println("Recibido: " + mensaje.getTexto());
+                        if(mensaje.isEmoji()){
+                            chat.add(new BubbleText(chat, mensaje.getEmoji(), EstilosApp.COLOR_SECUNDARIO,
+                            seleccionado.getNombre(), BubbleText.RECEIVED, 18));
+                        }
+                        else{
                         chat.add(new BubbleText(chat, mensaje.getTexto(), EstilosApp.COLOR_SECUNDARIO,
                         seleccionado.getNombre(), BubbleText.RECEIVED));
-                        
+                        }
                         
                     }
                 }
@@ -116,8 +124,9 @@ public class PanelDerechoMensajes extends JPanel {
 
             JScrollPane scroll = new JScrollPane(chat);
             scroll.setBackground(Color.GREEN);
-            scroll.setSize(400,700);
-            scroll.setMinimumSize(new Dimension(400,700));
+            
+            scroll.setSize(400, 700);
+            scroll.setMinimumSize(new Dimension(400 , 700));
             scroll.setMaximumSize(new Dimension(400,700));
             scroll.setPreferredSize(new Dimension(400,700));
             add(scroll, BorderLayout.CENTER);
@@ -168,6 +177,19 @@ public class PanelDerechoMensajes extends JPanel {
 
         panelTexto.add(campoTexto);
 
+        //Botón para emojis
+        ImageIcon iconoEmoji = new ImageIcon("C:\\Users\\Antonio\\Desktop\\Nueva carpeta\\src\\main\\resources\\images\\BotonEmoji2.gif");
+        JButton btnEmojis = new JButton(iconoEmoji); // Cambia el texto por un emoji o icono
+        btnEmojis.setFont(EstilosApp.FUENTE_BOTON);
+        btnEmojis.setForeground(Color.YELLOW);
+        btnEmojis.setBackground(Color.YELLOW);
+        btnEmojis.setPreferredSize(new Dimension(50, 45));
+        btnEmojis.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnEmojis.addActionListener(e -> {
+            Controlador.INSTANCIA.enviarEmoji((int)(Math.random() * BubbleText.MAXICONO), seleccionado);
+            GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho(seleccionado);
+        });
+
         // Botón para enviar el mensaje
         JButton btnEnviar = new JButton("Enviar");
         btnEnviar.setFont(EstilosApp.FUENTE_BOTON);
@@ -184,7 +206,7 @@ public class PanelDerechoMensajes extends JPanel {
             GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho(seleccionado);
             campoTexto.setText(""); // Limpiar el campo de texto después de enviar
         });
-
+        panelTexto.add(btnEmojis);
         panelTexto.add(btnEnviar);
 
         this.add(panelTexto, BorderLayout.SOUTH);

@@ -7,18 +7,36 @@ public class Mensaje {
     private String texto;
     private LocalDateTime fecha;
     private TipoMensaje tipo;
+    private int emoji;
     //emoticono aún no se como hacerlo
 
     public Mensaje(String texto, LocalDateTime fecha, TipoMensaje tipo) {
         this.texto = texto;
         this.fecha = fecha;
         this.tipo = tipo;
+        this.emoji = -1;
+
     }
     
     public Mensaje(String texto, TipoMensaje tipo) {
         this.texto = texto;
         this.fecha = LocalDateTime.now();
         this.tipo = tipo;
+        this.emoji = -1;
+    }
+
+    public Mensaje(LocalDateTime fecha, TipoMensaje tipo, int emoji) {
+        this.texto = "Emoticono";
+        this.fecha = fecha;
+        this.tipo = tipo;
+        this.emoji = emoji;
+    }
+
+    public Mensaje(int emoji, TipoMensaje tipo) {
+        this.texto = "Emoticono";
+        this.fecha = LocalDateTime.now();
+        this.tipo = tipo;
+        this.emoji = emoji;
     }
 
     public String getTexto() {
@@ -38,5 +56,17 @@ public class Mensaje {
     }
     public void setTipo(TipoMensaje tipo) {
         this.tipo = tipo;
+    }
+
+    public boolean isEmoji() {
+        return this.emoji != -1;
+    }
+
+    public int getEmoji() {
+        return emoji;
+    }
+
+    public void setEmoji(int emoji) {
+        this.emoji = emoji;
     }
 }

@@ -91,12 +91,9 @@ public class TarjetaContactoMensaje extends JPanel {
                 Frame parentFrame = JOptionPane.getFrameForComponent(this);
                 DialogAgregarContacto dialog = new DialogAgregarContacto(parentFrame, this.contacto);
                 dialog.setVisible(true);
-                if(dialog.isConfirmed()){
-                    String nombreContacto = dialog.getContactoNombre();
-                    // Aquí se implementa la lógica para agregar el contacto utilizando el nombre introducido.
-                    System.out.println("Contacto a agregar: " + nombreContacto);
-                }
+               
                 GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
+                GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho(this.contacto);
             });
             this.add(btnAgregar, BorderLayout.EAST);    
         }

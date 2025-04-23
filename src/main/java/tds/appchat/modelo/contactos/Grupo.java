@@ -85,6 +85,13 @@ public class Grupo implements Contacto {
     }
 
     @Override
+    public void agregarEmoji(int emoji, TipoMensaje tipo) {
+        for (Contacto contacto : contactos) {
+            contacto.agregarEmoji(emoji, tipo);
+        }
+    }
+
+    @Override
     public boolean isAgregado() {
         return true; // Los grupos siempre están agregados
     }
