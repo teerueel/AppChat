@@ -31,7 +31,7 @@ public enum Sesion {
 	
 	public void cerrarSesion() {
 		if(this.usuarioActual != null) {
-            this.usuarioActual.aumentarTiempoTotal(System.currentTimeMillis() - tiempoInicioSesion);
+            this.usuarioActual.getStats().aumentarTiempoUso(System.currentTimeMillis() - tiempoInicioSesion);
         }
 		this.usuarioActual = null;
 		
