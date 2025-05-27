@@ -5,6 +5,7 @@ import tds.appchat.modelo.util.TipoMensaje;
 
 public class Mensaje {
     private String texto;
+    private int id;
     private LocalDateTime fecha;
     private TipoMensaje tipo;
     private int emoji;
@@ -38,6 +39,13 @@ public class Mensaje {
         this.tipo = tipo;
         this.emoji = emoji;
     }
+    
+    public Mensaje(String texto, LocalDateTime fecha, TipoMensaje tipo, int emoji) {
+        this.texto = texto;
+        this.fecha = fecha;
+        this.tipo = tipo;
+        this.emoji = emoji;
+    }
 
     public String getTexto() {
         return texto;
@@ -68,5 +76,12 @@ public class Mensaje {
 
     public void setEmoji(int emoji) {
         this.emoji = emoji;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 }
