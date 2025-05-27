@@ -3,12 +3,18 @@ package tds.appchat.controlador;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.modelo.contactos.Grupo;
 import tds.appchat.modelo.util.TipoMensaje;
+import tds.appchat.persistencia.DAOException;
+import tds.appchat.persistencia.FactoriaDAO;
+import tds.appchat.persistencia.IAdaptadorContactoDAO;
+import tds.appchat.persistencia.IAdaptadorMensajeDAO;
+import tds.appchat.persistencia.IAdaptadorUsuarioDAO;
 import tds.appchat.repositorio.*;
 import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.core.GestorVentanas;
@@ -18,7 +24,21 @@ import tds.appchat.vista.util.SelectorImagen;
 
 public enum Controlador {
     INSTANCIA;
-    
+
+    private IAdaptadorUsuarioDAO adaptadorUsuario;
+    private IAdaptadorContactoDAO adaptadorContacto;
+    private IAdaptadorMensajeDAO adaptadorMensaje;
+
+   
+    /**
+     * Constructor privado para el singleton
+     */
+    Controlador() {
+        // Inicializar el controlador si es necesario
+        inicializarAdaptadores();
+        
+    }
+
     /**
      * Registra un nuevo usuario en el sistema
      * @param email Email del usuario
@@ -30,16 +50,19 @@ public enum Controlador {
 
      // Se utiliza para registrar un nuevo usuario en el sistema
     public boolean registrarUsuario(String email, String nombre, String password, String tlf, String imagen, String saludo){
-        return GestorUsuario.INSTANCIA.crearUsuario(email, nombre, password, tlf, imagen, saludo);
+        Usuario user = new Usuario(nombre, email, password, tlf, saludo, imagen);
+        adaptadorUsuario.registrarUsuario(user);
+        CatalogoUsuarios.INSTANCIA.addUsuario(user);
+        return true;
     }
 
     // Se utiliza para saber si un telefono ya está registrado en el sistema
     public boolean tlfRegistrado(String tlf) {
-    	return GestorUsuario.INSTANCIA.tlfRegistrado(tlf);
+    	return CatalogoUsuarios.INSTANCIA.tlfRegistrado(tlf);
     }
     // Se utiliza para saber si un email ya está registrado en el sistema
     public boolean emailRegistrado(String email) {
-    	return GestorUsuario.INSTANCIA.emailRegistrado(email);
+    	return CatalogoUsuarios.INSTANCIA.emailRegistrado(email);
     }
 
     public String seleccionarImagenPerfil(){
@@ -47,8 +70,8 @@ public enum Controlador {
     }
     
     public boolean iniciarSesion(String tlf, String password) {
-    	if(GestorUsuario.INSTANCIA.autenticarUsuario(tlf, password).isPresent()) {
-    		Sesion.INSTANCIA.setUsuarioActual(GestorUsuario.INSTANCIA.autenticarUsuario(tlf, password).get());
+    	if(CatalogoUsuarios.INSTANCIA.autenticarUsuario(tlf, password).isPresent()) {
+    		Sesion.INSTANCIA.setUsuarioActual(CatalogoUsuarios.INSTANCIA.autenticarUsuario(tlf, password).get());
     		return true;
     	}
     	return false;
@@ -66,7 +89,7 @@ public enum Controlador {
     public void actualizarTiempoUso(long tiempo){
         if(Sesion.INSTANCIA.haySesion()){
             System.out.println("Tiempo de uso: " + tiempo);
-            Sesion.INSTANCIA.getUsuarioActual().aumentarTiempoTotal(tiempo);
+            Sesion.INSTANCIA.getUsuarioActual().getStats().aumentarTiempoUso(tiempo);
             Sesion.INSTANCIA.setTiempoInicioSesion(System.currentTimeMillis());
         }
     }
@@ -75,11 +98,16 @@ public enum Controlador {
         if(Sesion.INSTANCIA.getUsuarioActual().contactoRegistrado(telefono).isPresent()){
             return false;
         }
-        if(!GestorUsuario.INSTANCIA.tlfRegistrado(telefono)){
+        if(!CatalogoUsuarios.INSTANCIA.tlfRegistrado(telefono)){
             return false;
         }
-        Usuario user = GestorUsuario.INSTANCIA.getUsuario(telefono).get();
-        return Sesion.INSTANCIA.getUsuarioActual().addContacto(user,nombre);
+        ContactoIndividual contactoActual = new ContactoIndividual(nombre);
+        Usuario user = CatalogoUsuarios.INSTANCIA.buscarUsuario(telefono).get();
+        contactoActual.setIdUsuario(user.getId());
+        adaptadorContacto.registrarContacto(contactoActual);
+        Sesion.INSTANCIA.getUsuarioActual().addContacto(contactoActual);
+        adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
+        return true;
     }
 
     public boolean nuevoGrupo(String nombre, String imagen, List<Contacto> contactos){
@@ -101,7 +129,10 @@ public enum Controlador {
     }
 
     public void eliminarContacto(Contacto contacto){
+        
+        adaptadorContacto.eliminarContacto(contacto);
         Sesion.INSTANCIA.getUsuarioActual().eliminarContacto(contacto);
+        adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
     }
 
     public List<Contacto> getContactosRestantes(Grupo grupo){
@@ -123,22 +154,24 @@ public enum Controlador {
         if(seleccionado == null){
             return;
         }
-        seleccionado.agregarMensaje(texto, TipoMensaje.ENVIADO);
-
+        Mensaje mensaje = new Mensaje(texto, TipoMensaje.ENVIADO);
+        adaptadorMensaje.registrarMensaje(mensaje);
+        seleccionado.agregarMensaje(mensaje);
+        adaptadorContacto.modificarContacto(seleccionado);
+        Mensaje mensajeRecibido = new Mensaje(texto, TipoMensaje.RECIBIDO);
+        
         
         if(seleccionado instanceof ContactoIndividual){
             
-            GestorUsuario.INSTANCIA.
-            getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> 
-            usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono())
-            );
+            recibirMensaje(mensajeRecibido, seleccionado);
+            
         }
 
         else if(seleccionado instanceof Grupo){
             Grupo grupo = (Grupo) seleccionado;
-            grupo.getContactos().stream().forEach(c -> 
-            GestorUsuario.INSTANCIA.getUsuario(c.getTelefono()).ifPresent(usuario -> 
-                usuario.recibirMensaje(texto, Sesion.INSTANCIA.getUsuarioActual().getTelefono())));
+            
+            grupo.getContactos().stream().forEach(c ->
+            recibirMensaje(mensajeRecibido, c));
         }
        GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
     }
@@ -147,28 +180,98 @@ public enum Controlador {
         if(seleccionado == null){
             return;
         }
-        seleccionado.agregarEmoji(emoji, TipoMensaje.ENVIADO);
+        Mensaje mensaje = new Mensaje(emoji, TipoMensaje.ENVIADO);
+        adaptadorMensaje.registrarMensaje(mensaje);
+        seleccionado.agregarMensaje(mensaje);
+        adaptadorContacto.modificarContacto(seleccionado);
+        Mensaje mensajeRecibido = new Mensaje(emoji, TipoMensaje.RECIBIDO);
+        
         
         if(seleccionado instanceof ContactoIndividual){
-            GestorUsuario.INSTANCIA.
-            getUsuario(seleccionado.getTelefono()).ifPresent(usuario -> 
-            usuario.recibirEmoji(emoji, Sesion.INSTANCIA.getUsuarioActual().getTelefono())
-            );
+            
+            recibirEmoji(mensajeRecibido, seleccionado);
+            
         }
 
         else if(seleccionado instanceof Grupo){
             Grupo grupo = (Grupo) seleccionado;
-            grupo.getContactos().stream().forEach(c -> 
-            GestorUsuario.INSTANCIA.getUsuario(c.getTelefono()).ifPresent(usuario -> 
-                usuario.recibirEmoji(emoji, Sesion.INSTANCIA.getUsuarioActual().getTelefono())));
+            
+            grupo.getContactos().stream().forEach(c ->
+            recibirEmoji(mensajeRecibido, c));
         }
        GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo(); 
     }
 
+    public void recibirMensaje(Mensaje mensaje, Contacto contacto){
+        
+        Usuario user = null;
+        if(CatalogoUsuarios.INSTANCIA.buscarUsuario(contacto.getTelefono()).isPresent()){
+             user = CatalogoUsuarios.INSTANCIA.buscarUsuario(contacto.getTelefono()).get();
+        }
+        Optional<Contacto> c = user.contactoRegistrado(Sesion.INSTANCIA.getUsuarioActual().getTelefono());
+        if(c.isPresent()){
+            adaptadorMensaje.registrarMensaje(mensaje);
+            c.get().agregarMensaje(mensaje);
+            adaptadorContacto.modificarContacto(c.get());
+            
+        } else {
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual().getId(),
+             Sesion.INSTANCIA.getUsuarioActual().getTelefono(), false);
+            adaptadorContacto.registrarContacto(nuevoContacto);
+            adaptadorMensaje.registrarMensaje(mensaje);
+            nuevoContacto.agregarMensaje(mensaje);
+            adaptadorContacto.modificarContacto(nuevoContacto);
+            user.addContacto(nuevoContacto);
+            adaptadorUsuario.modificarUsuario(user);
+        }
+
+    }
+
+    public void recibirEmoji(Mensaje mensaje, Contacto contacto){
+        
+        Usuario user = null;
+        if(CatalogoUsuarios.INSTANCIA.buscarUsuario(contacto.getTelefono()).isPresent()){
+             user = CatalogoUsuarios.INSTANCIA.buscarUsuario(contacto.getTelefono()).get();
+        }
+        Optional<Contacto> c = user.contactoRegistrado(Sesion.INSTANCIA.getUsuarioActual().getTelefono());
+        if(c.isPresent()){
+            adaptadorMensaje.registrarMensaje(mensaje);
+            c.get().agregarEmoji(mensaje);
+            adaptadorContacto.modificarContacto(c.get());
+            
+        } else {
+            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual().getId(), 
+            Sesion.INSTANCIA.getUsuarioActual().getTelefono(), false);
+            adaptadorContacto.registrarContacto(nuevoContacto);
+            adaptadorMensaje.registrarMensaje(mensaje);
+            nuevoContacto.agregarEmoji(mensaje);
+            adaptadorContacto.modificarContacto(nuevoContacto);
+            user.addContacto(nuevoContacto);
+            adaptadorUsuario.modificarUsuario(user);
+        }
+
+    }
+
+
+
     public void agregarContacto(String nombre, Contacto contacto){
         contacto.setNombre(nombre);
         contacto.setAgregado(true);
+        adaptadorContacto.modificarContacto(contacto);
 
     }
+
+    private void inicializarAdaptadores() {
+		FactoriaDAO factoria = null;
+		try {
+			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		adaptadorUsuario = factoria.getUsuarioDAO();
+        adaptadorContacto = factoria.getContactoDAO();
+        adaptadorMensaje = factoria.getMensajeDAO();
+		
+	}
   
 }
