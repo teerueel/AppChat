@@ -8,10 +8,12 @@ import java.util.Optional;
 import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.Usuario;
 import tds.appchat.modelo.util.TipoMensaje;
+import tds.appchat.repositorio.CatalogoUsuarios;
 
 public class ContactoIndividual implements Contacto {
     
-    private Usuario usuario;
+	private int id;
+    private int idUsuario;
     private String nombre;
     private List<Mensaje> mensajes;
     private boolean agregado;
@@ -19,35 +21,38 @@ public class ContactoIndividual implements Contacto {
 
     public ContactoIndividual(String nombre) {
         this.nombre = nombre;
-        this.usuario = null;
         this.mensajes = new LinkedList<Mensaje>();
         
         this.agregado = true;
     }
 
-    public ContactoIndividual(Usuario usuario, String nombre) {
+    public ContactoIndividual(int idUsuario, String nombre) {
         this.nombre = nombre;
-        this.usuario = usuario;
+        this.idUsuario = idUsuario;
         this.mensajes = new ArrayList<Mensaje>();
         this.agregado = true;
     }
 
-    public ContactoIndividual(Usuario usuario, String nombre, boolean agregado) {
+    public ContactoIndividual(int idUsuario, String nombre, boolean agregado) {
         this.nombre = nombre;
-        this.usuario = usuario;
+        this.idUsuario = idUsuario;
         this.mensajes = new ArrayList<Mensaje>();
         
         this.agregado = agregado;
     }
 
-   
-
-    public Usuario getUsuario() {
-        return usuario;
+   public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     @Override
@@ -68,30 +73,36 @@ public class ContactoIndividual implements Contacto {
     }
 
     @Override
-    public void agregarMensaje(String texto, TipoMensaje tipo) {
-        Mensaje mensaje = new Mensaje(texto, tipo);
+    public void agregarMensaje(Mensaje mensaje) {
         this.mensajes.add(mensaje);
     }
 
     @Override
-    public void agregarEmoji(int emoji, TipoMensaje tipo) {
-        Mensaje mensaje = new Mensaje(emoji,tipo);
+    public void agregarEmoji(Mensaje mensaje) {
         this.mensajes.add(mensaje);
     }
 
     @Override
     public String getTelefono() {
-        return this.usuario.getTelefono();
+        if(CatalogoUsuarios.INSTANCIA.getUsuario(idUsuario).isPresent()){
+            return CatalogoUsuarios.INSTANCIA.getUsuario(idUsuario).get().getTelefono();
+        }
+        return null;
     }
     @Override
     public String getImagen(){
-        return this.usuario.getImagen();
+        if(CatalogoUsuarios.INSTANCIA.getUsuario(idUsuario).isPresent()){
+            return CatalogoUsuarios.INSTANCIA.getUsuario(idUsuario).get().getImagen();
+        }
+        return null;
     }
 
     public String getSaludo(){
-        return this.usuario.getSaludo();
+        if(CatalogoUsuarios.INSTANCIA.getUsuario(idUsuario).isPresent()){
+            return CatalogoUsuarios.INSTANCIA.getUsuario(idUsuario).get().getSaludo();
+        }
+        return null;
     }
-
     public boolean isAgregado() {
         return agregado;
     }
