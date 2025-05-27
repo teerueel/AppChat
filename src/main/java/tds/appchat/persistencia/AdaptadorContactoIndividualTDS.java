@@ -58,7 +58,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoDAO {
                         new beans.Propiedad("agregado", String.valueOf(contacto.isAgregado())),
                         new beans.Propiedad("mensajes", obtenerCodigoMensajes(contacto.getMensajes())),
                         new beans.Propiedad("usuario", Integer.toString(((ContactoIndividual) contacto).getIdUsuario())))));
-        
+        				new beans.Propiedad("imagen", contacto.getImagen());
         eContacto = servPersistencia.registrarEntidad(eContacto);
         contacto.setId(eContacto.getId());
         
