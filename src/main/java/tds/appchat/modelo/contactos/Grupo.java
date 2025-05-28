@@ -32,6 +32,13 @@ public class Grupo implements Contacto {
         );   
     }
     
+    public Grupo(String nombreGrupo, String imagen) {
+        this.nombreGrupo = nombreGrupo;
+        this.imagen = imagen;
+        
+        this.contactos = new ArrayList<Contacto>(); 
+    }
+    
     public int getId() {
         return id;
     }
