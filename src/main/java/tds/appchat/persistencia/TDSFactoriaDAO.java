@@ -11,6 +11,11 @@ public class TDSFactoriaDAO extends FactoriaDAO {
     public IAdaptadorContactoDAO getContactoDAO() {
         return AdaptadorContactoIndividualTDS.getInstance();
     }
+    
+    @Override
+    public IAdaptadorContactoDAO getGrupoDAO() {
+        return AdaptadorGrupoTDS.getInstance();
+    }
 
     @Override
     public IAdaptadorMensajeDAO getMensajeDAO() {
