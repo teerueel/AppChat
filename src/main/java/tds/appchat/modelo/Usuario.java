@@ -183,6 +183,10 @@ public class Usuario {
         Grupo grupo = new Grupo(nombre, imagen, contactos);
         return this.contactos.add(grupo);
     }
+    
+    public boolean addGrupo(Grupo grupo) {
+        return this.contactos.add(grupo);
+    }
 
     //Elimina un contacto de la lista de contactos del usuario, también de todos los grupos
     // a los que pertenezca
