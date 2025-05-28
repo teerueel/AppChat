@@ -116,6 +116,7 @@ public enum Controlador {
 		Grupo grupo = new Grupo(nombre, imagen, contactos);
 		adaptadorGrupo.registrarContacto(grupo);
 		Sesion.INSTANCIA.getUsuarioActual().addGrupo(grupo);
+		adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
 		return true;
 	}
 
@@ -133,7 +134,6 @@ public enum Controlador {
 	}
 
 	public void eliminarContacto(Contacto contacto) {
-
 		adaptadorContacto.eliminarContacto(contacto);
 		Sesion.INSTANCIA.getUsuarioActual().eliminarContacto(contacto);
 		adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
@@ -160,19 +160,24 @@ public enum Controlador {
 		}
 		Mensaje mensaje = new Mensaje(texto, TipoMensaje.ENVIADO);
 		adaptadorMensaje.registrarMensaje(mensaje);
-		seleccionado.agregarMensaje(mensaje);
-		adaptadorContacto.modificarContacto(seleccionado);
 		Mensaje mensajeRecibido = new Mensaje(texto, TipoMensaje.RECIBIDO);
 
 		if (seleccionado instanceof ContactoIndividual) {
-
+			seleccionado.agregarMensaje(mensaje);
+			adaptadorContacto.modificarContacto(seleccionado);
 			recibirMensaje(mensajeRecibido, seleccionado);
 
 		}
 
 		else if (seleccionado instanceof Grupo) {
 			Grupo grupo = (Grupo) seleccionado;
-			grupo.getContactos().stream().forEach(c -> recibirMensaje(mensajeRecibido, c));
+			grupo.getContactos().stream().forEach(c -> {
+					c.agregarMensaje(mensaje);
+					adaptadorContacto.modificarContacto(c);
+					recibirMensaje(mensajeRecibido, c);
+					
+				});
+			adaptadorGrupo.modificarContacto(grupo);
 		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
 	}
@@ -183,12 +188,11 @@ public enum Controlador {
 		}
 		Mensaje mensaje = new Mensaje(emoji, TipoMensaje.ENVIADO);
 		adaptadorMensaje.registrarMensaje(mensaje);
-		seleccionado.agregarMensaje(mensaje);
-		adaptadorContacto.modificarContacto(seleccionado);
 		Mensaje mensajeRecibido = new Mensaje(emoji, TipoMensaje.RECIBIDO);
 
 		if (seleccionado instanceof ContactoIndividual) {
-
+			seleccionado.agregarEmoji(mensaje);
+			adaptadorContacto.modificarContacto(seleccionado);
 			recibirEmoji(mensajeRecibido, seleccionado);
 
 		}
@@ -196,7 +200,12 @@ public enum Controlador {
 		else if (seleccionado instanceof Grupo) {
 			Grupo grupo = (Grupo) seleccionado;
 
-			grupo.getContactos().stream().forEach(c -> recibirEmoji(mensajeRecibido, c));
+			grupo.getContactos().stream().forEach(c -> {
+					c.agregarEmoji(mensaje);
+					adaptadorContacto.modificarContacto(c);
+					recibirEmoji(mensajeRecibido, c);
+				});
+			adaptadorGrupo.modificarContacto(grupo);
 		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
 	}

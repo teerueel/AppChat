@@ -29,7 +29,7 @@ public class AdaptadorGrupoTDS extends AdaptadorContactoTDSBase {
 	@Override
 	protected Entidad crearEntidad(Contacto contacto) {
 		Entidad eGrupo = new Entidad();
-		eGrupo.setNombre("Contacto");
+		eGrupo.setNombre("Contacto Grupal");
 
 		eGrupo.setPropiedades(
 				new ArrayList<beans.Propiedad>(Arrays.asList(new beans.Propiedad("nombre", contacto.getNombre()),

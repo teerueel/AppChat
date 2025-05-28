@@ -35,9 +35,9 @@ public abstract class AdaptadorContactoTDSBase implements IAdaptadorContactoDAO{
 	
 	@Override
 	public void modificarContacto(Contacto contacto) {
-		Entidad eGrupo = servPersistencia.recuperarEntidad(contacto.getId());
+		Entidad eContacto = servPersistencia.recuperarEntidad(contacto.getId());
 
-		for (Propiedad p : eGrupo.getPropiedades()) {
+		for (Propiedad p : eContacto.getPropiedades()) {
 			if (p.getNombre().equals("nombre")) {
 				p.setValor(contacto.getNombre());
 			} else if (p.getNombre().equals("imagen")) {

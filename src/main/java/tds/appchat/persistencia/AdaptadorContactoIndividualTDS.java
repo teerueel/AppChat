@@ -50,6 +50,7 @@ public class AdaptadorContactoIndividualTDS extends AdaptadorContactoTDSBase {
 
 		nombre = servPersistencia.recuperarPropiedadEntidad(entidad, "nombre");
 		agregado = Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(entidad, "agregado"));
+		
 		idUsuario = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(entidad, "usuario"));
 
 		ContactoIndividual contacto = new ContactoIndividual(idUsuario, nombre, agregado);

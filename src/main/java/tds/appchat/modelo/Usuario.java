@@ -28,6 +28,7 @@ public class Usuario {
     private boolean Premium;
     private String imagen;
     private List<Contacto> contactos;
+    private List<Contacto> grupos;
 
     
 
@@ -36,6 +37,7 @@ public class Usuario {
         
         this.stats = new EstadisticasUsuario();
         this.contactos = new ArrayList<Contacto>();
+        this.grupos = new ArrayList<Contacto>();
         this.Premium    = false;
     }
 
@@ -141,15 +143,18 @@ public class Usuario {
     }
 
     public List<Contacto> getContactos() {
-        return this.contactos;
+    	List<Contacto> contactosMasGrupos = new ArrayList<Contacto>();
+    	contactosMasGrupos.addAll(contactos);
+    	contactosMasGrupos.addAll(grupos);    	
+        return contactosMasGrupos;
     }
 
     public List<Contacto> getContactosIndividuales() {
-        return this.contactos.stream().filter(c -> c instanceof ContactoIndividual).toList();
+        return this.contactos;
     }
 
     public List<Contacto> getGrupos() {
-        return this.contactos.stream().filter(c -> c instanceof Grupo).toList();
+        return this.grupos;
     }
 
     // Se utiliza para añadir un contacto a la lista de contactos del usuario
@@ -173,19 +178,19 @@ public class Usuario {
     }
 
 
-    public List<String> getContactosUsuario() {
+    /*public List<String> getContactosUsuario() {
         // TODO Auto-generated method stub
-        return this.contactos.stream().map(c -> c.getNombre()).toList();
-    }
+        return getContactos().stream().map(c -> c.getNombre()).toList();
+    }*/
 
     public boolean addGrupo(String nombre, String imagen, List<Contacto> contactos) {
         // TODO Auto-generated method stub
         Grupo grupo = new Grupo(nombre, imagen, contactos);
-        return this.contactos.add(grupo);
+        return this.grupos.add(grupo);
     }
     
-    public boolean addGrupo(Grupo grupo) {
-        return this.contactos.add(grupo);
+    public boolean addGrupo(Contacto grupo) {
+        return this.grupos.add(grupo);
     }
 
     //Elimina un contacto de la lista de contactos del usuario, también de todos los grupos

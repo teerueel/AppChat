@@ -41,10 +41,15 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         if(eUsuario != null) return;
 
         // Registrar primero los atributos que son objetos
-        IAdaptadorContactoDAO adaptadorContacto = AdaptadorContactoIndividualTDS.getInstance();
-         for(Contacto contacto : user.getContactos()) {
+        IAdaptadorContactoDAO adaptadorContacto, adaptadorGrupo;
+        adaptadorContacto = AdaptadorContactoIndividualTDS.getInstance();
+        for(Contacto contacto : user.getContactosIndividuales()) {
             adaptadorContacto.registrarContacto(contacto);
-        } 
+        }
+        adaptadorGrupo = AdaptadorGrupoTDS.getInstance();
+        for(Contacto grupo : user.getGrupos()) {
+            adaptadorGrupo.registrarContacto(grupo);
+        }
 
         // crear la entidad de usuario
         eUsuario = new Entidad();
@@ -53,7 +58,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                 Arrays.asList(new Propiedad("telefono", user.getTelefono()),
                         new Propiedad("nombre", user.getNombre()),
                         new Propiedad("password", user.getPassword()),
-                        new Propiedad("contactos", obtenerCodigoContactos(user.getContactos())),
+                        new Propiedad("contactos", obtenerCodigo(user.getContactosIndividuales())),
+                        new Propiedad("grupos", obtenerCodigo(user.getGrupos())),                        
                         new Propiedad("imagen", user.getImagen()),
                         new Propiedad("saludo", user.getSaludo()),
                         new Propiedad("email", user.getEmail()))));
@@ -93,7 +99,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
             } else if (prop.getNombre().equals("email")) {
                 prop.setValor(user.getEmail());
             } else if (prop.getNombre().equals("contactos")) {
-                prop.setValor(obtenerCodigoContactos(user.getContactos()));
+                prop.setValor(obtenerCodigo(user.getContactosIndividuales()));
+            } else if (prop.getNombre().equals("grupos")) {
+                prop.setValor(obtenerCodigo(user.getGrupos()));
             }
             servPersistencia.modificarPropiedad(prop);
         }
@@ -110,6 +118,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         // Si no, la recupera de la BBDD
         Entidad eUsuario;
         List<Contacto> contactos = new LinkedList<Contacto>();
+        List<Contacto> grupos = new LinkedList<Contacto>();
         String telefono;
         String nombre;
         String password;
@@ -135,10 +144,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
         // recuperar propiedades que son objetos
         
-        contactos = obtenerContactosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
+        contactos = obtenerDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"), false);
         for(Contacto contacto : contactos) {
             user.addContacto(contacto);
         } 
+        grupos = obtenerDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"), true);
+        for(Contacto grupo : grupos) {
+        	user.addGrupo(grupo);
+        }
         return user;
     }
 
@@ -157,7 +170,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
     }
 
     //--------- Funciones auxiliares ----------//
-    private String obtenerCodigoContactos(List<Contacto> contactos) {
+    private String obtenerCodigo(List<Contacto> contactos) {
         String aux = "";
         for (Contacto contacto : contactos) {
             aux += contacto.getId() + " ";
@@ -165,14 +178,19 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         return aux.trim();
     }
 
-    private List<Contacto> obtenerContactosDesdeCodigos(String codigos) {
+    private List<Contacto> obtenerDesdeCodigos(String codigos, boolean grupos) {
         List<Contacto> contactos = new LinkedList<Contacto>();
         // Comprueba si la cadena es null o vacía
         if(codigos == null || codigos.trim().isEmpty() || codigos.equals("0")){
             return contactos;
         }
         StringTokenizer st = new StringTokenizer(codigos, " ");
-        IAdaptadorContactoDAO adaptadorContacto = AdaptadorContactoIndividualTDS.getInstance();
+        IAdaptadorContactoDAO adaptadorContacto;
+        if (grupos) {
+        	adaptadorContacto = AdaptadorGrupoTDS.getInstance();
+        } else {
+        	adaptadorContacto = AdaptadorContactoIndividualTDS.getInstance();
+        }
         while (st.hasMoreTokens()) {
             contactos.add(adaptadorContacto.obtenerContacto(Integer.valueOf((String) st.nextElement())));
         }
