@@ -18,7 +18,7 @@ import tds.appchat.sesion.Sesion;
 public class Usuario {
 
    
-    private Integer id;  
+    private int id;
     private String nombre;
     private String telefono;
     private String saludo;
@@ -28,20 +28,22 @@ public class Usuario {
     private boolean Premium;
     private String imagen;
     private List<Contacto> contactos;
+    private List<Contacto> grupos;
 
     
 
     
     public Usuario() {
+        
         this.stats = new EstadisticasUsuario();
         this.contactos = new ArrayList<Contacto>();
+        this.grupos = new ArrayList<Contacto>();
         this.Premium    = false;
     }
 
 
-    public Usuario(int id,  String nombre, String email, String password, EstadisticasUsuario stats) {
+    public Usuario(  String nombre, String email, String password, EstadisticasUsuario stats) {
         this();
-        this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.password = password;
@@ -49,37 +51,36 @@ public class Usuario {
         
     }
 
-    public Usuario(int id,  String nombre, String email, String password) {
+    public Usuario(  String nombre, String email, String password) {
         this();
-        this.id = id;
+        
         this.nombre = nombre;
         this.email = email;
         this.password = password;
     }
 
-    public Usuario(int id, String nombre, String email, String password, String telefono, String saludo) {
-        this(id, nombre, email, password);
+    public Usuario(String nombre, String email, String password, String telefono, String saludo) {
+        this( nombre, email, password);
         this.telefono = telefono;
         this.saludo = saludo;
     }
 
-    public Usuario(int id, String nombre, String email, String password, String telefono, String saludo, String imagen) {
-        this(id, nombre, email, password, telefono, saludo);
+    public Usuario(String nombre, String email, String password, String telefono, String saludo, String imagen) {
+        this( nombre, email, password, telefono, saludo);
         this.imagen = imagen;
     }
 
    
 
+  
+
+
     public int getId() {
         return this.id;
     }
-
-    public void setId(Integer id){
+    public void setId(int id) {
         this.id = id;
     }
-
-
-    
 
     public String getNombre() {
         return this.nombre;
@@ -142,20 +143,28 @@ public class Usuario {
     }
 
     public List<Contacto> getContactos() {
-        return this.contactos;
+    	List<Contacto> contactosMasGrupos = new ArrayList<Contacto>();
+    	contactosMasGrupos.addAll(contactos);
+    	contactosMasGrupos.addAll(grupos);    	
+        return contactosMasGrupos;
     }
 
     public List<Contacto> getContactosIndividuales() {
-        return this.contactos.stream().filter(c -> c instanceof ContactoIndividual).toList();
+        return this.contactos;
     }
 
     public List<Contacto> getGrupos() {
-        return this.contactos.stream().filter(c -> c instanceof Grupo).toList();
+        return this.grupos;
     }
 
     // Se utiliza para añadir un contacto a la lista de contactos del usuario
     public boolean addContacto(Usuario user, String nombre) {
-        Contacto contacto = new ContactoIndividual(user, nombre);
+        Contacto contacto = new ContactoIndividual(user.getId(), nombre);
+        return this.contactos.add(contacto);
+    }
+
+    // Se utiliza para añadir un contacto a la lista de contactos del usuario
+    public boolean addContacto(Contacto contacto) {
         return this.contactos.add(contacto);
     }
 
@@ -169,15 +178,19 @@ public class Usuario {
     }
 
 
-    public List<String> getContactosUsuario() {
+    /*public List<String> getContactosUsuario() {
         // TODO Auto-generated method stub
-        return this.contactos.stream().map(c -> c.getNombre()).toList();
-    }
+        return getContactos().stream().map(c -> c.getNombre()).toList();
+    }*/
 
     public boolean addGrupo(String nombre, String imagen, List<Contacto> contactos) {
         // TODO Auto-generated method stub
         Grupo grupo = new Grupo(nombre, imagen, contactos);
-        return this.contactos.add(grupo);
+        return this.grupos.add(grupo);
+    }
+    
+    public boolean addGrupo(Contacto grupo) {
+        return this.grupos.add(grupo);
     }
 
     //Elimina un contacto de la lista de contactos del usuario, también de todos los grupos
@@ -197,38 +210,4 @@ public class Usuario {
                         (existing, replacement) -> existing,
                         LinkedHashMap::new));
     }
-
-    public void recibirMensaje(String texto, String telefono) {
-        Optional<Contacto> contacto = this.contactoRegistrado(telefono);
-        if (contacto.isPresent()) {
-            contacto.get().agregarMensaje(texto, TipoMensaje.RECIBIDO);
-        } else {
-            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
-            nuevoContacto.agregarMensaje(texto, TipoMensaje.RECIBIDO);
-            this.contactos.add(nuevoContacto);
-        }   
-    }
-
-    public void recibirEmoji(int emoji, String telefono) {
-        Optional<Contacto> contacto = this.contactoRegistrado(telefono);
-        if (contacto.isPresent()) {
-            contacto.get().agregarEmoji(emoji, TipoMensaje.RECIBIDO);
-        } else {
-            Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual(), telefono, false);
-            nuevoContacto.agregarEmoji(emoji, TipoMensaje.RECIBIDO);
-            this.contactos.add(nuevoContacto);
-        }   
-    }
-    
-    
-
-    public void aumentarTiempoTotal(long tiempo) {
-        this.stats.aumentarTiempoUso(tiempo);
-    }
-
-    public void actualizarRacha(boolean acierto) {
-        this.stats.actualizarRacha(acierto);
-    }
-
-
 }

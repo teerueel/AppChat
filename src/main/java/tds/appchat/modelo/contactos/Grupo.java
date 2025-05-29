@@ -9,6 +9,7 @@ import tds.appchat.modelo.Mensaje;
 import tds.appchat.modelo.util.TipoMensaje;
 
 public class Grupo implements Contacto {
+	private int id;
     private String nombreGrupo;
     private List<Contacto> contactos;
     private String imagen;
@@ -29,6 +30,21 @@ public class Grupo implements Contacto {
             this.contactos.add(contacto);
             }
         );   
+    }
+    
+    public Grupo(String nombreGrupo, String imagen) {
+        this.nombreGrupo = nombreGrupo;
+        this.imagen = imagen;
+        
+        this.contactos = new ArrayList<Contacto>(); 
+    }
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -78,16 +94,16 @@ public class Grupo implements Contacto {
     }
 
     @Override
-    public void agregarMensaje(String texto, TipoMensaje tipo) {
+    public void agregarMensaje(Mensaje mensaje) {
         for (Contacto contacto : contactos) {
-            contacto.agregarMensaje(texto, tipo);
+            contacto.agregarMensaje(mensaje);
         }
     }
 
     @Override
-    public void agregarEmoji(int emoji, TipoMensaje tipo) {
+    public void agregarEmoji(Mensaje mensaje) {
         for (Contacto contacto : contactos) {
-            contacto.agregarEmoji(emoji, tipo);
+            contacto.agregarEmoji(mensaje);
         }
     }
 

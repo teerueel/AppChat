@@ -7,8 +7,10 @@ import tds.appchat.modelo.util.TipoMensaje;
 
 // Utilizaremos el patrón Composite para la jerarquía de contactos y grupo.
 public interface Contacto {
-    public void agregarMensaje(String texto, TipoMensaje tipo);
-    public void agregarEmoji(int emoji, TipoMensaje tipo);
+    public void agregarMensaje(Mensaje mensaje);
+    public void agregarEmoji(Mensaje mensaje);
+    public int getId(); // Método para obtener el ID del contacto
+    public void setId(int id); // Método para establecer el ID del contacto
     public String getTelefono();
     public String getNombre(); // Método para obtener el nombre del contacto
     public String getImagen();
