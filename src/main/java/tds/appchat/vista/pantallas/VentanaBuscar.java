@@ -231,6 +231,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
         	} else {contacto = "";}
         	
         	List<String> mensajes = Controlador.INSTANCIA.buscarMensajes(texto, tlf, contacto, seleccion);
+            panelResultados.removeAll();
         	for(String s : mensajes) {
         		JLabel lblMensaje = new JLabel(s);
         		lblMensaje.setFont(EstilosApp.FUENTE_NORMAL);
@@ -239,6 +240,16 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
                 panelResultados.add(lblMensaje);
                 panelResultados.revalidate();
                 panelResultados.repaint();
+        	}
+        	if (mensajes.isEmpty()) {
+        		JLabel lblMensaje = new JLabel("No se han encontrado resultados para la busqueda");
+        		lblMensaje.setFont(EstilosApp.FUENTE_NORMAL);
+                lblMensaje.setForeground(EstilosApp.COLOR_TEXTO);
+                lblMensaje.setBorder(new EmptyBorder(5, 10, 5, 10));
+                panelResultados.add(lblMensaje);
+                panelResultados.revalidate();
+                panelResultados.repaint();
+
         	}
         });
         

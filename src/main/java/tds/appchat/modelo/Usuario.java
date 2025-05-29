@@ -172,16 +172,14 @@ public class Usuario {
     public Optional<Contacto> contactoRegistrado(String telefono) {
         return this.getContactosIndividuales().stream().filter(u -> u.getTelefono().equals(telefono)).findAny();   
     }
+    
+    public Optional<Contacto> contactoRegistradoNombre(String nombre) {
+        return this.getContactosIndividuales().stream().filter(u -> u.getNombre().equals(nombre)).findAny();   
+    }
 
     public Optional<Contacto> grupoRegistrado(String nombreGrupo) {
         return this.getGrupos().stream().filter(u -> u.getNombre().equals(nombreGrupo)).findAny();   
     }
-
-
-    /*public List<String> getContactosUsuario() {
-        // TODO Auto-generated method stub
-        return getContactos().stream().map(c -> c.getNombre()).toList();
-    }*/
 
     public boolean addGrupo(String nombre, String imagen, List<Contacto> contactos) {
         // TODO Auto-generated method stub

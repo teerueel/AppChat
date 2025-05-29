@@ -173,11 +173,11 @@ public enum Controlador {
 		else if (seleccionado instanceof Grupo) {
 			Grupo grupo = (Grupo) seleccionado;
 			grupo.getContactos().stream().forEach(c -> {
-					c.agregarMensaje(mensaje);
-					adaptadorContacto.modificarContacto(c);
-					recibirMensaje(mensajeRecibido, c);
-					
-				});
+				c.agregarMensaje(mensaje);
+				adaptadorContacto.modificarContacto(c);
+				recibirMensaje(mensajeRecibido, c);
+
+			});
 			adaptadorGrupo.modificarContacto(grupo);
 		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
@@ -202,10 +202,10 @@ public enum Controlador {
 			Grupo grupo = (Grupo) seleccionado;
 
 			grupo.getContactos().stream().forEach(c -> {
-					c.agregarEmoji(mensaje);
-					adaptadorContacto.modificarContacto(c);
-					recibirEmoji(mensajeRecibido, c);
-				});
+				c.agregarEmoji(mensaje);
+				adaptadorContacto.modificarContacto(c);
+				recibirEmoji(mensajeRecibido, c);
+			});
 			adaptadorGrupo.modificarContacto(grupo);
 		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
@@ -267,11 +267,51 @@ public enum Controlador {
 		adaptadorContacto.modificarContacto(contacto);
 
 	}
-	
-	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo){
-		List<String> listaMensajes = new ArrayList<>();
-		
-		listaMensajes.add("hey");
+
+	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo) {
+
+		// Primero obtenemos todos los mensajes del contacto indicado, o todos los
+		// mensajes si no se indica el contacto
+		Optional<Contacto> contacto;
+		List<Mensaje> mensajesContacto;
+		// Antes de nada comprobamos que el usuario tenga contactos, en caso de no
+		// tenerlos podemos devolver una lista vacía directamente
+		if (Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().isEmpty())
+			return new ArrayList<String>();
+		// Ahora sabemos que el usuario tiene contactos, proseguimos...
+		if (tlf != "") {
+			contacto = Sesion.INSTANCIA.getUsuarioActual().contactoRegistrado(tlf);
+			if (!contacto.isEmpty())
+				mensajesContacto = contacto.get().getMensajes();
+			else
+				return new ArrayList<String>();
+		} else if (nombre != "") {
+			contacto = Sesion.INSTANCIA.getUsuarioActual().contactoRegistradoNombre(nombre);
+			if (!contacto.isEmpty())
+				mensajesContacto = contacto.get().getMensajes();
+			else
+				return new ArrayList<String>();
+		} else {
+			mensajesContacto = Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().stream()
+					.map(c -> c.getMensajes()).flatMap(List::stream).toList();
+		}
+		// Si ninguno de los contactos o en particular el contacto buscado tienen
+		// mensajes, entonces también devolvemos una lista vacía
+		if (mensajesContacto.isEmpty())
+			return new ArrayList<String>();
+
+		// Ahora filtramos los mensajes del contacto por texto y tipo y los convertimos
+		// a su propio texto
+		List<String> listaMensajes;
+
+		if (tipo.equals("Ambos")) {
+			listaMensajes = adaptadorMensaje.obtenerMensajes().stream().filter(m -> m.getTexto().contains(txt))
+					.map(m -> m.getTexto()).toList();
+		} else {
+			listaMensajes = adaptadorMensaje.obtenerMensajes().stream().filter(m -> m.getTexto().contains(txt))
+					.filter(m -> m.getTipo().toString().toLowerCase().equals(tipo.toLowerCase())).map(m -> m.getTexto())
+					.toList();
+		}
 		return listaMensajes;
 	}
 
