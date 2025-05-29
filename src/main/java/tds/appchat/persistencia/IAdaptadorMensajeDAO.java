@@ -10,6 +10,6 @@ public interface IAdaptadorMensajeDAO {
     public void eliminarMensaje(Mensaje mensaje);
     public void modificarMensaje(Mensaje mensaje);
     public Mensaje obtenerMensaje(int id);
-    public List<Mensaje> obtenerMensajes(int idContacto);
+    public List<Mensaje> obtenerMensajes();
 
 }

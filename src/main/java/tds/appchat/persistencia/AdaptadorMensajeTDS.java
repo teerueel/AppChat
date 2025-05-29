@@ -110,7 +110,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
     }
 
     @Override
-    public List<Mensaje> obtenerMensajes(int idContacto) {
+    public List<Mensaje> obtenerMensajes() {
         List<Entidad> eMensajes = servPersistencia.recuperarEntidades("Mensaje");
         List<Mensaje> mensajes = new LinkedList<Mensaje>();
 
