@@ -268,9 +268,10 @@ public enum Controlador {
 
 	}
 	
-	public List<String> buscarMensajes(String txt, String tlf, String nombre){
+	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo){
 		List<String> listaMensajes = new ArrayList<>();
-		listaMensajes.add("mensajin");
+		
+		listaMensajes.add("hey");
 		return listaMensajes;
 	}
 

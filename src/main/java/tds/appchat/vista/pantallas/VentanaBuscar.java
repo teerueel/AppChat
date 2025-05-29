@@ -15,19 +15,21 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class VentanaBuscar extends JFrame implements Ventana, Recargable {
 
-    private JPanel panelPrincipal;
-    private JPanel panelResultados;
-    
-    List<JLabel> etiquetasMensajes = new ArrayList<>();
+	private JPanel panelPrincipal;
+	private JPanel panelResultados;
+	private boolean textoMod = false;
+	private boolean tlfMod = false;
+	private boolean contactoMod = false;
 
-    public VentanaBuscar() {
-        inicializarComponentes();
-    }
+	List<JLabel> etiquetasMensajes = new ArrayList<>();
 
-    public void inicializarComponentes() {
+	public VentanaBuscar() {
+		inicializarComponentes();
+	}
+
+	public void inicializarComponentes() {
         setTitle("Búsqueda de mensajes");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
@@ -78,6 +80,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             public void focusGained(FocusEvent e) {
                 if(txtTexto.getText().equals("texto")){
                     txtTexto.setText("");
+                    textoMod = true; //Indicamos que el texto se ha modificado
                     txtTexto.setForeground(EstilosApp.COLOR_TEXTO);
                 }
                 txtTexto.setBorder(BorderFactory.createCompoundBorder(
@@ -89,6 +92,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             public void focusLost(FocusEvent e) {
                 if(txtTexto.getText().isEmpty()){
                     txtTexto.setText("texto");
+                    textoMod = false; //Indicamos que el texto ha vuelto a su forma estándar
                     txtTexto.setForeground(Color.GRAY);
                     txtTexto.setCaretPosition(0); // Asegurar que el texto se vea completo
                 }
@@ -119,6 +123,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             public void focusGained(FocusEvent e) {
                 if(txtTelefono.getText().equals("telefono")){
                     txtTelefono.setText("");
+                    tlfMod = true;
                     txtTelefono.setForeground(EstilosApp.COLOR_TEXTO);
                 }
                 txtTelefono.setBorder(BorderFactory.createCompoundBorder(
@@ -130,6 +135,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             public void focusLost(FocusEvent e) {
                 if(txtTelefono.getText().isEmpty()){
                     txtTelefono.setText("telefono");
+                    tlfMod = false;
                     txtTelefono.setForeground(Color.GRAY);
                 }
                 txtTelefono.setBorder(BorderFactory.createCompoundBorder(
@@ -155,6 +161,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             public void focusGained(FocusEvent e) {
                 if(txtContacto.getText().equals("contacto")){
                     txtContacto.setText("");
+                    contactoMod = true;
                     txtContacto.setForeground(EstilosApp.COLOR_TEXTO);
                 }
                 txtContacto.setBorder(BorderFactory.createCompoundBorder(
@@ -166,6 +173,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             public void focusLost(FocusEvent e) {
                 if(txtContacto.getText().isEmpty()){
                     txtContacto.setText("contacto");
+                    contactoMod = false;
                     txtContacto.setForeground(Color.GRAY);
                 }
                 txtContacto.setBorder(BorderFactory.createCompoundBorder(
@@ -175,6 +183,19 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             }
         });
         
+        //Combo box para especificar si el mensaje es enviado, recibido o ambos
+        String[] opciones = { "Enviado", "Recibido", "Ambos" };
+        JComboBox<String> comboBox = new JComboBox<>(opciones);
+        comboBox.setFont(EstilosApp.FUENTE_NORMAL);
+        // Aumentar el alto para que coincida
+        comboBox.setMaximumSize(new Dimension(300, 35));
+        comboBox.setPreferredSize(new Dimension(300, 35));
+        comboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        comboBox.setBorder(BorderFactory.createCompoundBorder(
+            new LineBorder(EstilosApp.COLOR_BORDE, 1, true),
+            new EmptyBorder(5, 10, 5, 10)
+        ));
+        
         // Ajustar el panelInferiorBuscar para centrar los recuadros verticalmente
         JPanel panelCamposInferiores = new JPanel();
         panelCamposInferiores.setLayout(new BoxLayout(panelCamposInferiores, BoxLayout.Y_AXIS));
@@ -182,6 +203,8 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
         panelCamposInferiores.add(txtTelefono);
         panelCamposInferiores.add(Box.createRigidArea(new Dimension(0, 10)));
         panelCamposInferiores.add(txtContacto);
+        panelCamposInferiores.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelCamposInferiores.add(comboBox);
         
         // Crear un botón "Buscar"
         JButton btnBuscar = new JButton("Buscar");
@@ -194,7 +217,20 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             new EmptyBorder(5, 10, 5, 10)
          ));
         btnBuscar.addActionListener(e -> {
-        	List<String> mensajes = Controlador.INSTANCIA.buscarMensajes(txtTexto.getText(), txtTelefono.getText(), txtContacto.getText());
+        	String seleccion = (String) comboBox.getSelectedItem();
+        	String texto, tlf, contacto;
+        	// Necesario para saber si el texto de los paneles es el por defecto
+        	if (textoMod) {
+        		texto = txtTexto.getText();
+        	} else {texto = "";}
+        	if (tlfMod) {
+        		tlf = txtTelefono.getText();
+        	} else {tlf = "";}
+        	if (contactoMod) {
+        		contacto = txtContacto.getText();
+        	} else {contacto = "";}
+        	
+        	List<String> mensajes = Controlador.INSTANCIA.buscarMensajes(texto, tlf, contacto, seleccion);
         	for(String s : mensajes) {
         		JLabel lblMensaje = new JLabel(s);
         		lblMensaje.setFont(EstilosApp.FUENTE_NORMAL);
@@ -232,31 +268,31 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
         getContentPane().add(panelPrincipal, BorderLayout.CENTER);
     }
 
-    @Override
-    public void recargar() {
-        panelPrincipal.removeAll();
-        inicializarComponentes();
-        panelPrincipal.revalidate();
-        panelPrincipal.repaint();
-    }
+	@Override
+	public void recargar() {
+		panelPrincipal.removeAll();
+		inicializarComponentes();
+		panelPrincipal.revalidate();
+		panelPrincipal.repaint();
+	}
 
-    @Override
-    public JPanel getPanelPrincipal() {
-        return panelPrincipal;
-    }
+	@Override
+	public JPanel getPanelPrincipal() {
+		return panelPrincipal;
+	}
 
-    @Override
-    public void alMostrar() {
-        // ...acciones al mostrar la ventana...
-    }
+	@Override
+	public void alMostrar() {
+		// ...acciones al mostrar la ventana...
+	}
 
-    @Override
-    public void alOcultar() {
-        // ...acciones al ocultar la ventana...
-    }
+	@Override
+	public void alOcultar() {
+		// ...acciones al ocultar la ventana...
+	}
 
-    @Override
-    public TipoVentana getTipo() {
-        return TipoVentana.BUSCAR; // Asegúrese de definir BUSCAR en TipoVentana
-    }
+	@Override
+	public TipoVentana getTipo() {
+		return TipoVentana.BUSCAR; // Asegúrese de definir BUSCAR en TipoVentana
+	}
 }
