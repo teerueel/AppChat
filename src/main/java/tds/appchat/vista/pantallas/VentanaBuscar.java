@@ -8,13 +8,20 @@ import tds.appchat.vista.core.Ventana;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.util.EstilosApp;
+import tds.appchat.controlador.Controlador;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class VentanaBuscar extends JFrame implements Ventana, Recargable {
 
     private JPanel panelPrincipal;
+    private JPanel panelResultados;
+    
+    List<JLabel> etiquetasMensajes = new ArrayList<>();
 
     public VentanaBuscar() {
         inicializarComponentes();
@@ -28,6 +35,10 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
 
         panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.setBackground(EstilosApp.COLOR_FONDO);
+        
+        panelResultados = new JPanel(); //Dejamos ya inicializado el panel donde se mostrarán los resultados de la búsqueda
+        panelResultados.setLayout(new BoxLayout(panelResultados, BoxLayout.Y_AXIS));
+        panelResultados.setBackground(EstilosApp.COLOR_FONDO);
         
         // Reemplazar el título directamente agregado al panelPrincipal por un panel superior con borde negro
         JPanel panelSuperior = new JPanel(new BorderLayout());
@@ -183,7 +194,16 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
             new EmptyBorder(5, 10, 5, 10)
          ));
         btnBuscar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(VentanaBuscar.this, "Funcionalidad disponible próximamente");
+        	List<String> mensajes = Controlador.INSTANCIA.buscarMensajes(txtTexto.getText(), txtTelefono.getText(), txtContacto.getText());
+        	for(String s : mensajes) {
+        		JLabel lblMensaje = new JLabel(s);
+        		lblMensaje.setFont(EstilosApp.FUENTE_NORMAL);
+                lblMensaje.setForeground(EstilosApp.COLOR_TEXTO);
+                lblMensaje.setBorder(new EmptyBorder(5, 10, 5, 10));
+                panelResultados.add(lblMensaje);
+                panelResultados.revalidate();
+                panelResultados.repaint();
+        	}
         });
         
         // Crear un panel para agrupar el bloque inferior junto al botón
@@ -197,18 +217,7 @@ public class VentanaBuscar extends JFrame implements Ventana, Recargable {
         panelBuscar.add(Box.createRigidArea(new Dimension(0, 10)));
         panelBuscar.add(panelBloqueInferior);
         
-        // Panel de resultados (área donde se muestran mensajes)
-        JPanel panelResultados = new JPanel();
-        panelResultados.setLayout(new BoxLayout(panelResultados, BoxLayout.Y_AXIS));
-        panelResultados.setBackground(EstilosApp.COLOR_FONDO);
-        // Ejemplo: agregar algunos mensajes simulados
-        for (int i = 1; i <= 5; i++) {
-            JLabel lblMensaje = new JLabel("Mensaje " + i);
-            lblMensaje.setFont(EstilosApp.FUENTE_NORMAL);
-            lblMensaje.setForeground(EstilosApp.COLOR_TEXTO);
-            lblMensaje.setBorder(new EmptyBorder(5, 10, 5, 10));
-            panelResultados.add(lblMensaje);
-        }
+        // Creamos el panel deslizante de resultados para contener al panel de resultados normal
         
         JScrollPane scrollResultados = new JScrollPane(panelResultados);
         scrollResultados.setPreferredSize(new Dimension(0, 200));

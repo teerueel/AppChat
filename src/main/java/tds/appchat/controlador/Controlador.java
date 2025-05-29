@@ -1,5 +1,6 @@
 package tds.appchat.controlador;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -265,6 +266,12 @@ public enum Controlador {
 		contacto.setAgregado(true);
 		adaptadorContacto.modificarContacto(contacto);
 
+	}
+	
+	public List<String> buscarMensajes(String txt, String tlf, String nombre){
+		List<String> listaMensajes = new ArrayList<>();
+		listaMensajes.add("mensajin");
+		return listaMensajes;
 	}
 
 	private void inicializarAdaptadores() {
