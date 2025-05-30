@@ -1,5 +1,6 @@
 package tds.appchat.controlador;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -172,11 +173,11 @@ public enum Controlador {
 		else if (seleccionado instanceof Grupo) {
 			Grupo grupo = (Grupo) seleccionado;
 			grupo.getContactos().stream().forEach(c -> {
-					c.agregarMensaje(mensaje);
-					adaptadorContacto.modificarContacto(c);
-					recibirMensaje(mensajeRecibido, c);
-					
-				});
+				c.agregarMensaje(mensaje);
+				adaptadorContacto.modificarContacto(c);
+				recibirMensaje(mensajeRecibido, c);
+
+			});
 			adaptadorGrupo.modificarContacto(grupo);
 		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
@@ -201,10 +202,10 @@ public enum Controlador {
 			Grupo grupo = (Grupo) seleccionado;
 
 			grupo.getContactos().stream().forEach(c -> {
-					c.agregarEmoji(mensaje);
-					adaptadorContacto.modificarContacto(c);
-					recibirEmoji(mensajeRecibido, c);
-				});
+				c.agregarEmoji(mensaje);
+				adaptadorContacto.modificarContacto(c);
+				recibirEmoji(mensajeRecibido, c);
+			});
 			adaptadorGrupo.modificarContacto(grupo);
 		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
@@ -265,6 +266,33 @@ public enum Controlador {
 		contacto.setAgregado(true);
 		adaptadorContacto.modificarContacto(contacto);
 
+	}
+
+	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo) {
+
+		List<Contacto> listaContactos;
+		List<Mensaje> mensajesContacto;
+		// Primero obtenemos todos los mensajes del contacto indicado, o de todos los contactos si
+		// el teléfono y el nombre están vacíos
+		
+		listaContactos = Sesion.INSTANCIA.getUsuarioActual().buscarContacto(tlf, nombre);
+		mensajesContacto = listaContactos.stream()
+				.map(c -> c.getMensajes()).flatMap(List::stream).toList();
+
+		// Ahora filtramos los mensajes del contacto según su tipo y si contienenen la cadena de texto deseada
+		// y los convertimos a su propio contenido en String
+		List<String> listaMensajes;
+
+		if (tipo.equals("Ambos")) {
+			listaMensajes = mensajesContacto.stream().filter(m -> m.getTexto().contains(txt))
+					.map(m -> m.getTexto()).toList();
+		} else {
+			listaMensajes = mensajesContacto.stream().filter(m -> m.getTexto().contains(txt))
+					.filter(m -> m.getTipo().toString().toLowerCase().equals(tipo.toLowerCase())).map(m -> m.getTexto())
+					.toList();
+		}
+		
+		return listaMensajes;
 	}
 
 	private void inicializarAdaptadores() {
