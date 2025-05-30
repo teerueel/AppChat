@@ -270,48 +270,28 @@ public enum Controlador {
 
 	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo) {
 
-		// Primero obtenemos todos los mensajes del contacto indicado, o todos los
-		// mensajes si no se indica el contacto
-		Optional<Contacto> contacto;
+		List<Contacto> listaContactos;
 		List<Mensaje> mensajesContacto;
-		// Antes de nada comprobamos que el usuario tenga contactos, en caso de no
-		// tenerlos podemos devolver una lista vacía directamente
-		if (Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().isEmpty())
-			return new ArrayList<String>();
-		// Ahora sabemos que el usuario tiene contactos, proseguimos...
-		if (tlf != "") {
-			contacto = Sesion.INSTANCIA.getUsuarioActual().contactoRegistrado(tlf);
-			if (!contacto.isEmpty())
-				mensajesContacto = contacto.get().getMensajes();
-			else
-				return new ArrayList<String>();
-		} else if (nombre != "") {
-			contacto = Sesion.INSTANCIA.getUsuarioActual().contactoRegistradoNombre(nombre);
-			if (!contacto.isEmpty())
-				mensajesContacto = contacto.get().getMensajes();
-			else
-				return new ArrayList<String>();
-		} else {
-			mensajesContacto = Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().stream()
-					.map(c -> c.getMensajes()).flatMap(List::stream).toList();
-		}
-		// Si ninguno de los contactos o en particular el contacto buscado tienen
-		// mensajes, entonces también devolvemos una lista vacía
-		if (mensajesContacto.isEmpty())
-			return new ArrayList<String>();
+		// Primero obtenemos todos los mensajes del contacto indicado, o de todos los contactos si
+		// el teléfono y el nombre están vacíos
+		
+		listaContactos = Sesion.INSTANCIA.getUsuarioActual().buscarContacto(tlf, nombre);
+		mensajesContacto = listaContactos.stream()
+				.map(c -> c.getMensajes()).flatMap(List::stream).toList();
 
-		// Ahora filtramos los mensajes del contacto por texto y tipo y los convertimos
-		// a su propio texto
+		// Ahora filtramos los mensajes del contacto según su tipo y si contienenen la cadena de texto deseada
+		// y los convertimos a su propio contenido en String
 		List<String> listaMensajes;
 
 		if (tipo.equals("Ambos")) {
-			listaMensajes = adaptadorMensaje.obtenerMensajes().stream().filter(m -> m.getTexto().contains(txt))
+			listaMensajes = mensajesContacto.stream().filter(m -> m.getTexto().contains(txt))
 					.map(m -> m.getTexto()).toList();
 		} else {
-			listaMensajes = adaptadorMensaje.obtenerMensajes().stream().filter(m -> m.getTexto().contains(txt))
+			listaMensajes = mensajesContacto.stream().filter(m -> m.getTexto().contains(txt))
 					.filter(m -> m.getTipo().toString().toLowerCase().equals(tipo.toLowerCase())).map(m -> m.getTexto())
 					.toList();
 		}
+		
 		return listaMensajes;
 	}
 
