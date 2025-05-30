@@ -56,8 +56,7 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         btnBuscar.setBackground(EstilosApp.COLOR_PRIMARIO);
 
         
-        btnBuscar.addActionListener(e -> {
-           
+        btnBuscar.addActionListener(e -> {           
             GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.BUSCAR);
         });
         
@@ -67,7 +66,6 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
 
         btnGestion.addActionListener(e -> {
             GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.CONTACTOS);
-            
         });
 
         
@@ -75,8 +73,9 @@ public class VentanaApp extends JFrame implements Ventana, Recargable {
         btnPremium.setForeground(Color.WHITE);
         btnPremium.setBackground(EstilosApp.COLOR_PRIMARIO);
 
-        btnPremium.addActionListener(e -> JOptionPane.
-        showMessageDialog(VentanaApp.this, "Funcionalidad dispoible próximamente"));
+        btnPremium.addActionListener(e -> {
+            GestorVentanas.INSTANCIA.mostrarVentana(TipoVentana.PREMIUM);            
+        });
         
         // Nuevo botón "Iniciar Conversación"
         JButton btnIniciar = new JButton("Iniciar Conversación");
