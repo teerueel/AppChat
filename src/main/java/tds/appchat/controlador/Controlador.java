@@ -73,6 +73,7 @@ public enum Controlador {
 	public boolean iniciarSesion(String tlf, String password) {
 		if (CatalogoUsuarios.INSTANCIA.autenticarUsuario(tlf, password).isPresent()) {
 			Sesion.INSTANCIA.setUsuarioActual(CatalogoUsuarios.INSTANCIA.autenticarUsuario(tlf, password).get());
+			GestorVentanas.INSTANCIA.inicializarTrasRegistro();
 			return true;
 		}
 		return false;
@@ -293,6 +294,10 @@ public enum Controlador {
 		}
 		
 		return listaMensajes;
+	}
+	
+	public void setPremium(boolean premium) {
+		Sesion.INSTANCIA.getUsuarioActual().setPremium(premium);
 	}
 
 	private void inicializarAdaptadores() {

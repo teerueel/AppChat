@@ -1,5 +1,6 @@
 package tds.appchat.vista.core;
 
+import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.componentes.Cabecera;
 import tds.appchat.vista.pantallas.*;
 import tds.appchat.vista.util.EstilosApp;
@@ -86,7 +87,10 @@ public enum GestorVentanas {
         ventanas.put(TipoVentana.NUEVO_CONTACTO, new VentanaNuevoContacto());
         ventanas.put(TipoVentana.BUSCAR, new VentanaBuscar());
         ventanas.put(TipoVentana.NUEVO_GRUPO, new VentanaNuevoGrupo());
-        ventanas.put(TipoVentana.PREMIUM, new VentanaPremium());
+    }
+    
+    public void inicializarTrasRegistro() {
+    	ventanas.put(TipoVentana.PREMIUM, new VentanaPremium());
     }
     
     /**

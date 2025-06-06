@@ -11,10 +11,13 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import tds.appchat.controlador.Controlador;
+import tds.appchat.sesion.Sesion;
 import tds.appchat.vista.core.Recargable;
 import tds.appchat.vista.core.TipoVentana;
 import tds.appchat.vista.core.Ventana;
@@ -22,6 +25,9 @@ import tds.appchat.vista.util.EstilosApp;
 
 public class VentanaPremium extends JFrame implements Ventana, Recargable{
 	private JPanel panelPrincipal;
+	private JLabel lblEstado;
+	private final String estadoActivo = "Estado de la suscripción: Activa";
+	private final String estadoInactivo = "Estado de la suscripción: No suscrito";
 
     public VentanaPremium() {
     	inicializarComponentes();
@@ -62,9 +68,26 @@ public class VentanaPremium extends JFrame implements Ventana, Recargable{
         btnPremium.setMaximumSize(new Dimension(200, 40));
         panelCentral.add(btnPremium);
         panelCentral.add(Box.createRigidArea(new Dimension(0, 30)));
+        
+        // Establecemos el resultado de pulsar el boton de premium
+        btnPremium.addActionListener(e -> {
+        	if (Sesion.INSTANCIA.getUsuarioActual().isPremium()) {
+        		JOptionPane.showMessageDialog(null, "Información", "La suscripción ya está activa", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+            	boolean aceptado = DialogAceptarSuscripcion.mostrar(this);
+        		Controlador.INSTANCIA.setPremium(aceptado);
+        		if (aceptado) lblEstado.setText(estadoActivo);
+            }
+        	panelPrincipal.revalidate();
+    		panelPrincipal.repaint();
+        });
 
         // Etiquetas de estado
-        JLabel lblEstado = new JLabel("Estado de la suscripción: Activa");
+        if (Sesion.INSTANCIA.getUsuarioActual().isPremium()) {
+        	lblEstado = new JLabel(estadoActivo);
+        } else {
+        	lblEstado = new JLabel(estadoInactivo);
+        }
         lblEstado.setFont(EstilosApp.FUENTE_NORMAL);
         lblEstado.setForeground(EstilosApp.COLOR_TEXTO);
         lblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -79,6 +102,19 @@ public class VentanaPremium extends JFrame implements Ventana, Recargable{
         btnCancelar.setFocusPainted(false);
         btnCancelar.setMaximumSize(new Dimension(200, 40));
         panelCentral.add(btnCancelar);
+        
+        // Resultado de pulsar el boton de cancelar
+        btnCancelar.addActionListener(e -> {
+        	if (Sesion.INSTANCIA.getUsuarioActual().isPremium()) {
+        		boolean cancelado = DialogCancelarSuscripcion.mostrar(this);
+        		Controlador.INSTANCIA.setPremium(!cancelado);
+        		if (cancelado) lblEstado.setText(estadoInactivo);
+            } else {
+        		JOptionPane.showMessageDialog(null, "Información", "No hay una suscripción activa", JOptionPane.INFORMATION_MESSAGE);
+            }
+        	panelPrincipal.revalidate();
+    		panelPrincipal.repaint();
+        });
 
         panelPrincipal.add(panelCentral, BorderLayout.CENTER);
         setContentPane(panelPrincipal);
