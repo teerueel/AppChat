@@ -298,6 +298,7 @@ public enum Controlador {
 	
 	public void setPremium(boolean premium) {
 		Sesion.INSTANCIA.getUsuarioActual().setPremium(premium);
+		adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
 	}
 
 	private void inicializarAdaptadores() {
