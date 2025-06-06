@@ -62,6 +62,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                         new Propiedad("grupos", obtenerCodigo(user.getGrupos())),                        
                         new Propiedad("imagen", user.getImagen()),
                         new Propiedad("saludo", user.getSaludo()),
+                        new Propiedad("premium", codigoPremium(user.isPremium())),
                         new Propiedad("email", user.getEmail()))));
         
         // Guardar la entidad en la base de datos
@@ -102,6 +103,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
                 prop.setValor(obtenerCodigo(user.getContactosIndividuales()));
             } else if (prop.getNombre().equals("grupos")) {
                 prop.setValor(obtenerCodigo(user.getGrupos()));
+            } else if (prop.getNombre().equals("premium")) {
+            	prop.setValor(codigoPremium(user.isPremium()));
             }
             servPersistencia.modificarPropiedad(prop);
         }
@@ -125,6 +128,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         String imagen;
         String saludo;
         String email;
+        String premium;
 
         // recuperar la entidad de usuario
         eUsuario = servPersistencia.recuperarEntidad(id);
@@ -136,8 +140,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
         imagen = servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen");
         saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
         email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
+        premium = servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium");
 
-        Usuario user = new Usuario(nombre, email, password, telefono, saludo, imagen);  
+        Usuario user = new Usuario(nombre, email, password, telefono, saludo, imagen); 
+        user.setPremium(booleanPremium(premium));
         user.setId(id);
         // Añadir el Usuario al pool antes de llamar a a otros adaptadores
         PoolDAO.INSTANCIA.addObjeto(id, user);
@@ -195,6 +201,16 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
             contactos.add(adaptadorContacto.obtenerContacto(Integer.valueOf((String) st.nextElement())));
         }
         return contactos;
+    }
+    
+    private String codigoPremium(boolean premium) {
+    	if (premium) return "premium";
+    	return "nopremium";
+    }
+    
+    private boolean booleanPremium(String premium) {
+    	if (premium.equals("premium")) return true;
+    	else return false;
     }
 
 
