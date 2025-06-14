@@ -70,6 +70,7 @@ public enum Controlador {
 		return SelectorImagen.INSTANCIA.seleccionarImagenPerfil();
 	}
 
+	// Se utiliza para iniciar sesión en el sistema
 	public boolean iniciarSesion(String tlf, String password) {
 		if (CatalogoUsuarios.INSTANCIA.autenticarUsuario(tlf, password).isPresent()) {
 			Sesion.INSTANCIA.setUsuarioActual(CatalogoUsuarios.INSTANCIA.autenticarUsuario(tlf, password).get());
@@ -78,11 +79,12 @@ public enum Controlador {
 		}
 		return false;
 	}
-
+	// Se utiliza para cerrar sesión en el sistema
 	public void cerrarSesion() {
 		Sesion.INSTANCIA.cerrarSesion();
 	}
-
+	
+	// Se utiliza para saber si hay una sesión iniciada
 	public boolean haySesion() {
 		return Sesion.INSTANCIA.haySesion();
 	}
@@ -94,7 +96,7 @@ public enum Controlador {
 			Sesion.INSTANCIA.setTiempoInicioSesion(System.currentTimeMillis());
 		}
 	}
-
+	// Crea un nuevo contacto individual y lo añade a la lista de contactos del usuario actual
 	public boolean nuevoContacto(String nombre, String telefono) {
 		if (Sesion.INSTANCIA.getUsuarioActual().contactoRegistrado(telefono).isPresent()) {
 			return false;
@@ -111,6 +113,7 @@ public enum Controlador {
 		return true;
 	}
 
+	// Crea un nuevo grupo y lo añade a la lista de grupos del usuario actual
 	public boolean nuevoGrupo(String nombre, String imagen, List<Contacto> contactos) {
 		if (Sesion.INSTANCIA.getUsuarioActual().grupoRegistrado(nombre).isPresent()) {
 			return false;
@@ -122,6 +125,7 @@ public enum Controlador {
 		return true;
 	}
 
+	// Añade contactos al grupo
 	public void agregarContactosGrupo(List<Contacto> contactos, Grupo grupo) {
 		if (contactos.isEmpty()) {
 			return;
@@ -129,26 +133,34 @@ public enum Controlador {
 		grupo.agregarContactos(contactos);
 		adaptadorGrupo.modificarContacto(grupo);
 	}
-
+	// Elimina ciertos contactos de un grupo y actualiza el grupo en la base de datos
 	public void eliminarContactos(List<Contacto> contactos, Grupo grupo) {
 		grupo.eliminarContactos(contactos);
 		adaptadorGrupo.modificarContacto(grupo);
 	}
 
+	// Elimina un contacto individual de la lista de contactos del usuario actual y lo elimina de la base de datos
 	public void eliminarContacto(Contacto contacto) {
 		adaptadorContacto.eliminarContacto(contacto);
 		Sesion.INSTANCIA.getUsuarioActual().eliminarContacto(contacto);
 		adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
 	}
 
+	// Devuelve una lista con los contactos restantes que no están en el grupo
 	public List<Contacto> getContactosRestantes(Grupo grupo) {
-		if (grupo == null) {
-			return Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales();
-		}
-		return Sesion.INSTANCIA.getUsuarioActual().getContactosIndividuales().stream()
-				.filter(c -> !grupo.getContactos().contains(c) && !c.equals(grupo)).toList();
+		return Sesion.INSTANCIA.getUsuarioActual().getContactosRestantes(grupo);
+		
 	}
 
+	// Sirve para dar un nombre a un contacto no agregado.
+	public void marcarAgregadoContacto(String nombre, Contacto contacto) {
+		contacto.setNombre(nombre);
+		contacto.setAgregado(true);
+		adaptadorContacto.modificarContacto(contacto);
+
+	}
+
+	
 	public Map<Contacto, Mensaje> getUltimosMensajes() {
 		if (!Sesion.INSTANCIA.haySesion()) {
 			return null;
@@ -156,6 +168,7 @@ public enum Controlador {
 		return Sesion.INSTANCIA.getUsuarioActual().getUltimosMensajes();
 	}
 
+	// Envía un mensaje de texto a un contacto individual o a un grupo.
 	public void enviarMensaje(String texto, Contacto seleccionado) {
 		if (seleccionado == null) {
 			return;
@@ -164,26 +177,19 @@ public enum Controlador {
 		adaptadorMensaje.registrarMensaje(mensaje);
 		Mensaje mensajeRecibido = new Mensaje(texto, TipoMensaje.RECIBIDO);
 
-		if (seleccionado instanceof ContactoIndividual) {
-			seleccionado.agregarMensaje(mensaje);
-			adaptadorContacto.modificarContacto(seleccionado);
-			recibirMensaje(mensajeRecibido, seleccionado);
-
+		seleccionado.agregarMensaje(mensaje);
+		for(Contacto c : seleccionado.getContactos()) {
+			adaptadorContacto.modificarContacto(c);
+			recibirMensaje(mensajeRecibido, c);
+		}
+		if(seleccionado.getContactos().size() > 1) {
+			adaptadorGrupo.modificarContacto((Grupo) seleccionado);
 		}
 
-		else if (seleccionado instanceof Grupo) {
-			Grupo grupo = (Grupo) seleccionado;
-			grupo.getContactos().stream().forEach(c -> {
-				c.agregarMensaje(mensaje);
-				adaptadorContacto.modificarContacto(c);
-				recibirMensaje(mensajeRecibido, c);
-
-			});
-			adaptadorGrupo.modificarContacto(grupo);
-		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
 	}
 
+	// Envía un emoji a un contacto individual o a un grupo.
 	public void enviarEmoji(int emoji, Contacto seleccionado) {
 		if (seleccionado == null) {
 			return;
@@ -192,25 +198,18 @@ public enum Controlador {
 		adaptadorMensaje.registrarMensaje(mensaje);
 		Mensaje mensajeRecibido = new Mensaje(emoji, TipoMensaje.RECIBIDO);
 
-		if (seleccionado instanceof ContactoIndividual) {
-			seleccionado.agregarEmoji(mensaje);
-			adaptadorContacto.modificarContacto(seleccionado);
-			recibirEmoji(mensajeRecibido, seleccionado);
-
+		seleccionado.agregarEmoji(mensaje);
+		for(Contacto c : seleccionado.getContactos()) {
+			adaptadorContacto.modificarContacto(c);
+			recibirEmoji(mensajeRecibido, c);
+		}
+		if(seleccionado.getContactos().size() > 1) {
+			adaptadorGrupo.modificarContacto((Grupo) seleccionado);
 		}
 
-		else if (seleccionado instanceof Grupo) {
-			Grupo grupo = (Grupo) seleccionado;
-
-			grupo.getContactos().stream().forEach(c -> {
-				c.agregarEmoji(mensaje);
-				adaptadorContacto.modificarContacto(c);
-				recibirEmoji(mensajeRecibido, c);
-			});
-			adaptadorGrupo.modificarContacto(grupo);
-		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
 	}
+
 
 	public void recibirMensaje(Mensaje mensaje, Contacto contacto) {
 
@@ -226,7 +225,7 @@ public enum Controlador {
 
 		} else {
 			Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual().getId(),
-					Sesion.INSTANCIA.getUsuarioActual().getTelefono(), false);
+			Sesion.INSTANCIA.getUsuarioActual().getTelefono(), false);
 			adaptadorContacto.registrarContacto(nuevoContacto);
 			adaptadorMensaje.registrarMensaje(mensaje);
 			nuevoContacto.agregarMensaje(mensaje);
@@ -262,12 +261,7 @@ public enum Controlador {
 
 	}
 
-	public void agregarContacto(String nombre, Contacto contacto) {
-		contacto.setNombre(nombre);
-		contacto.setAgregado(true);
-		adaptadorContacto.modificarContacto(contacto);
-
-	}
+	
 
 	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo) {
 
