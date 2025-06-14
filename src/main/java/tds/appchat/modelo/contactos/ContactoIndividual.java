@@ -103,12 +103,21 @@ public class ContactoIndividual implements Contacto {
         }
         return null;
     }
+    
     public boolean isAgregado() {
         return agregado;
     }
     
     public void setAgregado(boolean agregado) {
         this.agregado = agregado;
+    }
+
+    @Override
+    public List<Contacto> getContactos() {
+        // Un contacto individual no tiene contactos, por lo que devolvemos una lista vacía
+        ArrayList<Contacto> lista = new ArrayList<Contacto>();
+        lista.add(this);
+        return lista;
     }
 
     //devuelve el último mensaje 

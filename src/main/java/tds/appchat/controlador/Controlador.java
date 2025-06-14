@@ -168,6 +168,7 @@ public enum Controlador {
 		return Sesion.INSTANCIA.getUsuarioActual().getUltimosMensajes();
 	}
 
+	// Envía un mensaje de texto a un contacto individual o a un grupo.
 	public void enviarMensaje(String texto, Contacto seleccionado) {
 		if (seleccionado == null) {
 			return;
@@ -176,26 +177,19 @@ public enum Controlador {
 		adaptadorMensaje.registrarMensaje(mensaje);
 		Mensaje mensajeRecibido = new Mensaje(texto, TipoMensaje.RECIBIDO);
 
-		if (seleccionado instanceof ContactoIndividual) {
-			seleccionado.agregarMensaje(mensaje);
-			adaptadorContacto.modificarContacto(seleccionado);
-			recibirMensaje(mensajeRecibido, seleccionado);
-
+		seleccionado.agregarMensaje(mensaje);
+		for(Contacto c : seleccionado.getContactos()) {
+			adaptadorContacto.modificarContacto(c);
+			recibirMensaje(mensajeRecibido, c);
+		}
+		if(seleccionado.getContactos().size() > 1) {
+			adaptadorGrupo.modificarContacto((Grupo) seleccionado);
 		}
 
-		else if (seleccionado instanceof Grupo) {
-			Grupo grupo = (Grupo) seleccionado;
-			grupo.getContactos().stream().forEach(c -> {
-				c.agregarMensaje(mensaje);
-				adaptadorContacto.modificarContacto(c);
-				recibirMensaje(mensajeRecibido, c);
-
-			});
-			adaptadorGrupo.modificarContacto(grupo);
-		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
 	}
 
+	// Envía un emoji a un contacto individual o a un grupo.
 	public void enviarEmoji(int emoji, Contacto seleccionado) {
 		if (seleccionado == null) {
 			return;
@@ -204,25 +198,18 @@ public enum Controlador {
 		adaptadorMensaje.registrarMensaje(mensaje);
 		Mensaje mensajeRecibido = new Mensaje(emoji, TipoMensaje.RECIBIDO);
 
-		if (seleccionado instanceof ContactoIndividual) {
-			seleccionado.agregarEmoji(mensaje);
-			adaptadorContacto.modificarContacto(seleccionado);
-			recibirEmoji(mensajeRecibido, seleccionado);
-
+		seleccionado.agregarEmoji(mensaje);
+		for(Contacto c : seleccionado.getContactos()) {
+			adaptadorContacto.modificarContacto(c);
+			recibirEmoji(mensajeRecibido, c);
+		}
+		if(seleccionado.getContactos().size() > 1) {
+			adaptadorGrupo.modificarContacto((Grupo) seleccionado);
 		}
 
-		else if (seleccionado instanceof Grupo) {
-			Grupo grupo = (Grupo) seleccionado;
-
-			grupo.getContactos().stream().forEach(c -> {
-				c.agregarEmoji(mensaje);
-				adaptadorContacto.modificarContacto(c);
-				recibirEmoji(mensajeRecibido, c);
-			});
-			adaptadorGrupo.modificarContacto(grupo);
-		}
 		GestorVentanas.INSTANCIA.getVentanaApp().updatePanelIzquierdo();
 	}
+
 
 	public void recibirMensaje(Mensaje mensaje, Contacto contacto) {
 
@@ -238,7 +225,7 @@ public enum Controlador {
 
 		} else {
 			Contacto nuevoContacto = new ContactoIndividual(Sesion.INSTANCIA.getUsuarioActual().getId(),
-					Sesion.INSTANCIA.getUsuarioActual().getTelefono(), false);
+			Sesion.INSTANCIA.getUsuarioActual().getTelefono(), false);
 			adaptadorContacto.registrarContacto(nuevoContacto);
 			adaptadorMensaje.registrarMensaje(mensaje);
 			nuevoContacto.agregarMensaje(mensaje);
@@ -274,12 +261,7 @@ public enum Controlador {
 
 	}
 
-	public void agregarContacto(String nombre, Contacto contacto) {
-		contacto.setNombre(nombre);
-		contacto.setAgregado(true);
-		adaptadorContacto.modificarContacto(contacto);
-
-	}
+	
 
 	public List<String> buscarMensajes(String txt, String tlf, String nombre, String tipo) {
 
