@@ -228,7 +228,7 @@ public class PanelDerechoMensajes extends JPanel {
                     );
         	}
         	if (aceptado) {
-        		// Llamamos a la función del controlador que gestiona el exportar a PDF
+        		Controlador.INSTANCIA.exportarChat(seleccionado);
         	}
         	
         });

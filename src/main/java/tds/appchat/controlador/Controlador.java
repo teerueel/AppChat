@@ -1,14 +1,19 @@
 package tds.appchat.controlador;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.itextpdf.text.DocumentException;
+
 import tds.appchat.modelo.*;
 import tds.appchat.modelo.contactos.Contacto;
 import tds.appchat.modelo.contactos.ContactoIndividual;
 import tds.appchat.modelo.contactos.Grupo;
+import tds.appchat.modelo.util.ExportarPDF;
 import tds.appchat.modelo.util.TipoMensaje;
 import tds.appchat.persistencia.DAOException;
 import tds.appchat.persistencia.FactoriaDAO;
@@ -293,6 +298,25 @@ public enum Controlador {
 	public void setPremium(boolean premium) {
 		Sesion.INSTANCIA.getUsuarioActual().setPremium(premium);
 		adaptadorUsuario.modificarUsuario(Sesion.INSTANCIA.getUsuarioActual());
+	}
+	
+	public void exportarChat(Contacto contacto) {
+		String carpetaUsuario = System.getProperty("user.home");
+		String carpetaExportados = carpetaUsuario + "/MisExportaciones"; // o "Documents/MisExportaciones"
+		File carpeta = new File(carpetaExportados);
+		if (!carpeta.exists()) {
+		    carpeta.mkdirs();
+		}
+		
+		String nombreUsuario = Sesion.INSTANCIA.getUsuarioActual().getNombre();
+		String ruta = carpetaExportados + "/conversacion.pdf";
+		try {
+			ExportarPDF.INSTANCIA.crearPDF(ruta, nombreUsuario, contacto);
+		} catch (FileNotFoundException | DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	private void inicializarAdaptadores() {
