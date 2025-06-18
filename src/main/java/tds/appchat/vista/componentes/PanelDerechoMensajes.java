@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -206,8 +208,34 @@ public class PanelDerechoMensajes extends JPanel {
             GestorVentanas.INSTANCIA.getVentanaApp().updatePanelDerecho(seleccionado);
             campoTexto.setText(""); // Limpiar el campo de texto después de enviar
         });
+        
+        // Botón para exportar la conversación
+        JButton btnExportar = new JButton("Exportar");
+        btnExportar.setFont(EstilosApp.FUENTE_BOTON);
+        btnExportar.setForeground(Color.WHITE);
+        btnExportar.setBackground(EstilosApp.COLOR_PRIMARIO);
+        btnExportar.setPreferredSize(new Dimension(100, 45));
+        btnExportar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnExportar.addActionListener(e -> {
+        	boolean aceptado = false;
+        	if (Sesion.INSTANCIA.getUsuarioActual().isPremium()) {
+        		aceptado = DialogExportarChat.mostrar((Frame) SwingUtilities.getWindowAncestor(this));
+        	} else {
+        		JOptionPane.showMessageDialog(this,
+                        "Necesita una suscripción premium para poder acceder a esta funcionalidad",
+                        "Atención",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+        	}
+        	if (aceptado) {
+        		Controlador.INSTANCIA.exportarChat(seleccionado);
+        	}
+        	
+        });
+        
         panelTexto.add(btnEmojis);
         panelTexto.add(btnEnviar);
+        panelTexto.add(btnExportar);
 
         this.add(panelTexto, BorderLayout.SOUTH);
 

@@ -148,37 +148,40 @@ public class Usuario {
 		return this.grupos;
 	}
 
-	// Se utiliza para añadir un contacto a la lista de contactos del usuario
-	public boolean addContacto(Usuario user, String nombre) {
-		Contacto contacto = new ContactoIndividual(user.getId(), nombre);
-		return this.contactos.add(contacto);
-	}
+	
 
 	// Se utiliza para añadir un contacto a la lista de contactos del usuario
 	public boolean addContacto(Contacto contacto) {
 		return this.contactos.add(contacto);
 	}
 
+	// Devuelve el contacto registrado con el número de teléfono especificado, si existe.
 	public Optional<Contacto> contactoRegistrado(String telefono) {
 		return this.getContactosIndividuales().stream().filter(u -> u.getTelefono().equals(telefono)).findAny();
 	}
 
+	// Devuelve el contacto registrado con el nombre especificado, si existe.
 	public Optional<Contacto> contactoRegistradoNombre(String nombre) {
 		return this.getContactosIndividuales().stream().filter(u -> u.getNombre().equals(nombre)).findAny();
 	}
 
+	// Devuelve el grupo registrado con el nombre especificado, si existe.
 	public Optional<Contacto> grupoRegistrado(String nombreGrupo) {
 		return this.getGrupos().stream().filter(u -> u.getNombre().equals(nombreGrupo)).findAny();
 	}
 
-	public boolean addGrupo(String nombre, String imagen, List<Contacto> contactos) {
-		// TODO Auto-generated method stub
-		Grupo grupo = new Grupo(nombre, imagen, contactos);
+	// Se utiliza para añadir un grupo a la lista de grupos del usuario
+	public boolean addGrupo(Contacto grupo) {
 		return this.grupos.add(grupo);
 	}
 
-	public boolean addGrupo(Contacto grupo) {
-		return this.grupos.add(grupo);
+	// Devuelve una lista de contactos que no pertenecen al grupo especificado
+	public List<Contacto> getContactosRestantes(Grupo grupo){
+		if (grupo == null) {
+			return this.contactos;
+		}
+		return this.contactos.stream()
+				.filter(c -> !grupo.getContactos().contains(c) && !c.equals(grupo)).toList();
 	}
 
 	// Elimina un contacto de la lista de contactos del usuario, también de todos

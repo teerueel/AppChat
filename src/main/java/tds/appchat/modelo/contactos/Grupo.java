@@ -61,6 +61,7 @@ public class Grupo implements Contacto {
         this.nombreGrupo = nombreGrupo;
     }
 
+    @Override
     public List<Contacto> getContactos() {
         return contactos;
     }

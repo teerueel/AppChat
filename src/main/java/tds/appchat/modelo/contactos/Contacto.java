@@ -18,4 +18,5 @@ public interface Contacto {
     public void setAgregado(boolean agregado);
     public void setNombre(String nombre);
     public List<Mensaje> getMensajes(); // Método para obtener la lista de mensajes
+    public List<Contacto> getContactos();
 }

@@ -39,7 +39,7 @@ public class DialogAgregarContacto extends JDialog {
                 contactoNombre = txtNombre.getText().trim();
                 if(!contactoNombre.isEmpty()){
                     confirmed = true;
-                    Controlador.INSTANCIA.agregarContacto(contactoNombre, contacto);
+                    Controlador.INSTANCIA.marcarAgregadoContacto(contactoNombre, contacto);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(DialogAgregarContacto.this, "El nombre no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);

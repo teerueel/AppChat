@@ -14,5 +14,6 @@ public enum TipoVentana {
     CONTACTOS,
     NUEVO_CONTACTO,
     BUSCAR,
-    NUEVO_GRUPO
+    NUEVO_GRUPO,
+    PREMIUM
 }
